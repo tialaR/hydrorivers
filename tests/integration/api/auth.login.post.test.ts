@@ -27,6 +27,7 @@ import { POST } from '@/app/api/auth/login/route';
 describe('POST /api/auth/login', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    delete process.env.HYDRORIVERS_EXPOSE_OTP_CODE;
     mockToPublicUser.mockImplementation((user: unknown) => user);
   });
 
@@ -66,7 +67,27 @@ describe('POST /api/auth/login', () => {
     await expect(response.json()).resolves.toMatchObject({ error: 'invalid-login' });
   });
 
-  it('retorna desafio OTP quando ainda não enviou otp', async () => {
+  it('retorna desafio OTP sem expor código no modo padrão', async () => {
+    mockReadMock.mockReturnValue([
+      { id: 'u-shipper-1', email: 'tiala@hydrorivers.com', passwordHash: 'hash' }
+    ]);
+    mockVerifyPassword.mockReturnValue(true);
+
+    const request = new Request('http://localhost/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email: 'tiala@hydrorivers.com', password: 'hydro123' })
+    });
+    const response = await POST(request);
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(body).toMatchObject({ otpRequired: true });
+    expect(typeof body.challenge).toBe('string');
+    expect(body.otpCode).toBeUndefined();
+  });
+
+  it('retorna otpCode apenas em modo demo com flag habilitada', async () => {
+    process.env.HYDRORIVERS_EXPOSE_OTP_CODE = 'true';
     mockReadMock.mockReturnValue([
       { id: 'u-shipper-1', email: 'tiala@hydrorivers.com', passwordHash: 'hash' }
     ]);
@@ -107,6 +128,7 @@ describe('POST /api/auth/login', () => {
   });
 
   it('retorna 200 e grava cookie quando otp/challenge são válidos', async () => {
+    process.env.HYDRORIVERS_EXPOSE_OTP_CODE = 'true';
     const user = { id: 'u-shipper-1', email: 'tiala@hydrorivers.com', passwordHash: 'hash', company: 'Cooperativa Açaí Norte' };
     mockReadMock.mockReturnValue([user]);
     mockVerifyPassword.mockReturnValue(true);
