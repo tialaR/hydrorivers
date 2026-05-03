@@ -1,0 +1,132 @@
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.linkWrap {
+  display: block;
+  height: 100%;
+}
+
+.card {
+  position: relative;
+  display: grid;
+  gap: .9rem;
+  height: 100%;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: var(--brand);
+  opacity: .95;
+}
+
+.linkWrap:hover .card {
+  transform: translateY(-3px);
+  border-color: var(--brand-soft-line);
+  box-shadow: 0 24px 74px var(--glow);
+}
+
+.low::before { background: var(--brand); }
+.medium::before { background: var(--warning); }
+.high::before { background: var(--danger); }
+
+.top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.icon {
+  width: 4.2rem;
+  height: 4.2rem;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, var(--brand), var(--river));
+  color: #07110e;
+  box-shadow: 0 14px 36px var(--glow);
+}
+
+.card h2 {
+  margin: 0;
+  font-size: clamp(1.35rem, 2.6vw, 2.35rem);
+  line-height: 1.02;
+  letter-spacing: -.06em;
+  overflow-wrap: anywhere;
+}
+
+.card p {
+  margin: 0;
+  min-height: 2.55rem;
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  width: fit-content;
+  max-width: 100%;
+  padding: 0 .8rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--surface) 86%, transparent);
+  color: var(--text);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.card p:nth-of-type(1) svg { color: var(--brand); }
+.card p:nth-of-type(2) svg { color: var(--blue); }
+
+.card strong {
+  font-size: clamp(2rem, 3.6vw, 2.8rem);
+  font-weight: 820;
+  letter-spacing: -.08em;
+}
+
+.timeline {
+  height: .72rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--surface) 78%, transparent);
+  border: 1px solid var(--line);
+}
+
+.timeline span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--brand), var(--river));
+}
+
+.card small {
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.45;
+  font-weight: 650;
+}
+
+@media (max-width: 1280px) {
+  .board { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 860px) {
+  .board { grid-template-columns: 1fr; }
+}
+
+:global(html[data-theme='light']) {
+  .card p,
+  .timeline {
+    border-color: var(--line-strong);
+    background: color-mix(in srgb, var(--surface) 94%, transparent);
+  }
+
+  .card small {
+    color: var(--muted-soft);
+  }
+}

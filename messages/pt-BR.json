@@ -1,0 +1,673 @@
+{
+  "nav": {
+    "home": "Início",
+    "dashboard": "Dashboard",
+    "cargoes": "Cargas",
+    "vessels": "Embarcações",
+    "negotiations": "Negociações",
+    "tracking": "Rastreio",
+    "impact": "Impacto",
+    "admin": "Admin",
+    "cta": "Publicar carga",
+    "login": "Entrar",
+    "signup": "Criar conta",
+    "more": "Mais",
+    "openMenu": "Abrir menu",
+    "closeMenu": "Fechar menu",
+    "mobileMenu": "Menu de navegação",
+    "language": "Alterar idioma",
+    "publish": "Publicar carga",
+    "profile": "Perfil",
+    "primaryNavigation": "Navegação principal",
+    "government": "Governo",
+    "currentRoute": "Rota atual",
+    "subpageContext": "contexto operacional ativo"
+  },
+  "auth": {
+    "login": "Entrar",
+    "signup": "Criar conta",
+    "logout": "Sair",
+    "profile": "Perfil",
+    "loginEyebrow": "Acesso seguro",
+    "loginTitle": "Entre na operação HydroRivers",
+    "loginDescription": "Acesse cargas, propostas, reservas e rastreio em uma experiência digital para rios e cabotagem.",
+    "registerEyebrow": "Nova conta",
+    "registerTitle": "Cadastre sua operação fluvial",
+    "registerDescription": "Crie um perfil de embarcador ou transportador para simular os fluxos do MVP.",
+    "name": "Nome completo",
+    "company": "Empresa ou cooperativa",
+    "role": "Perfil",
+    "shipper": "Embarcador",
+    "carrier": "Transportador",
+    "admin": "Admin",
+    "email": "E-mail",
+    "password": "Senha",
+    "loading": "Processando...",
+    "error": "Não foi possível concluir. Tente novamente.",
+    "sideEyebrow": "MVP operacional",
+    "sideTitle": "Do pedido à entrega, menos papel e mais rio.",
+    "sideOne": "Cadastro público para embarcador e transportador, com admin fora da UI pública.",
+    "sideTwo": "Cotação, aceite e reserva de espaço simulados via API/MSW.",
+    "sideThree": "Base pronta para aprovação manual, auditoria e offline-first.",
+    "saved": "Dados salvos no mock",
+    "avatar": "Foto do avatar",
+    "avatarHelp": "Escolha uma foto JPEG/JPG. A imagem será otimizada e salva no mock somente ao clicar em Salvar dados.",
+    "saveProfile": "Salvar dados",
+    "namePlaceholder": "Tiala Rocha",
+    "companyPlaceholder": "Cooperativa Açaí Norte",
+    "emailPlaceholder": "tiala@hydrorivers.com",
+    "avatarUpload": "Trocar foto",
+    "removeAvatar": "Remover foto",
+    "avatarUrlPlaceholder": "Cole uma URL ou carregue uma imagem",
+    "avatarInvalidType": "Envie uma foto em JPEG ou JPG.",
+    "avatarTooLarge": "A imagem deve ter até 1,5 MB.",
+    "avatarReadError": "Não foi possível ler essa foto. Tente outro JPEG.",
+    "avatarSaveError": "Não foi possível salvar a foto. Tente novamente.",
+    "otpEyebrow": "validacao otp",
+    "otpTitle": "Validar codigo OTP",
+    "otpDescription": "Use o codigo exibido abaixo para validar o login mock. O codigo fica pronto para copiar e colar.",
+    "otpCodeLabel": "Codigo OTP mock",
+    "otpCodeHelp": "Copie o codigo acima e cole no campo abaixo para concluir a autenticacao.",
+    "otpPlaceholder": "Digite o codigo de 6 digitos",
+    "copyOtp": "Copiar codigo",
+    "copied": "Copiado",
+    "changeCredentials": "Alterar credenciais",
+    "otpSubmit": "Validar OTP",
+    "otpInvalid": "Codigo OTP invalido. Confira e tente novamente."
+  },
+  "home": {
+    "eyebrow": "Frete fluvial e cabotagem",
+    "title": "O marketplace que transforma rios em corredores digitais de carga.",
+    "description": "HydroRivers conecta pequenos produtores, operadores e embarcações para reduzir custo logístico, emissões e burocracia na Amazônia e na cabotagem brasileira.",
+    "primary": "Explorar cargas",
+    "secondary": "Ver impacto",
+    "pillars": {
+      "cost": {
+        "title": "Custo e sustentabilidade",
+        "description": "Menos caminhões em longas distâncias e mais uso de rotas naturais com menor emissão."
+      },
+      "region": {
+        "title": "Necessidade regional",
+        "description": "Onde o rio é estrada, organizar capacidade fluvial reduz custo de vida e amplia mercado."
+      },
+      "automation": {
+        "title": "Desburocratização",
+        "description": "Cotação, contraproposta e documentos em fluxo digital preparado para automação."
+      }
+    },
+    "visualAria": "Resumo visual da operação HydroRivers",
+    "visualRouteTitle": "Belém → Santarém",
+    "visualRouteDescription": "Capacidade regional encontrada para carga refrigerada em rota fluvial.",
+    "visualCargoTitle": "Açaí em paletes",
+    "visualCargoMeta": "18 t · Janela 08-12 maio",
+    "visualImpactValue": "-64% CO₂",
+    "visualImpactDescription": "Potencial de emissão evitada ao trocar rodovia longa por hidrovia."
+  },
+  "pages": {
+    "dashboard": {
+      "eyebrow": "Operação",
+      "title": "Painel HydroRivers",
+      "description": "Resumo das cargas, embarcações e negociações em andamento."
+    },
+    "cargoes": {
+      "eyebrow": "Marketplace",
+      "title": "Cargas disponíveis",
+      "description": "Cargas fluviais e de cabotagem prontas para receber propostas."
+    },
+    "newCargo": {
+      "eyebrow": "Publicação",
+      "title": "Publicar nova carga",
+      "description": "Simule a abertura de uma carga para receber cotações de embarcações aptas.",
+      "breadcrumbCurrent": "Publicar nova carga"
+    },
+    "vessels": {
+      "eyebrow": "Frota",
+      "title": "Embarcações disponíveis",
+      "description": "Capacidade regional para rotas fluviais, cabotagem e última milha ribeirinha."
+    },
+    "negotiations": {
+      "eyebrow": "Comercial",
+      "title": "Negociações",
+      "description": "Pipeline de cotações, contrapropostas, contratos e embarques."
+    },
+    "tracking": {
+      "eyebrow": "Rastreio por eventos",
+      "title": "Acompanhar frete",
+      "description": "Linha do tempo manual para baixa conectividade, com eventos e comprovantes.",
+      "trackingCode": "Código de rastreio",
+      "track": "Rastrear",
+      "inRiverRoute": "Em rota fluvial",
+      "sampleRoute": "Belém, PA → Santarém, PA",
+      "sampleCargo": "Açaí congelado em paletes",
+      "progressAria": "Progresso de {progress}%",
+      "temperature": "Temperatura: -18 °C",
+      "eta": "ETA: 10/05 09:30",
+      "insurance": "Seguro: ativo",
+      "operationalInfo": "Informações operacionais",
+      "vessel": "Embarcação",
+      "sampleVessel": "Barco Marituba",
+      "operator": "Operador",
+      "sampleOperator": "Coop. Ribeirinha",
+      "lastSync": "Última sincronização",
+      "sampleLastSync": "Rio Amazonas, antena regional",
+      "proofs": "Comprovantes",
+      "sampleProofs": "Lacre, romaneio, checklist reefer",
+      "timelineTitle": "Linha do tempo operacional",
+      "progressLabel": "{progress}% concluído"
+    },
+    "admin": {
+      "eyebrow": "Backoffice",
+      "title": "Painel administrativo",
+      "description": "Aprovação, suporte, auditoria e visão operacional do piloto.",
+      "unauthorizedTitle": "Acesso restrito",
+      "unauthorizedDescription": "Este painel é exclusivo para usuários administradores."
+    },
+    "impact": {
+      "eyebrow": "Valor",
+      "title": "Impacto econômico e ambiental",
+      "description": "Por que HydroRivers gera mais valor para produtores, transportadores e comunidades.",
+      "storyTitle": "História de impacto",
+      "storyDescription": "Resumo narrativo dos ganhos ambientais, regulatórios e socioeconômicos gerados pelas operações fluviais priorizadas."
+    },
+    "profile": {
+      "eyebrow": "Conta",
+      "title": "Meu perfil",
+      "description": "Preferências, empresa, papel operacional e status de aprovação.",
+      "loading": "Carregando perfil",
+      "loginRequired": "Entre para acessar seu perfil",
+      "loginRequiredDescription": "Use sua conta HydroRivers para editar dados da empresa e status operacional.",
+      "approved": "Aprovado",
+      "pending": "Em análise",
+      "role": "Perfil",
+      "manualValidation": "Validação manual",
+      "readyForPilot": "Pronto para piloto operacional",
+      "awaitingReview": "Aguardando revisão operacional",
+      "phone": "Telefone",
+      "phonePlaceholder": "(91) 99999-0000",
+      "baseCity": "Cidade/porto base",
+      "baseCityPlaceholder": "Belém, PA"
+    },
+    "vesselDetail": {
+      "eyebrow": "Embarcação",
+      "breadcrumb": "Embarcações"
+    },
+    "adminConsole": {
+      "carriersForApproval": "Transportadores para aprovação",
+      "openCargoes": "Cargas abertas",
+      "activeVessels": "Embarcações ativas",
+      "disputesUnderReview": "Disputas em análise",
+      "pilotPhase": "Fase piloto",
+      "queueTitle": "Fila operacional",
+      "approveDocs": "Aprovar documentação",
+      "validateProof": "Validar comprovante",
+      "contractAudit": "Auditoria de contrato",
+      "pending": "Pendente",
+      "underReview": "Em análise",
+      "ok": "OK"
+    },
+    "impactDetail": {
+      "eyebrow": "Impacto",
+      "breadcrumb": "Impacto",
+      "kicker": "HydroRivers + BR do Mar",
+      "description": "Este eixo conecta o valor de produto do HydroRivers à estratégia brasileira de cabotagem: ampliar concorrência, melhorar uso da frota, reduzir custo logístico e estimular embarcações mais sustentáveis.",
+      "details": {
+        "cost": [
+          "Consolidação de cargas fracionadas em rotas fluviais.",
+          "Maior ocupação das embarcações e menos retorno vazio.",
+          "Comparação de propostas e histórico auditável de preço."
+        ],
+        "sustainability": [
+          "Cabotagem e hidrovias emitem menos por tonelada transportada.",
+          "Indicadores de CO₂ evitado por carga.",
+          "Incentivo a operadores com embarcações mais eficientes."
+        ],
+        "regional": [
+          "Rotas piloto entre Belém, Santarém, Manaus e Porto Velho.",
+          "Foco em cooperativas, pequenos produtores e operadores locais.",
+          "Fluxos preparados para baixa conectividade."
+        ],
+        "automation": [
+          "Cotação, contraproposta e aceite em uma linha digital.",
+          "Documentos e comprovantes anexados à negociação.",
+          "Rastreio por eventos para operação assistida."
+        ],
+        "brdomar": [
+          "Aderência à Lei nº 14.301/2022 e ao estímulo à cabotagem.",
+          "Integração com portos brasileiros e outros modais.",
+          "Redução de dependência rodoviária e risco de roubo."
+        ],
+        "compliance": [
+          "Documentos fiscais, ambientais e sanitários deixam de ser checklist genérico.",
+          "Estados obrigatório, condicional e próxima fase reduzem risco de contratação.",
+          "A trilha mockada prepara o app para integrações reais com órgãos e sistemas."
+        ],
+        "connectivity": [
+          "O app reconhece que nem todo trecho tem sinal estável.",
+          "Eventos podem ser registrados como evidência operacional e sincronizados depois.",
+          "Isso cria narrativa realista para operação em comunidades e terminais menores."
+        ],
+        "government": [
+          "Painéis por corredor mostram abastecimento, bioeconomia, risco e documentação.",
+          "A leitura territorial ajuda priorização de política pública e fiscalização.",
+          "O HydroRivers passa a apoiar coordenação, não apenas cotação."
+        ]
+      }
+    },
+    "dashboardOverview": {
+      "openCargoes": "Cargas abertas",
+      "activeMarketplace": "marketplace ativo",
+      "availableVessels": "Embarcações disponíveis",
+      "riverRoutes": "rotas fluviais/cabotagem",
+      "activeNegotiations": "Negociações ativas",
+      "quotesAndBookings": "cotações e reservas",
+      "averageCo2Saving": "Economia média CO₂",
+      "roadComparison": "vs. rodoviário estimado",
+      "featuredCorridors": "Corredores em destaque",
+      "operation": "operação",
+      "capacityAndBookings": "Capacidade e reservas",
+      "liveMock": "mock vivo",
+      "recentNegotiations": "Negociações recentes",
+      "activeCount": "{count} ativas"
+    },
+    "cargoDetail": {
+      "kicker": "Oportunidade aquaviária",
+      "impactDescription": "Estimativa visual de impacto ao usar rota aquaviária em vez de transporte rodoviário longo.",
+      "sendProposal": "Enviar proposta",
+      "amount": "Valor",
+      "estimatedTime": "Tempo estimado",
+      "estimatedTimePlaceholder": "3 dias",
+      "notes": "Observações",
+      "notesPlaceholder": "Descreva riscos, exigências e observações da proposta.",
+      "simulateProposal": "Simular proposta",
+      "notFoundTitle": "Carga não encontrada no mock local.",
+      "notFoundDescription": "Volte para a listagem e publique novamente.",
+      "eyebrow": "Carga",
+      "fallbackTitle": "Carga salva no mock",
+      "fallbackDescription": "Detalhe carregado pelo mock local",
+      "documentKicker": "Confiança documental",
+      "documentTitle": "Exigências por carga, rota e fase",
+      "riskTitle": "Riscos operacionais",
+      "originContext": "Contexto de origem",
+      "originFallback": "Origem operacional em validação",
+      "proposalCount": "Propostas simuladas",
+      "proposalUnit": "propostas",
+      "documentTooltip": "Documento exigido conforme tipo de carga, rota e fase da operação.",
+      "vesselCompatibility": "Compatibilidade da embarcação",
+      "vesselCompatibilityPlaceholder": "Ex.: comboio refrigerado, calado até 1,8 m",
+      "documentCommitment": "Prontidão documental",
+      "documentReady": "Documentos conferidos",
+      "documentPending": "Documento será regularizado",
+      "riskNote": "Observação de risco e operação",
+      "proposalToastTitle": "Proposta simulada enviada",
+      "proposalToastDescription": "A carga “{title}” recebeu uma nova proposta mockada.",
+      "documentDescription": "Requisitos por tipo de carga, rota e fase operacional.",
+      "operationPlan": "Plano operacional",
+      "operationPlanPlaceholder": "Ex.: embarque em 2 lotes com conferência no cais.",
+      "contactChannel": "Canal de contato",
+      "contactChannelPlaceholder": "Ex.: WhatsApp da operação / e-mail do time."
+    },
+    "negotiationDetail": {
+      "terms": "Termos da negociação",
+      "parties": "Partes",
+      "payment": "Pagamento",
+      "insurance": "Seguro",
+      "nextStep": "Próximo passo",
+      "documents": "Documentos",
+      "history": "Histórico",
+      "eyebrow": "Negociação"
+    },
+    "governmentPage": {
+      "eyebrow": "Valor público",
+      "title": "Painel governamental de logística fluvial amazônica",
+      "description": "Visão demonstrável para coordenação de corredores, documentação, abastecimento territorial e cadeias de sociobiodiversidade."
+    },
+    "government": {
+      "heroEyebrow": "Porto digital amazônico",
+      "heroTitle": "Camada operacional para política pública, fiscalização e desenvolvimento regional.",
+      "heroDescription": "O HydroRivers passa a tratar rota, rio, documentação, sazonalidade, conectividade e cadeia produtiva como dados operacionais. A proposta é apoiar governo, cooperativas e operadores com visibilidade prática sobre cargas amazônicas.",
+      "publicValueScore": "Índice de valor público",
+      "publicValueHint": "Sinaliza impacto combinado em formalização, previsibilidade e abastecimento.",
+      "bioeconomyLoads": "Cargas de sociobioeconomia",
+      "bioeconomyHint": "Açaí, castanha, cacau, cupuaçu, pescado e produtos florestais.",
+      "documentExceptions": "Exceções documentais",
+      "documentHint": "Itens que precisam de análise antes da contratação.",
+      "seasonalRoutes": "Rotas sazonais",
+      "seasonalHint": "Corredores sensíveis a cheia, vazante ou baixa conectividade.",
+      "lowSignal": "Operações com sinal limitado",
+      "signalHint": "Trechos que exigem sincronização tardia de eventos.",
+      "corridorPanelEyebrow": "Inteligência territorial",
+      "corridorPanelTitle": "Corredores, rios e previsibilidade",
+      "governmentPilot": "Piloto gov",
+      "complianceEyebrow": "Confiança operacional",
+      "complianceTitle": "Fila de documentos e exceções",
+      "actionable": "Acionável",
+      "fleetEyebrow": "Capacidade regulada",
+      "fleetTitle": "Embarcações e compatibilidade",
+      "workflowEyebrow": "Fluxo transacional",
+      "workflowTitle": "Da publicação ao comprovante de entrega",
+      "workflow": {
+        "register": "Cadastro e aprovação do perfil",
+        "publish": "Publicação da carga com contexto territorial",
+        "match": "Matching por corredor, calado, temperatura e capacidade",
+        "documents": "Pacote documental sugerido por tipo de carga",
+        "boarding": "Checklist de embarque e evidência operacional",
+        "pod": "Rastreio, sincronização tardia e POD"
+      },
+      "corridorHint": "Cada corredor combina rio principal, tipo de operação e previsibilidade logística para apoiar decisões públicas.",
+      "predictabilityLabel": "Previsibilidade",
+      "fleetHint": "Acompanhe rapidamente o tipo de embarcação, calado operacional e situação documental de cada ativo.",
+      "fleetStatusLabel": "Situação",
+      "workflowHint": "Fluxo resumido da jornada operacional, do cadastro inicial ao comprovante de entrega."
+    }
+  },
+  "forms": {
+    "origin": "Origem",
+    "destination": "Destino",
+    "cargoType": "Tipo de carga",
+    "volume": "Volume",
+    "window": "Janela",
+    "targetPrice": "Preço alvo",
+    "description": "Descrição",
+    "publish": "Publicar carga",
+    "simulate": "Simular publicação",
+    "trackingCode": "Código de rastreio",
+    "track": "Rastrear",
+    "reserve": "Reservar espaço",
+    "accept": "Aceitar cotação",
+    "counter": "Enviar contraproposta",
+    "fallbackCargoTitle": "Carga fluvial",
+    "originPlaceholder": "Belém, PA",
+    "destinationPlaceholder": "Santarém, PA",
+    "cargoTypePlaceholder": "Açaí refrigerado",
+    "volumePlaceholder": "18 t",
+    "windowPlaceholder": "08-12 maio",
+    "targetPricePlaceholder": "R$ 8.400",
+    "descriptionPlaceholder": "Carga refrigerada, com coleta em cooperativa e entrega no porto regional.",
+    "loading": "Publicando..."
+  },
+  "common": {
+    "co2": "CO₂ evitado",
+    "status": "Status",
+    "route": "Rota",
+    "capacity": "Capacidade",
+    "eta": "ETA",
+    "owner": "Operador",
+    "volume": "Volume",
+    "window": "Janela",
+    "price": "Preço",
+    "view": "Ver detalhes",
+    "published": "Publicado e salvo no mock",
+    "resultCount": "{count} cargas encontradas",
+    "filter": "Filtrar",
+    "search": "Buscar",
+    "clear": "Limpar filtros",
+    "brDoMar": "BR do Mar",
+    "proofs": "Comprovantes",
+    "documents": "Documentos",
+    "risk": "Risco operacional",
+    "timeline": "Linha do tempo",
+    "open": "Abrir",
+    "all": "Todos",
+    "pageIndicator": "Página {current} de {total}",
+    "pagination": "Paginação de cargas",
+    "previous": "Anterior",
+    "next": "Próximo",
+    "breadcrumbHome": "Início",
+    "searchPlaceholder": "açaí, Manaus, reefer",
+    "activeFilters": "Filtros ativos",
+    "chipSearch": "Busca: {value}",
+    "chipOrigin": "Origem: {value}",
+    "chipDestination": "Destino: {value}",
+    "chipCargoType": "Tipo: {value}",
+    "emptyTitle": "Nenhuma carga encontrada",
+    "emptyDescription": "Remova alguns filtros ou tente uma rota/carga diferente.",
+    "mobileFiltersEyebrow": "Refine a lista",
+    "closeFilters": "Fechar filtros",
+    "showResults": "Mostrar {count} resultados",
+    "operator": "Operador",
+    "openVessel": "Abrir embarcação {name}",
+    "draft": "Calado",
+    "greenScore": "Score verde",
+    "documentsAndOperation": "Documentos e operação",
+    "availableResources": "Recursos disponíveis",
+    "flag": "Bandeira",
+    "lastInspection": "Última inspeção",
+    "vesselStatus": {
+      "available": "Disponível",
+      "route": "Em rota",
+      "maintenance": "Manutenção"
+    },
+    "mockUser": "Usuário HydroRivers",
+    "draftPublication": "Rascunho de publicação",
+    "openCargo": "Abrir carga {title}",
+    "waterwayRoute": "Rota fluvial/cabotagem",
+    "target": "Alvo",
+    "viewCargo": "Ver carga",
+    "cargoStatus": {
+      "open": "Aberta",
+      "bidding": "Em cotação",
+      "contracting": "Contratação",
+      "reserved": "Reservada",
+      "boarded": "Embarcada",
+      "delivered": "Entregue"
+    },
+    "toggleTheme": "Alternar tema",
+    "breadcrumb": "Caminho de navegação",
+    "socialRoutes": "Rotas",
+    "socialSupport": "Suporte",
+    "cargoTypes": {
+      "refrigerated": "Refrigerada",
+      "dry": "Seca",
+      "fractional": "Fracionada",
+      "project": "Projeto",
+      "cabotage": "Cabotagem",
+      "reefer": "Reefer",
+      "bulkLight": "Granel leve"
+    },
+    "productFamilies": {
+      "bioeconomy": "Sociobiodiversidade",
+      "perishable": "Alimentos regionais",
+      "territorialSupply": "Abastecimento territorial",
+      "industrialCabotage": "Cabotagem industrial"
+    },
+    "connectivity": {
+      "online": "Sinal online",
+      "delayedSync": "Sincronização tardia",
+      "lowSignal": "Baixa conectividade"
+    },
+    "predictability": {
+      "high": "Alta",
+      "medium": "Média",
+      "seasonal": "Sazonal"
+    },
+    "documentStatus": {
+      "required": "Obrigatório",
+      "conditional": "Condicional",
+      "nextPhase": "Próxima fase",
+      "ok": "Validado"
+    },
+    "vesselDocumentStatus": {
+      "verified": "Regular",
+      "pending": "Pendente",
+      "review": "Em revisão"
+    },
+    "documentReadiness": "{value}% pronto",
+    "corridor": "Corredor",
+    "river": "Rio",
+    "etaConfidence": "ETA com confiança",
+    "connectivityLabel": "Conectividade",
+    "documentation": "Documentação",
+    "requiredDocument": "Documento exigido",
+    "cargoAndBioeconomy": "Carga e bioeconomia",
+    "productFamily": "Família produtiva",
+    "chipFamily": "Família: {value}",
+    "chipDocument": "Documento: {value}",
+    "nativeSearchPlaceholder": "Buscar carga, corredor ou produto",
+    "chipCorridor": "Corredor: {value}",
+    "waterwayCorridor": "Corredor hidroviário",
+    "originPortCommunity": "Origem, porto ou comunidade",
+    "destinationHub": "Destino ou hub logístico",
+    "activeFilterCount": "{count} filtros ativos",
+    "noActiveFilters": "sem filtros ativos",
+    "lowConnectivityReady": "Baixa conectividade pronta",
+    "lowConnectivityPending": "Baixa conectividade pendente",
+    "checklistReady": "Checklist digital pronto",
+    "checklistPending": "Checklist pendente",
+    "negotiationProgress": "Progresso da negociação: {progress}%",
+    "dealStage": {
+      "quote": "Cotação",
+      "counteroffer": "Contraproposta",
+      "contract": "Contrato",
+      "boarding": "Embarque",
+      "delivered": "Entregue"
+    },
+    "origin": "Origem",
+    "destination": "Destino",
+    "documentNames": {
+      "nfe": "NF-e",
+      "cte": "CT-e",
+      "romaneio": "Romaneio",
+      "dof": "DOF",
+      "manifest": "Manifesto",
+      "originDeclaration": "Declaração de origem",
+      "healthReport": "Laudo sanitário",
+      "healthDocument": "Documento sanitário",
+      "gta": "GTA",
+      "temperatureControl": "Controle de temperatura",
+      "integrityChecklist": "Checklist de integridade"
+    }
+  },
+  "impactCards": {
+    "cost": {
+      "title": "Redução de custo logístico",
+      "description": "Cabotagem e rios organizados reduzem dependência rodoviária e melhoram ocupação."
+    },
+    "sustainability": {
+      "title": "Menos CO₂ por tonelada",
+      "description": "Rotas aquaviárias evitam emissões e apoiam embarcações mais eficientes."
+    },
+    "regional": {
+      "title": "Amazônia conectada",
+      "description": "Onde o rio é estrada, frete digital alavanca produtores e comunidades."
+    },
+    "automation": {
+      "title": "Menos burocracia",
+      "description": "Cotação, reserva, documentos e rastreio viram um fluxo operacional auditável."
+    },
+    "brdomar": {
+      "title": "Aderência ao BR do Mar",
+      "description": "Amplia competitividade, frota e integração modal para cabotagem brasileira."
+    },
+    "compliance": {
+      "title": "Confiança documental",
+      "description": "Documentos obrigatórios, condicionais e de próxima fase ficam claros antes da contratação."
+    },
+    "connectivity": {
+      "title": "Operação com baixa conectividade",
+      "description": "Eventos podem ser registrados em campo e sincronizados quando houver sinal."
+    },
+    "government": {
+      "title": "Valor governamental",
+      "description": "Indicadores de corredor, abastecimento, bioeconomia e risco ajudam decisões públicas."
+    }
+  },
+  "footer": {
+    "description": "Marketplace de frete fluvial e cabotagem para reduzir custo, ampliar previsibilidade e tornar a logística regional mais sustentável.",
+    "copyright": "Todos os direitos reservados.",
+    "social": "Redes e canais do HydroRivers",
+    "product": {
+      "title": "Produto"
+    },
+    "platform": {
+      "title": "Plataforma"
+    },
+    "support": {
+      "title": "Suporte"
+    },
+    "company": {
+      "title": "Contexto"
+    },
+    "socialRoutes": "Rotas e operações",
+    "socialSupport": "Suporte HydroRivers",
+    "fakeSocialTitle": "Canal demonstrativo",
+    "socials": {
+      "whatsapp": {
+        "label": "WhatsApp demo",
+        "message": "Canal WhatsApp fake para demonstrar atendimento operacional."
+      },
+      "instagram": {
+        "label": "Instagram demo",
+        "message": "Perfil Instagram fake para demonstração institucional."
+      },
+      "twitter": {
+        "label": "X/Twitter demo",
+        "message": "Canal social fake para atualizações de rota e operação."
+      },
+      "support": {
+        "label": "Suporte demo",
+        "message": "Suporte fake: em produção abriria chat ou central de atendimento."
+      }
+    }
+  },
+  "metadata": {
+    "title": "HydroRivers",
+    "description": "Marketplace de frete fluvial e cabotagem para corredores digitais de carga."
+  },
+  "mockMode": {
+    "title": "Mock mode QA",
+    "subtitle": "Acesso rápido para cenários, contas e validações do produto.",
+    "button": "Mock mode",
+    "close": "Fechar painel QA",
+    "accountsTitle": "Contas fake",
+    "casesTitle": "Cenários de teste",
+    "openCase": "Abrir caso",
+    "passwordLabel": "Senha",
+    "roles": {
+      "shipper": "Embarcador",
+      "carrier": "Transportador",
+      "admin": "Administrador"
+    },
+    "cases": {
+      "cargoList": {
+        "title": "Lista de cargas (30+ itens)",
+        "description": "Valida busca, filtros, hover, estados e scroll infinito visual."
+      },
+      "cargoDetail": {
+        "title": "Detalhe da carga",
+        "description": "Valida documentação, contexto operacional e envio de proposta fake."
+      },
+      "vessels": {
+        "title": "Lista de embarcações",
+        "description": "Valida layout, cards e dados complementares de frota."
+      },
+      "vesselDetail": {
+        "title": "Detalhe da embarcação",
+        "description": "Valida destaque de capacidades, certificações e disponibilidade."
+      },
+      "negotiations": {
+        "title": "Negociações",
+        "description": "Valida estágios, etiquetas e cenários de contraproposta/contrato."
+      },
+      "tracking": {
+        "title": "Rastreio",
+        "description": "Valida steps, ícones, estados done/current/pending e contexto de operação."
+      },
+      "impact": {
+        "title": "Impacto",
+        "description": "Valida cards, internacionalização e links de histórias de impacto."
+      },
+      "profile": {
+        "title": "Perfil",
+        "description": "Valida sessão, dados persistidos e edição de preferências."
+      },
+      "lightMode": {
+        "title": "Light mode",
+        "description": "Valida contraste, legibilidade e consistência visual fora do dark mode."
+      },
+      "i18n": {
+        "title": "Internacionalização",
+        "description": "Valida traduções de componentes, labels, mocks e navegação."
+      }
+    }
+  }
+}

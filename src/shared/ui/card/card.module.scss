@@ -1,0 +1,26 @@
+.card {
+  position: relative;
+  overflow: hidden;
+  border: 1.5px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--surface) 97%, transparent), color-mix(in srgb, var(--surface-strong) 92%, transparent));
+  padding: clamp(1rem, 2vw, 1.55rem);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(20px) saturate(1.08);
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(255,255,255,.16), transparent 16rem),
+    radial-gradient(circle at 95% 15%, var(--glow), transparent 15rem);
+  opacity: .72;
+}
+
+.card > * { position: relative; z-index: 1; }
+

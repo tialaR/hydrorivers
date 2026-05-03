@@ -1,0 +1,87 @@
+.hero {
+  width: min(1180px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: clamp(2.4rem, 6vw, 5.8rem) 0 4rem;
+  display: grid;
+  grid-template-columns: 1.05fr .95fr;
+  gap: clamp(1rem, 4vw, 3rem);
+  align-items: center;
+}
+.copy { animation: rise .45s ease both; }
+.copy p { color: var(--brand); font-weight: 520; text-transform: uppercase; letter-spacing: .22em; margin: 0; }
+.copy h1 { margin: .5rem 0 1rem; font-size: clamp(2.35rem, 7.2vw, 5.35rem); line-height: 1.02; letter-spacing: -.035em; font-weight: 500; max-width: 900px; }
+.copy span { color: var(--muted); font-size: 1.12rem; line-height: 1.7; max-width: 700px; display: block; }
+.actions { display: flex; gap: .8rem; flex-wrap: wrap; margin-top: 1.5rem; }
+.visual {
+  position: relative;
+  min-height: 430px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background:
+    radial-gradient(circle at 30% 12%, rgba(98, 208, 215, .18), transparent 16rem),
+    linear-gradient(145deg, color-mix(in srgb, var(--surface) 88%, transparent), color-mix(in srgb, var(--surface-strong) 88%, transparent));
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  backdrop-filter: blur(22px);
+  animation: floatIn .55s ease .08s both;
+}
+.riverLine {
+  position: absolute;
+  inset: auto -10% 17% -10%;
+  height: 150px;
+  background: linear-gradient(90deg, transparent, var(--river-soft), transparent);
+  border-radius: 50%;
+  transform: rotate(-7deg);
+}
+.routeCard, .impactCard, .cargoCard {
+  position: absolute;
+  border: 1px solid var(--line);
+  background: var(--surface-glass);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(18px);
+  border-radius: 6px;
+  padding: 1rem;
+}
+.routeCard { left: 1.2rem; top: 1.2rem; width: min(280px, calc(100% - 2.4rem)); }
+.impactCard { right: 1.2rem; bottom: 1.2rem; width: 230px; }
+.cargoCard { left: 2.5rem; bottom: 6.8rem; width: 245px; }
+.iconBubble { width: 3.2rem; height: 3.2rem; display: grid; place-items: center; border-radius: 6px; background: linear-gradient(135deg, var(--brand), var(--river)); color: #07110e; font-size: 1.45rem; box-shadow: 0 18px 42px var(--glow); }
+.visual h2, .visual h3 { margin: .8rem 0 .35rem; }
+.visual p { margin: 0; color: var(--muted); line-height: 1.5; }
+.visual strong { display: block; font-size: 2.45rem; letter-spacing: -.035em; color: var(--brand); }
+.visual small { color: var(--muted); }
+@keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes floatIn { from { opacity: 0; transform: translateY(22px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@media (max-width: 920px) { .hero { grid-template-columns: 1fr; padding-top: 2rem; } .visual { min-height: 360px; } }
+@media (max-width: 560px) { .impactCard, .cargoCard { position: static; margin: 1rem; width: auto; } .routeCard { position: relative; width: auto; margin: 1rem; left: auto; top: auto; } .visual { display: grid; min-height: auto; } .riverLine { display: none; } }
+
+:global(html[data-theme='light']) {
+  .copy p {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2rem;
+    padding: 0 .7rem;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--brand-strong) 26%, var(--line));
+    background: color-mix(in srgb, var(--brand) 8%, var(--surface));
+    color: var(--brand-strong);
+    font-weight: 800;
+  }
+
+  .copy span,
+  .visual p,
+  .visual small {
+    color: var(--muted-soft);
+  }
+
+  .visual strong {
+    color: var(--brand-strong);
+  }
+
+  .routeCard,
+  .impactCard,
+  .cargoCard {
+    border-color: var(--line-strong);
+    background: color-mix(in srgb, var(--surface) 95%, transparent);
+  }
+}

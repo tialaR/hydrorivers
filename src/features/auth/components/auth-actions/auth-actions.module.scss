@@ -1,0 +1,24 @@
+
+.actions, .session { display: flex; align-items: center; gap: .42rem; }
+.login, .signup, .logout, .avatar {
+  border: 1.5px solid var(--line);
+  min-height: 2.72rem;
+  height: 2.72rem;
+  border-radius: var(--radius-pill);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .45rem;
+  font-weight: 680;
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, color 160ms ease;
+}
+.login { color: var(--muted); padding: 0 .95rem; background: color-mix(in srgb, var(--surface) 84%, transparent); }
+.signup { color: #07110e; background: linear-gradient(135deg, var(--brand), var(--river)); padding: 0 1rem; box-shadow: 0 14px 34px var(--glow); border-color: transparent; }
+.avatar { width: 2.72rem; padding: 0; color: var(--text); background: var(--surface-strong); overflow: hidden; }
+.avatar img { width: 100%; height: 100%; object-fit: cover; }
+.avatar span { font-size: .78rem; font-weight: 760; letter-spacing: .02em; }
+.logout { width: 2.72rem; color: var(--muted); background: color-mix(in srgb, var(--surface) 84%, transparent); cursor: pointer; }
+.login:hover, .signup:hover, .logout:hover, .avatar:hover { transform: translateY(-1px); border-color: var(--brand-soft-line); background: var(--hover-soft); color: var(--text); }
+.signup:hover { color: #07110e; }
+.skeleton { width: 8rem; height: 2.72rem; border-radius: var(--radius-pill); background: var(--surface-strong); border: 1.5px solid var(--line); opacity: .7; }
+@media (max-width: 720px) { .login { display: none; } .signup { padding-inline: .8rem; } }

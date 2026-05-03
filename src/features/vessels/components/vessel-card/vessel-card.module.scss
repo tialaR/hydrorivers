@@ -1,0 +1,65 @@
+
+.linkWrap { display: block; height: 100%; }
+.card { height: 100%; display: grid; gap: 0; overflow: hidden; border-radius: var(--radius-xl); }
+.linkWrap:hover .card,
+.linkWrap:focus-visible .card { transform: translateY(-4px); border-color: var(--brand-soft-line); box-shadow: 0 22px 70px var(--glow); }
+.linkWrap:hover .title > span,
+.linkWrap:focus-visible .title > span { box-shadow: 0 14px 34px var(--glow); }
+.media { min-height: 180px; padding: 1rem; display: flex; align-items: flex-start; justify-content: flex-end; background-position: center; background-size: cover; }
+.body { display: grid; gap: .95rem; padding-top: 1rem; }
+.title { display: flex; gap: .8rem; align-items: center; }
+.title > span { width: 3rem; height: 3rem; flex: 0 0 auto; display: grid; place-items: center; border-radius: var(--radius-md); color: #07110e; background: linear-gradient(135deg, var(--brand), var(--river)); }
+.title h2 { margin: 0; font-size: 1.28rem; font-weight: 700; }
+.title p { margin: .18rem 0 0; color: var(--muted); font-weight: 650; }
+.route { min-height: 2.7rem; display: inline-flex; align-items: center; gap: .5rem; width: fit-content; max-width: 100%; padding: 0 .8rem; border-radius: var(--radius-pill); background: color-mix(in srgb, var(--surface) 86%, transparent); border: 1px solid var(--line); color: var(--text); font-weight: 700; }
+.route svg { color: var(--blue); }
+.meta { display: flex; gap: .55rem; flex-wrap: wrap; }
+.meta span, .readiness span {
+  min-height: 2.35rem;
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  padding: 0 .8rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface) 86%, transparent);
+  font-weight: 700;
+}
+.meta span:nth-child(1) svg { color: var(--blue); }
+.meta span:nth-child(2) svg { color: var(--warning); }
+.meta span:nth-child(3) svg { color: var(--brand); }
+.readiness { display: grid; gap: .55rem; }
+.ok { color: var(--text); background: color-mix(in srgb, var(--leaf) 12%, var(--surface)) !important; border-color: color-mix(in srgb, var(--leaf) 30%, var(--line)) !important; }
+.ok svg { color: var(--leaf); }
+.warn { color: var(--text); background: color-mix(in srgb, var(--warning) 10%, var(--surface)) !important; border-color: color-mix(in srgb, var(--warning) 30%, var(--line)) !important; }
+.warn svg { color: var(--warning); }
+.body > small { color: var(--muted); font-weight: 650; }
+@media (max-width: 720px) {
+  .media { min-height: 160px; }
+}
+
+:global(html[data-theme='light']) {
+  .title p,
+  .body > small {
+    color: var(--muted-soft);
+  }
+
+  .route,
+  .meta span,
+  .readiness span {
+    border-color: var(--line-strong);
+    background: color-mix(in srgb, var(--surface) 95%, transparent);
+  }
+
+  .ok {
+    color: var(--success-text);
+    background: var(--success-bg) !important;
+    border-color: color-mix(in srgb, var(--success-text) 28%, transparent) !important;
+  }
+
+  .warn {
+    color: var(--warning-text);
+    background: var(--warning-bg) !important;
+    border-color: color-mix(in srgb, var(--warning-text) 26%, transparent) !important;
+  }
+}

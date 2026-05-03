@@ -1,0 +1,123 @@
+
+.linkWrap { display: block; height: 100%; cursor: pointer; }
+.card {
+  position: relative;
+  height: 100%;
+  display: grid;
+  gap: .9rem;
+  border-width: 1.5px;
+  border-radius: 18px;
+  overflow: hidden;
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+.card::before { content: ""; position: absolute; inset: 0 0 auto; height: 4px; background: var(--brand); opacity: .9; }
+.open::before { background: var(--river); }
+.bidding::before { background: var(--blue); }
+.contracting::before { background: var(--warning); }
+.reserved::before, .delivered::before { background: var(--leaf); }
+.boarded::before { background: var(--brand); }
+.linkWrap:hover .card { transform: translateY(-3px); border-color: var(--brand-soft-line); box-shadow: 0 24px 74px var(--glow); }
+.topline { display: flex; justify-content: space-between; align-items: center; gap: .6rem; flex-wrap: wrap; }
+.heroRow { display: flex; gap: .9rem; align-items: flex-start; }
+.icon { display: grid; place-items: center; width: 3.2rem; height: 3.2rem; flex: 0 0 auto; border-radius: var(--radius-md); color: #07110e; background: linear-gradient(135deg, var(--brand), var(--river)); box-shadow: inset 0 0 0 1px rgba(255,255,255,.35); }
+.family_bioeconomy { background: linear-gradient(135deg, var(--leaf), var(--brand)); }
+.family_perishable { background: linear-gradient(135deg, var(--river), var(--blue)); }
+.family_territorialSupply { background: linear-gradient(135deg, var(--sand), var(--brand)); }
+.family_industrialCabotage { background: linear-gradient(135deg, var(--blue), var(--river)); }
+.titleBlock { min-width: 0; }
+.card h2 {
+  margin: 0;
+  font-size: 1.14rem;
+  letter-spacing: -.03em;
+  line-height: 1.18;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.card p {
+  margin: .25rem 0 0;
+  color: var(--muted);
+  font-weight: 520;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.family { display: block; margin-bottom: .22rem; color: var(--brand-strong); font-weight: 800; font-size: .72rem; text-transform: uppercase; letter-spacing: .11em; }
+.routeCard { padding: .95rem; border: 1px solid var(--line); border-radius: var(--radius-lg); background: color-mix(in srgb, var(--surface-strong) 78%, transparent); display: grid; gap: .8rem; }
+.routeHeader { display: flex; align-items: center; justify-content: space-between; gap: .5rem; flex-wrap: wrap; }
+.routeHeader small, .routeHeader span, .routeNode small, .serviceLabel { display: inline-flex; align-items: center; gap: .45rem; color: var(--muted); font-weight: 700; }
+.routeHeader small svg { color: var(--blue); }
+.routeHeader span svg { color: var(--leaf); }
+.routeFlow { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: .55rem; align-items: center; }
+.routeNode { display: flex; align-items: center; gap: .55rem; min-width: 0; }
+.routeNode > div { min-width: 0; }
+.routeNode strong { display: block; font-size: 1rem; line-height: 1.15; overflow-wrap: anywhere; }
+.dotOrigin, .dotDestination { width: 2rem; height: 2rem; border-radius: 999px; display: inline-grid; place-items: center; flex: 0 0 auto; color: #07110e; }
+.dotOrigin { background: color-mix(in srgb, var(--brand) 80%, white); box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand) 18%, transparent); }
+.dotDestination { background: color-mix(in srgb, var(--river) 86%, white); box-shadow: 0 0 0 4px color-mix(in srgb, var(--river) 18%, transparent); }
+.routeArrow { width: 4rem; display: grid; justify-items: center; gap: .18rem; color: var(--brand-strong); }
+.routeArrow span { width: 100%; height: 2px; border-radius: 999px; background: linear-gradient(90deg, var(--brand), var(--river)); }
+.serviceLabel { min-height: 2.2rem; padding: .45rem .7rem; border-radius: var(--radius-md); border: 1px dashed var(--line); background: color-mix(in srgb, var(--surface) 65%, transparent); }
+.serviceLabel svg { color: var(--river); }
+.card dl { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem; margin: 0; }
+.card dl div { padding: .78rem; border-radius: var(--radius-md); background: var(--surface-strong); border: 1px solid var(--line); }
+.card dt { display: inline-flex; align-items: center; gap: .45rem; color: var(--muted); font-weight: 760; font-size: .82rem; }
+.card dt svg { padding: .22rem; box-sizing: content-box; border-radius: 999px; background: color-mix(in srgb, var(--surface) 88%, transparent); }
+.card dl div:nth-child(1) dt svg { color: var(--blue); }
+.card dl div:nth-child(2) dt svg { color: var(--warning); }
+.card dl div:nth-child(3) dt svg { color: var(--leaf); }
+.card dd { margin: .25rem 0 0; font-weight: 700; overflow-wrap: anywhere; }
+.intelligence { display: grid; gap: .42rem; }
+.intelligence span,
+.risk {
+  min-height: 2.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .5rem .72rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface-strong) 80%, transparent);
+  color: var(--muted);
+  font-size: .88rem;
+  font-weight: 700;
+}
+.intelligence span svg,
+.risk svg { padding: .22rem; box-sizing: content-box; border-radius: 999px; background: color-mix(in srgb, var(--surface) 90%, transparent); }
+.intelligence span:nth-child(1) svg { color: var(--warning); }
+.intelligence span:nth-child(2) svg { color: var(--blue); }
+.intelligence span:nth-child(3) svg { color: var(--leaf); }
+.risk { color: var(--text); }
+.risk svg { color: var(--danger); }
+@media (max-width: 620px) {
+  .card { border-radius: 16px; }
+  .routeFlow { grid-template-columns: 1fr; }
+  .routeArrow { width: 100%; grid-auto-flow: column; justify-content: flex-start; }
+  .card dl { grid-template-columns: 1fr; }
+}
+
+:global(html[data-theme='light']) {
+  .card p,
+  .routeHeader small,
+  .routeHeader span,
+  .routeNode small,
+  .serviceLabel,
+  .card dt,
+  .intelligence span {
+    color: var(--muted-soft);
+  }
+
+  .routeCard,
+  .serviceLabel,
+  .card dl div,
+  .intelligence span,
+  .risk {
+    border-color: var(--line-strong);
+  }
+
+  .family {
+    color: var(--brand-strong);
+  }
+
+  .risk {
+    color: var(--text);
+  }
+}

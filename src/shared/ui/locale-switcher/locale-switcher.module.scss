@@ -1,0 +1,33 @@
+.switcher {
+  height: 2.72rem;
+  min-width: 4.8rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .35rem;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 6px;
+  padding: 0 .62rem;
+  background: color-mix(in srgb, var(--surface-strong) 82%, transparent);
+  color: var(--muted);
+  cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease, color 160ms ease, transform 160ms ease;
+}
+.switcher:hover { border-color: var(--brand-soft-line); color: var(--text); background: var(--hover-soft); transform: translateY(-1px); }
+.switcher select {
+  appearance: none;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: inherit;
+  font-weight: 570;
+  cursor: pointer;
+  width: 2.05rem;
+  letter-spacing: -.02em;
+}
+.switcher option { color: #111; }
+@media (max-width: 560px) { .switcher { height: 2.65rem; min-width: 4.55rem; padding: 0 .5rem; } }
+
+.current { font-weight: 590; letter-spacing: .02em; }
+.switcher { position: relative; }
+.switcher select { position: absolute; inset: 0; width: 100%; opacity: 0; }

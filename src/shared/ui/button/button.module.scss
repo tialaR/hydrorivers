@@ -1,0 +1,48 @@
+.button {
+  min-height: 3.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+  padding: 0 1.15rem;
+  border-radius: var(--radius-pill);
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  font-weight: 760;
+  letter-spacing: -.01em;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease, background 160ms ease, color 160ms ease;
+}
+.button:hover { transform: translateY(-1px); }
+.primary {
+  background: linear-gradient(135deg, var(--brand), var(--river));
+  color: #07110e;
+  box-shadow: 0 14px 34px var(--glow);
+}
+.secondary {
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
+  color: var(--text);
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow-soft);
+}
+.secondary:hover { border-color: var(--brand-soft-line); }
+
+.ghost {
+  background: transparent;
+  color: var(--muted-soft);
+  border-color: var(--line-strong);
+}
+.ghost:hover { color: var(--text); border-color: var(--brand-soft-line); }
+
+.button:disabled { cursor: not-allowed; }
+.button:disabled:hover { transform: none; }
+.loading { position: relative; }
+.loadingContent { display: inline-flex; align-items: center; justify-content: center; gap: .55rem; }
+.spinner {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 999px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }

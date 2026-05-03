@@ -1,0 +1,42 @@
+.wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: .32rem;
+}
+
+.icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 999px;
+  color: var(--muted);
+  border: 1px solid var(--line);
+}
+
+.bubble {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + .45rem);
+  width: min(18rem, 80vw);
+  padding: .6rem .7rem;
+  border-radius: 12px;
+  border: 1px solid var(--line-strong);
+  color: var(--text);
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(.25rem);
+  transition: opacity 150ms ease, transform 150ms ease;
+  z-index: 20;
+  font-size: .84rem;
+  font-weight: 520;
+}
+
+.wrap:hover .bubble,
+.icon:focus + .bubble {
+  opacity: 1;
+  transform: translateY(0);
+}

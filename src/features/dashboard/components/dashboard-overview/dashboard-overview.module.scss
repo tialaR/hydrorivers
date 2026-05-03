@@ -1,0 +1,63 @@
+
+.wrap { display: grid; gap: 1.25rem; }
+.grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+.metric { min-height: 176px; display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto 1fr auto; align-content: start; gap: .9rem; position: relative; overflow: hidden; }
+.metric::after { content: ""; position: absolute; inset: auto -20% -42% 22%; height: 120px; border-radius: 50%; background: color-mix(in srgb, var(--brand) 18%, transparent); filter: blur(34px); }
+.metricBody { display: grid; align-content: start; gap: .22rem; min-width: 0; }
+.metric p { color: var(--muted); margin: 0; font-weight: 700; }
+.metric strong { display: block; font-size: clamp(2rem, 5vw, 3.1rem); letter-spacing: -.07em; line-height: .95; }
+.metric small { color: var(--muted); font-weight: 650; overflow-wrap: anywhere; }
+.metric em { grid-column: 1 / -1; align-self: end; justify-self: start; font-style: normal; font-weight: 760; min-height: 2.25rem; display: inline-flex; align-items: center; padding: 0 .78rem; border-radius: var(--radius-pill); border: 1px solid var(--line); background: color-mix(in srgb, var(--surface) 85%, transparent); white-space: nowrap; }
+.icon { width: 3rem; height: 3rem; display: grid; place-items: center; border-radius: var(--radius-md); border: 1px solid var(--line); color: #07110e; }
+.cargoTone .icon { background: linear-gradient(135deg, var(--brand), var(--river)); }
+.shipTone .icon { background: linear-gradient(135deg, var(--river), var(--blue)); }
+.dealTone .icon { background: linear-gradient(135deg, var(--sand), var(--warning)); }
+.impactTone .icon { background: linear-gradient(135deg, var(--leaf), var(--brand)); }
+.panels { display: grid; grid-template-columns: 1.15fr .85fr; gap: 1rem; }
+.panel, .tablePanel { display: grid; gap: .75rem; }
+.panelHeader { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: .4rem; }
+.panelHeader h2 { margin: 0; font-size: 1.35rem; letter-spacing: -.05em; }
+.panelHeader span { color: var(--muted); font-weight: 700; border: 1px solid var(--line); border-radius: var(--radius-pill); padding: .42rem .8rem; background: color-mix(in srgb, var(--surface) 84%, transparent); }
+.row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: .75rem; padding: .82rem; border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--surface-strong); }
+.row > span { width: 2.55rem; height: 2.55rem; display: grid; place-items: center; border-radius: var(--radius-md); color: #07110e; }
+.routeIcon { background: linear-gradient(135deg, var(--river), var(--blue)); }
+.shipIcon { background: linear-gradient(135deg, var(--brand), var(--river)); }
+.row strong, .row small { display: block; }
+.row small { color: var(--muted); margin-top: .2rem; }
+.row b { color: var(--brand-strong); }
+.table { display: grid; gap: .45rem; overflow: auto; }
+.tableRow { min-width: 760px; display: grid; grid-template-columns: 90px 1.2fr 1.1fr 150px 120px; gap: .75rem; align-items: center; padding: .95rem; border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--surface-strong); }
+.tableRow span { color: var(--muted); font-weight: 650; overflow-wrap: anywhere; }
+.stage { width: fit-content; padding: .42rem .65rem; border-radius: var(--radius-pill); background: color-mix(in srgb, var(--brand) 10%, var(--surface)); border: 1px solid var(--brand-soft-line); color: var(--text) !important; }
+.tableRow b { justify-self: end; color: var(--brand-strong); }
+@media (max-width: 1100px) { .grid { grid-template-columns: repeat(2, 1fr); } .panels { grid-template-columns: 1fr; } }
+@media (max-width: 620px) { .grid { grid-template-columns: 1fr; } .metric { min-height: 150px; grid-template-columns: auto 1fr; } .metric em { justify-self: start; grid-column: 1 / -1; } }
+
+:global(html[data-theme='light']) {
+  .metric p,
+  .metric small,
+  .row small,
+  .tableRow span,
+  .panelHeader span {
+    color: var(--muted-soft);
+  }
+
+  .metric em,
+  .panelHeader span,
+  .stage {
+    border-color: var(--line-strong);
+    background: color-mix(in srgb, var(--surface) 94%, transparent);
+    font-weight: 760;
+  }
+
+  .row,
+  .tableRow {
+    border-color: var(--line-strong);
+    background: color-mix(in srgb, var(--surface-strong) 94%, transparent);
+  }
+
+  .tableRow b,
+  .row b {
+    color: var(--brand-strong);
+  }
+}

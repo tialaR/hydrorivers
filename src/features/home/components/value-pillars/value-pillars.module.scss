@@ -1,0 +1,20 @@
+.grid { width: min(1180px, calc(100% - 2rem)); margin: 0 auto 4rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.pillar { min-height: 250px; display: grid; align-content: start; gap: .7rem; }
+.icon { width: 3.35rem; height: 3.35rem; display: grid; place-items: center; border-radius: 6px; border: 1px solid var(--line); box-shadow: var(--shadow-soft); }
+.pillar:nth-child(1) .icon { color: var(--sand); background: linear-gradient(135deg, color-mix(in srgb, var(--sand) 24%, var(--surface-strong)), var(--surface-strong)); }
+.pillar:nth-child(2) .icon { color: var(--leaf); background: linear-gradient(135deg, color-mix(in srgb, var(--leaf) 24%, var(--surface-strong)), var(--surface-strong)); }
+.pillar:nth-child(3) .icon { color: var(--river); background: linear-gradient(135deg, color-mix(in srgb, var(--river) 24%, var(--surface-strong)), var(--surface-strong)); }
+.pillar h2 { margin: .6rem 0 0; letter-spacing: -.025em; font-weight: 560; }
+.pillar p { color: var(--muted); line-height: 1.7; margin: 0; font-weight: 560; }
+@media (max-width: 760px) { .grid { grid-template-columns: 1fr; } }
+
+:global(html[data-theme='light']) {
+  .icon {
+    border-color: var(--line-strong);
+    box-shadow: 0 14px 34px rgba(15, 23, 20, .08);
+  }
+
+  .pillar p {
+    color: var(--muted-soft);
+  }
+}

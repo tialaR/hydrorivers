@@ -1,0 +1,167 @@
+'use client';
+
+import { useState } from 'react';
+import { useLocale, useTranslations } from 'next-intl';
+import { Card } from '@/shared/ui/card/card';
+import { Button } from '@/shared/ui/button/button';
+import { Badge } from '@/shared/ui/badge/badge';
+import { HydroIcon } from '@/shared/ui/hydro-icon/hydro-icon';
+import { Tooltip } from '@/shared/ui/tooltip/tooltip';
+import { useToast } from '@/shared/ui/toast/toast-provider';
+import type { Cargo } from '@/features/marketplace/domain/marketplace.types';
+import { translateMock } from '@/shared/i18n/mock-content';
+import styles from './cargo-detail.module.scss';
+
+function translateCargoType(t: ReturnType<typeof useTranslations>, cargoType: string) {
+  switch (cargoType) {
+    case 'Refrigerada': return t('cargoTypes.refrigerated');
+    case 'Seca': return t('cargoTypes.dry');
+    case 'Fracionada': return t('cargoTypes.fractional');
+    case 'Projeto': return t('cargoTypes.project');
+    case 'Cabotagem': return t('cargoTypes.cabotage');
+    case 'Reefer': return t('cargoTypes.reefer');
+    case 'Granel leve': return t('cargoTypes.bulkLight');
+    default: return cargoType;
+  }
+}
+
+function translateDocument(t: ReturnType<typeof useTranslations>, name: string) {
+  const map: Record<string, string> = {
+    'NF-e': t('documentNames.nfe'),
+    'CT-e': t('documentNames.cte'),
+    Romaneio: t('documentNames.romaneio'),
+    DOF: t('documentNames.dof'),
+    Manifesto: t('documentNames.manifest'),
+    'Declaração de origem': t('documentNames.originDeclaration'),
+    'Laudo sanitário': t('documentNames.healthReport'),
+    'Documento sanitário': t('documentNames.healthDocument'),
+    GTA: t('documentNames.gta'),
+    'Controle de temperatura': t('documentNames.temperatureControl'),
+    'Checklist de integridade': t('documentNames.integrityChecklist')
+  };
+  return map[name] ?? name;
+}
+
+export function CargoDetail({ cargo }: { cargo: Cargo }) {
+  const page = useTranslations('pages.cargoDetail');
+  const common = useTranslations('common');
+  const locale = useLocale();
+  const { showToast } = useToast();
+  const [proposalCount, setProposalCount] = useState(2);
+
+  const cargoType = translateCargoType(common, cargo.cargoType);
+
+  function simulateProposal() {
+    setProposalCount((value) => value + 1);
+    showToast({
+      tone: 'success',
+      title: page('proposalToastTitle'),
+      description: page('proposalToastDescription', { title: translateMock(locale, cargo.title) })
+    });
+  }
+
+  return (
+    <section className={styles.layout}>
+      <Card className={styles.heroCard}>
+        <div className={styles.heroHeader}>
+          <div>
+            <span className={styles.kicker}><HydroIcon name="cargo" /> {page('kicker')}</span>
+            <h2>{translateMock(locale, cargo.title)}</h2>
+            <p className={styles.subtitle}>{cargo.origin} → {cargo.destination}</p>
+          </div>
+          <Badge tone="success"><HydroIcon name="leaf" size={14} /> {cargo.co2Saving}</Badge>
+        </div>
+
+        <div className={styles.routeSpotlight}>
+          <div className={styles.routeTopline}>
+            <strong><HydroIcon name="route" size={18} /> {cargo.corridor ?? `${cargo.origin} → ${cargo.destination}`}</strong>
+            {cargo.mainRiver ? <span><HydroIcon name="waves" size={16} /> {common('river')}: {cargo.mainRiver}</span> : null}
+          </div>
+          <div className={styles.routeFlow}>
+            <div className={styles.node}>
+              <span className={styles.nodeIcon}><HydroIcon name="dock" size={16} /></span>
+              <div><small>{common('origin')}</small><strong>{cargo.origin}</strong></div>
+            </div>
+            <div className={styles.flowLine} aria-hidden="true"><HydroIcon name="ship" size={18} /><span /></div>
+            <div className={styles.node}>
+              <span className={`${styles.nodeIcon} ${styles.nodeDestination}`}><HydroIcon name="map" size={16} /></span>
+              <div><small>{common('destination')}</small><strong>{cargo.destination}</strong></div>
+            </div>
+          </div>
+          <p className={styles.serviceNote}><HydroIcon name="river" size={16} /> {cargo.serviceType ? translateMock(locale, cargo.serviceType) : cargoType}</p>
+        </div>
+
+        <div className={styles.impact}>
+          <strong>{cargo.co2Saving}</strong>
+          <small>{page('impactDescription')}</small>
+        </div>
+
+        <div className={styles.specs}>
+          <span><HydroIcon name="cargo" /> {cargo.volume}</span>
+          <span><HydroIcon name="clock" /> {translateMock(locale, cargo.window)}</span>
+          <span><HydroIcon name="ship" /> {cargo.serviceType ? translateMock(locale, cargo.serviceType) : cargoType}</span>
+          <span><HydroIcon name="coin" /> {cargo.targetPrice}</span>
+        </div>
+
+        {cargo.description ? <p className={styles.description}>{translateMock(locale, cargo.description)}</p> : null}
+
+        <div className={styles.contextGrid}>
+          <div><small>{common('corridor')}</small><strong>{cargo.corridor ?? `${cargo.origin} → ${cargo.destination}`}</strong></div>
+          <div><small>{common('river')}</small><strong>{cargo.mainRiver ?? '—'}</strong></div>
+          <div><small>{common('etaConfidence')}</small><strong>{cargo.etaConfidence ? translateMock(locale, cargo.etaConfidence) : '—'}</strong></div>
+          <div><small>{common('connectivityLabel')}</small><strong>{cargo.connectivity ? common(`connectivity.${cargo.connectivity}`) : '—'}</strong></div>
+          <div><small>{page('originContext')}</small><strong>{cargo.originContext ? translateMock(locale, cargo.originContext) : page('originFallback')}</strong></div>
+          <div><small>{page('proposalCount')}</small><strong>{proposalCount} {page('proposalUnit')}</strong></div>
+        </div>
+      </Card>
+
+      <Card className={styles.docCard}>
+        <div className={styles.docHeader}>
+          <div>
+            <span className={styles.kicker}><HydroIcon name="shield" /> {page('documentKicker')}</span>
+            <h3>{page('documentTitle')}</h3>
+            <p>{page('documentDescription')}</p>
+          </div>
+          {typeof cargo.documentReadiness === 'number' ? <Badge tone="river">{common('documentReadiness', { value: cargo.documentReadiness })}</Badge> : null}
+        </div>
+        <div className={styles.docList}>
+          {(cargo.requiredDocuments ?? []).map((document) => (
+            <div key={`${document.name}-${document.status}`} className={styles.docItem}>
+              <div className={styles.docMeta}>
+                <strong>
+                  <Tooltip label={document.note ? translateMock(locale, document.note) : page('documentTooltip')}>
+                    <span><HydroIcon name="document" size={16} /> {translateDocument(common, document.name)}</span>
+                  </Tooltip>
+                </strong>
+                {document.note ? <small>{translateMock(locale, document.note)}</small> : null}
+              </div>
+              <Badge tone={document.status === 'required' ? 'warning' : document.status === 'ok' ? 'success' : 'river'}>
+                {common(`documentStatus.${document.status}`)}
+              </Badge>
+            </div>
+          ))}
+        </div>
+        {cargo.operationalRisks?.length ? (
+          <div className={styles.riskBox}>
+            <strong><HydroIcon name="shield" size={17} /> {page('riskTitle')}</strong>
+            <ul>{cargo.operationalRisks.map((risk) => <li key={risk}>{translateMock(locale, risk)}</li>)}</ul>
+          </div>
+        ) : null}
+      </Card>
+
+      <Card className={styles.formCard}>
+        <form className={styles.form}>
+          <h3>{page('sendProposal')}</h3>
+          <label>{page('amount')}<input placeholder={cargo.targetPrice} inputMode="decimal" /></label>
+          <label>{page('estimatedTime')}<input placeholder={page('estimatedTimePlaceholder')} /></label>
+          <label>{page('vesselCompatibility')}<input placeholder={page('vesselCompatibilityPlaceholder')} /></label>
+          <label>{page('documentCommitment')}<select defaultValue="ready"><option value="ready">{page('documentReady')}</option><option value="pending">{page('documentPending')}</option></select></label>
+          <label>{page('operationPlan')}<input placeholder={page('operationPlanPlaceholder')} /></label>
+          <label>{page('contactChannel')}<input placeholder={page('contactChannelPlaceholder')} /></label>
+          <label>{page('riskNote')}<textarea placeholder={page('notesPlaceholder')} /></label>
+          <Button type="button" onClick={simulateProposal}><HydroIcon name="message" size={17} /> {page('simulateProposal')}</Button>
+        </form>
+      </Card>
+    </section>
+  );
+}
