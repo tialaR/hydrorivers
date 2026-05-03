@@ -1,4 +1,3 @@
-cat >> docs/agents/E2E-PLAYWRIGHT.md <<'EOF'
 
 ---
 
