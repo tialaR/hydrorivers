@@ -1,0 +1,25 @@
+---
+description: Diretrizes para testes E2E de fluxos criticos
+alwaysApply: false
+---
+
+# Objetivo
+
+Executar E2E apenas para fluxos criticos de ponta a ponta, evitando suites extensas e lentas.
+
+# Fluxos obrigatorios
+
+- login/logout
+- dashboard
+- cargas
+- negociacoes
+- rastreamento
+- troca de idioma
+- governo/admin
+
+# Orientacoes
+
+- Cobrir caminho feliz e principais falhas por fluxo.
+- Validar navegacao, permissoes e feedback visual ao usuario.
+- Evitar sobreposicao com testes unitarios e de integracao.
+- Manter cenarios curtos, estaveis e independentes.

@@ -1,0 +1,22 @@
+---
+description: Diretrizes de internacionalizacao (i18n) do HydroRivers
+alwaysApply: false
+---
+
+# Objetivo
+
+Garantir consistencia de idiomas e evitar regressao de internacionalizacao.
+
+# Regras obrigatorias
+
+- nao hardcodar textos visiveis
+- manter `pt-BR`, `en` e `es` consistentes
+- rodar `npm run check:i18n`
+- revisar navegacao, forms, erros, empty states e dashboards
+
+# Orientacoes
+
+- Usar chaves de traducao em titulos, labels, botoes e mensagens.
+- Validar pluralizacao, interpolacao e fallback de idioma.
+- Conferir textos de erro e estados vazios em todos os fluxos criticos.
+- Evitar divergencia de semantica entre os tres idiomas.

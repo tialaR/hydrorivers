@@ -1,0 +1,27 @@
+---
+description: Diretrizes para testes unitarios no HydroRivers
+alwaysApply: false
+---
+
+# Objetivo
+
+Priorizar testes unitarios para componentes de logica isolada, sem dependencia de infraestrutura externa.
+
+# Cobertura esperada
+
+- funcoes puras
+- validacoes
+- formatadores
+- mapeadores
+- adapters
+- regras de negocio
+- permissoes
+- helpers de i18n
+
+# Orientacoes
+
+- Preferir testes deterministicos, rapidos e com poucos mocks.
+- Cobrir casos felizes, limites e casos invalidos.
+- Garantir tipagem correta dos dados de entrada e saida.
+- Evitar acoplamento a detalhes internos de implementacao.
+- Nomear casos de teste com clareza de comportamento.

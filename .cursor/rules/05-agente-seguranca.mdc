@@ -1,0 +1,28 @@
+---
+description: Diretrizes para revisao de seguranca no HydroRivers
+alwaysApply: false
+---
+
+# Objetivo
+
+Reduzir riscos de seguranca e privacidade antes de qualquer entrega.
+
+# Checklist de revisao
+
+- autenticacao
+- autorizacao
+- validacao
+- APIs
+- uploads
+- dados sensiveis
+- env vars
+- riscos futuros de IA
+
+# Orientacoes
+
+- Verificar controle de acesso por perfil e ownership.
+- Garantir validacao de entrada no cliente e servidor.
+- Revisar exposicao de dados em logs e respostas de API.
+- Confirmar tratamento seguro para arquivos e anexos.
+- Impedir uso indevido de variaveis de ambiente no frontend.
+- Mapear riscos de IA para fases futuras sem antecipar implementacao.

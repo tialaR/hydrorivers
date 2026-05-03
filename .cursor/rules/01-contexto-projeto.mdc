@@ -1,0 +1,41 @@
+---
+description: Contexto geral do HydroRivers
+alwaysApply: true
+---
+
+# Contexto base
+
+HydroRivers e uma plataforma Next.js/React para operacoes logisticas hidroviarias.
+
+Dominios principais:
+- cargas
+- embarcacoes
+- negociacoes
+- rastreamento
+- impacto
+- governo
+- admin
+- perfil de usuario
+
+Stack:
+- Next.js App Router
+- React 19
+- TypeScript
+- next-intl
+- Sass Modules
+- dados mock em `.mock-data`
+- rotas protegidas
+- i18n: `pt-BR`, `en`, `es`
+
+# Regras gerais do projeto
+
+1. Nao reescrever o projeto do zero.
+2. Nao remover i18n.
+3. Nao remover mocks sem fase propria.
+4. Nao adicionar IA antes de seguranca, validacao e testes.
+5. Fazer mudancas pequenas e incrementais.
+6. Explicar plano antes de editar.
+7. Preservar arquitetura existente.
+8. Manter acessibilidade e responsividade.
+9. Nao adicionar dependencias sem justificativa.
+10. Rodar validacoes apos mudancas.

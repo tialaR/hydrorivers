@@ -1,0 +1,26 @@
+---
+description: Diretrizes de commit com Conventional Commits
+alwaysApply: false
+---
+
+# Objetivo
+
+Padronizar mensagens de commit para melhorar rastreabilidade e automacao.
+
+# Tipos permitidos
+
+- `feat:`
+- `fix:`
+- `refactor:`
+- `test:`
+- `docs:`
+- `chore:`
+- `perf:`
+- `ci:`
+
+# Orientacoes
+
+- Escrever titulo curto e claro com foco em intencao.
+- Descrever no corpo o motivo da mudanca quando necessario.
+- Evitar commits grandes e mistos; preferir commits pequenos e tematicos.
+- Garantir que o commit represente estado valido do codigo.

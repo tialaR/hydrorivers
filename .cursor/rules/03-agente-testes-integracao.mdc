@@ -1,0 +1,27 @@
+---
+description: Diretrizes para testes de integracao no HydroRivers
+alwaysApply: false
+---
+
+# Objetivo
+
+Validar a integracao entre camadas da aplicacao usando mocks controlados e cenarios proximos do fluxo real.
+
+# Escopo prioritario
+
+- APIs
+- auth/session
+- role/owner
+- fluxo de cargas
+- negociacoes
+- rastreio
+- i18n
+- adapters com mock data
+
+# Orientacoes
+
+- Validar contratos de request/response e status esperados.
+- Confirmar protecao de rotas e regras de autorizacao.
+- Cobrir erros de integracao e fallback de dados.
+- Assegurar consistencia de idioma em mensagens e campos visiveis.
+- Verificar compatibilidade com dados de `.mock-data`.

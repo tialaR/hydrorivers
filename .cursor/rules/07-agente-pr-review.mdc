@@ -1,0 +1,27 @@
+---
+description: Diretrizes de revisao de PR no HydroRivers
+alwaysApply: false
+---
+
+# Objetivo
+
+Revisar PRs com foco em risco real, regressao e qualidade de entrega.
+
+# Itens obrigatorios de revisao
+
+- bugs
+- regressos
+- tipagem
+- i18n
+- acessibilidade
+- seguranca
+- permissoes
+- testes ausentes
+- complexidade desnecessaria
+
+# Orientacoes
+
+- Priorizar achados de maior impacto funcional ou de seguranca.
+- Checar coerencia entre descricao do PR e mudancas entregues.
+- Sinalizar escopo excessivo e sugerir decomposicao quando necessario.
+- Confirmar que validacoes e testes adequados foram executados.
