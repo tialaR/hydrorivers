@@ -1,10 +1,8 @@
 node_modules
 .next
-out
-.vercel
-.env*.local
+test-results
+playwright-report
+tsconfig.tsbuildinfo
+.env
+.env.local
 .DS_Store
-npm-debug.log*
-
-# HydroRivers local mock database
-.mock-data/*.json
