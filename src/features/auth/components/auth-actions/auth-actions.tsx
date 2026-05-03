@@ -2,6 +2,7 @@
 
 import { LogOut } from 'lucide-react';
 import { useState } from 'react';
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Link, useRouter } from '@/core/i18n/navigation';
 import { useAuthSession } from '../../hooks/use-auth-session';
@@ -22,7 +23,16 @@ function UserAvatar({ name, avatarUrl }: { name: string; avatarUrl?: string }) {
   const canRenderAvatar = Boolean(avatarUrl) && failedSrc !== avatarUrl;
 
   if (avatarUrl && canRenderAvatar) {
-    return <img src={avatarUrl} alt="" onError={() => setFailedSrc(avatarUrl)} />;
+    return (
+      <Image
+        src={avatarUrl}
+        alt=""
+        width={40}
+        height={40}
+        unoptimized
+        onError={() => setFailedSrc(avatarUrl)}
+      />
+    );
   }
 
   return <span>{getInitials(name)}</span>;

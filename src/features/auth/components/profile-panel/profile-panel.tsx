@@ -2,6 +2,7 @@
 
 import { FormEvent, useRef, useState } from 'react';
 import { Building2, Camera, CheckCircle2, Mail, ShieldCheck } from 'lucide-react';
+import NextImage from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Card } from '@/shared/ui/card/card';
 import { Badge } from '@/shared/ui/badge/badge';
@@ -187,7 +188,7 @@ export function ProfilePanel() {
       <p className={styles.eyebrow}>{t('eyebrow')}</p><h1>{t('title')}</h1><span>{t('description')}</span>
       <section className={styles.grid}>
         <Card className={styles.identity}>
-          <div className={styles.avatar}>{avatarPreviewAvailable ? <img src={profile.avatarUrl} alt="" onError={() => setAvatarPreviewFailedSrc(profile.avatarUrl ?? null)} /> : <span>{getInitials(profile.name)}</span>}</div>
+          <div className={styles.avatar}>{avatarPreviewAvailable ? <NextImage src={profile.avatarUrl ?? ''} alt="" width={120} height={120} unoptimized onError={() => setAvatarPreviewFailedSrc(profile.avatarUrl ?? null)} /> : <span>{getInitials(profile.name)}</span>}</div>
           <h2>{profile.name}</h2>
           <p>{profile.company}</p>
           <Badge tone={user.approved ? 'success' : 'warning'}>{user.approved ? t('approved') : t('pending')}</Badge>

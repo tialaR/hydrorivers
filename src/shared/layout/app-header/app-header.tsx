@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type CSSProperties, type PointerEvent as ReactPointerEvent } from 'react';
 import { createPortal } from 'react-dom';
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { useAuthSession } from '@/features/auth/hooks/use-auth-session';
 import { Link, usePathname } from '@/core/i18n/navigation';
@@ -267,7 +268,7 @@ export function AppHeader() {
           <div className={styles.sheetAccount}>
             {user ? (
               <Link href="/perfil" onClick={() => requestCloseSheet()} className={styles.accountCard}>
-                <span className={styles.accountAvatar}>{user.avatarUrl ? <img src={user.avatarUrl} alt="" /> : initials(user.name)}</span>
+                <span className={styles.accountAvatar}>{user.avatarUrl ? <Image src={user.avatarUrl} alt="" width={40} height={40} unoptimized /> : initials(user.name)}</span>
                 <span><strong>{user.name}</strong><small>{user.company}</small></span>
               </Link>
             ) : <AuthActions />}
@@ -336,7 +337,7 @@ export function AppHeader() {
           <div className={styles.headerSession}><AuthActions /></div>
           {user ? (
             <Link href="/perfil" className={styles.mobileAvatar} aria-label={t('profile')}>
-              {user.avatarUrl ? <img src={user.avatarUrl} alt="" /> : <span>{initials(user.name)}</span>}
+              {user.avatarUrl ? <Image src={user.avatarUrl} alt="" width={40} height={40} unoptimized /> : <span>{initials(user.name)}</span>}
             </Link>
           ) : null}
           <Link href="/cargas/nova" className={styles.cta}>{t('cta')}</Link>
