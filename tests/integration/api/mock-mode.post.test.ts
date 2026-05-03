@@ -23,6 +23,16 @@ import { POST } from '@/app/api/mock-mode/route';
 describe('POST /api/mock-mode', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockResetMockScenario.mockReturnValue({
+      scenario: 'market-active',
+      data: {
+        users: [{ id: 'u-admin-1' }],
+        cargoes: [{ id: 'cargo-1' }],
+        vessels: [{ id: 'vessel-1' }],
+        negotiations: [{ id: 'neg-1' }],
+        trackingEvents: [{ id: 'track-1' }]
+      }
+    });
   });
 
   it('retorna 401 quando não há sessão', async () => {
@@ -36,6 +46,7 @@ describe('POST /api/mock-mode', () => {
 
     expect(response.status).toBe(401);
     await expect(response.json()).resolves.toMatchObject({ error: 'unauthenticated' });
+    expect(mockResetMockScenario).not.toHaveBeenCalled();
   });
 
   it('retorna 403 quando usuário não é admin', async () => {
@@ -49,6 +60,7 @@ describe('POST /api/mock-mode', () => {
 
     expect(response.status).toBe(403);
     await expect(response.json()).resolves.toMatchObject({ error: 'forbidden' });
+    expect(mockResetMockScenario).not.toHaveBeenCalled();
   });
 
   it('retorna 200 e contagens quando admin reseta cenário', async () => {
