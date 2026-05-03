@@ -1,0 +1,158 @@
+[
+  {
+    "id": "vessel-001",
+    "name": "Comboio Rio Negro",
+    "route": "Manaus–Belém",
+    "capacity": "2.400 t",
+    "eta": "36h",
+    "status": "available",
+    "owner": "Navega Norte",
+    "vesselType": "Comboio de barcaças",
+    "draft": "2,2 m",
+    "corridor": "Manaus–Belém",
+    "documentStatus": "verified",
+    "lowConnectivityReady": true,
+    "checklistReady": true,
+    "imageUrl": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
+    "certifications": [
+      "ANTAQ",
+      "Seguro P&I",
+      "Checklist digital"
+    ],
+    "sustainabilityScore": "A-",
+    "lastInspection": "2026-04-18"
+  },
+  {
+    "id": "vessel-002",
+    "name": "Frio Tapajós",
+    "route": "Belém–Santarém",
+    "capacity": "480 m³",
+    "eta": "18h",
+    "status": "route",
+    "owner": "FrioRios",
+    "vesselType": "Embarcação regional refrigerada",
+    "draft": "1,4 m",
+    "corridor": "Belém–Santarém",
+    "documentStatus": "verified",
+    "lowConnectivityReady": true,
+    "checklistReady": true,
+    "imageUrl": "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&w=1200&q=80",
+    "certifications": [
+      "Cadeia fria",
+      "Rastreio",
+      "Lacre digital"
+    ],
+    "sustainabilityScore": "A",
+    "lastInspection": "2026-04-20"
+  },
+  {
+    "id": "vessel-003",
+    "name": "Madeira Forte",
+    "route": "Manaus–Porto Velho",
+    "capacity": "1.600 t",
+    "eta": "72h",
+    "status": "maintenance",
+    "owner": "Hidrovia Madeira",
+    "vesselType": "Empurrador + barcaça",
+    "draft": "2,6 m",
+    "corridor": "Manaus–Porto Velho",
+    "documentStatus": "review",
+    "lowConnectivityReady": false,
+    "checklistReady": false,
+    "imageUrl": "https://images.unsplash.com/photo-1527439228071-489156f9b94a?auto=format&fit=crop&w=1200&q=80",
+    "certifications": [
+      "ANTAQ em revisão"
+    ],
+    "sustainabilityScore": "B+",
+    "lastInspection": "2026-03-29"
+  },
+  {
+    "id": "vessel-004",
+    "name": "Cabotagem Norte 01",
+    "route": "Vila do Conde–Suape",
+    "capacity": "320 TEU",
+    "eta": "5 dias",
+    "status": "available",
+    "owner": "BR do Mar Log",
+    "vesselType": "Multiuso de cabotagem",
+    "draft": "5,8 m",
+    "corridor": "Vila do Conde–Suape",
+    "documentStatus": "verified",
+    "lowConnectivityReady": true,
+    "checklistReady": true,
+    "imageUrl": "https://images.unsplash.com/photo-1565891741441-64926e441838?auto=format&fit=crop&w=1200&q=80",
+    "certifications": [
+      "ANTAQ",
+      "Seguro P&I",
+      "Terminal ready"
+    ],
+    "sustainabilityScore": "A-",
+    "lastInspection": "2026-04-10"
+  },
+  {
+    "id": "vessel-005",
+    "name": "Tapajós Express",
+    "route": "Santarém–Itaituba",
+    "capacity": "620 t",
+    "eta": "28h",
+    "status": "available",
+    "owner": "Tapajós Cargo",
+    "vesselType": "Carga geral fluvial",
+    "draft": "1,8 m",
+    "corridor": "Santarém–Itaituba",
+    "documentStatus": "verified",
+    "lowConnectivityReady": true,
+    "checklistReady": true,
+    "imageUrl": "https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=1200&q=80",
+    "certifications": [
+      "ANTAQ",
+      "Checklist digital"
+    ],
+    "sustainabilityScore": "A-",
+    "lastInspection": "2026-04-23"
+  },
+  {
+    "id": "vessel-006",
+    "name": "Marajó Link",
+    "route": "Belém–Soure",
+    "capacity": "340 t",
+    "eta": "12h",
+    "status": "route",
+    "owner": "Norte Marajó",
+    "vesselType": "Carga mista insular",
+    "draft": "1,2 m",
+    "corridor": "Belém–Soure",
+    "documentStatus": "verified",
+    "lowConnectivityReady": true,
+    "checklistReady": true,
+    "imageUrl": "https://images.unsplash.com/photo-1504609813442-a8924e83f76e?auto=format&fit=crop&w=1200&q=80",
+    "certifications": [
+      "Seguro P&I",
+      "Manifesto digital"
+    ],
+    "sustainabilityScore": "A",
+    "lastInspection": "2026-04-19"
+  },
+  {
+    "id": "vessel-007",
+    "name": "Solimões Care",
+    "route": "Manaus–Tabatinga",
+    "capacity": "290 m³",
+    "eta": "6 dias",
+    "status": "available",
+    "owner": "Saúde Ribeirinha",
+    "vesselType": "Refrigerado essencial",
+    "draft": "1,5 m",
+    "corridor": "Manaus–Tabatinga",
+    "documentStatus": "verified",
+    "lowConnectivityReady": true,
+    "checklistReady": true,
+    "imageUrl": "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80",
+    "certifications": [
+      "Cadeia fria",
+      "Rastreio"
+    ],
+    "sustainabilityScore": "A",
+    "lastInspection": "2026-04-16"
+  }
+]

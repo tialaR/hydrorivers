@@ -1,0 +1,169 @@
+[
+  {
+    "id": "neg-001",
+    "cargoTitle": "Polpa de açaí congelada — cooperativa ribeirinha",
+    "vesselName": "Frio Tapajós",
+    "stage": "quote",
+    "amount": "R$ 6.080",
+    "lastUpdate": "Hoje, 10:40",
+    "parties": [
+      "Coop. Açaí Pará",
+      "FrioRios"
+    ],
+    "route": "Belém–Santarém",
+    "paymentTerms": "50% reserva / 50% POD",
+    "insurance": "Cadeia fria coberta",
+    "documents": [
+      "NF-e pendente de anexação",
+      "Romaneio validado"
+    ],
+    "nextStep": "Anexar laudo sanitário e confirmar lacre",
+    "riskLevel": "medium",
+    "history": [
+      {
+        "title": "Cotação recebida",
+        "description": "Transportador compatível com cadeia fria e baixa conectividade.",
+        "date": "10:40"
+      }
+    ]
+  },
+  {
+    "id": "neg-002",
+    "cargoTitle": "Madeira de manejo com DOF",
+    "vesselName": "Madeira Forte",
+    "stage": "counteroffer",
+    "amount": "R$ 11.900",
+    "lastUpdate": "Ontem, 17:25",
+    "parties": [
+      "Floresta Legal",
+      "Hidrovia Madeira"
+    ],
+    "route": "Manaus–Porto Velho",
+    "paymentTerms": "Contrato mediante DOF",
+    "insurance": "Ambiental e carga",
+    "documents": [
+      "DOF obrigatório",
+      "ANTAQ em revisão"
+    ],
+    "nextStep": "Compliance revisar autorização e janela de vazante",
+    "riskLevel": "high",
+    "history": [
+      {
+        "title": "Exceção aberta",
+        "description": "DOF e documentação da embarcação precisam de validação antes da reserva.",
+        "date": "Ontem"
+      }
+    ]
+  },
+  {
+    "id": "neg-003",
+    "cargoTitle": "Equipamentos solares para comunidades ribeirinhas",
+    "vesselName": "Comboio Rio Negro",
+    "stage": "contract",
+    "amount": "R$ 19.450",
+    "lastUpdate": "Hoje, 08:10",
+    "parties": [
+      "Programa Energia Ribeirinha",
+      "Navega Norte"
+    ],
+    "route": "Belém–Tefé",
+    "paymentTerms": "Empenho + aceite digital",
+    "insurance": "Equipamento sensível",
+    "documents": [
+      "Checklist de integridade ok",
+      "NF-e ok"
+    ],
+    "nextStep": "Gerar reserva e checklist de embarque",
+    "riskLevel": "low",
+    "history": [
+      {
+        "title": "Documentos validados",
+        "description": "Carga pronta para reserva operacional.",
+        "date": "08:10"
+      }
+    ]
+  },
+  {
+    "id": "neg-004",
+    "cargoTitle": "Medicamentos refrigerados para abastecimento territorial",
+    "vesselName": "Solimões Care",
+    "stage": "quote",
+    "amount": "R$ 15.820",
+    "lastUpdate": "Hoje, 11:15",
+    "parties": [
+      "Saúde Ribeirinha",
+      "Saúde Ribeirinha"
+    ],
+    "route": "Manaus–Tabatinga",
+    "paymentTerms": "Reserva + SLA sanitário",
+    "insurance": "Saúde e cadeia fria",
+    "documents": [
+      "Controle de temperatura ok",
+      "NF-e ok"
+    ],
+    "nextStep": "Validar janela de atracação sanitária",
+    "riskLevel": "medium",
+    "history": [
+      {
+        "title": "SLA operacional registrado",
+        "description": "Transportador com prontidão para baixa conectividade.",
+        "date": "11:15"
+      }
+    ]
+  },
+  {
+    "id": "neg-005",
+    "cargoTitle": "Castanha beneficiada com rastreabilidade socioambiental",
+    "vesselName": "Tapajós Express",
+    "stage": "counteroffer",
+    "amount": "R$ 9.120",
+    "lastUpdate": "Hoje, 09:05",
+    "parties": [
+      "Rede Castanha Viva",
+      "Tapajós Cargo"
+    ],
+    "route": "Santarém–Macapá",
+    "paymentTerms": "30% reserva / saldo na entrega",
+    "insurance": "Carga seca e rastreável",
+    "documents": [
+      "Declaração de origem revisada"
+    ],
+    "nextStep": "Responder contraproposta e validar cronograma",
+    "riskLevel": "low",
+    "history": [
+      {
+        "title": "Contraproposta enviada",
+        "description": "Ajuste de janela e roteiro fluvial.",
+        "date": "09:05"
+      }
+    ]
+  },
+  {
+    "id": "neg-006",
+    "cargoTitle": "Contêineres de cabotagem conectada Norte–Nordeste",
+    "vesselName": "Cabotagem Norte 01",
+    "stage": "contract",
+    "amount": "R$ 24.240",
+    "lastUpdate": "Ontem, 18:22",
+    "parties": [
+      "BR do Mar Log",
+      "BR do Mar Log"
+    ],
+    "route": "Vila do Conde–Suape",
+    "paymentTerms": "Booking + terminal window",
+    "insurance": "Portuário",
+    "documents": [
+      "Manifesto pendente",
+      "CT-e em emissão"
+    ],
+    "nextStep": "Emitir booking final e anexar manifesto",
+    "riskLevel": "medium",
+    "history": [
+      {
+        "title": "Contrato em minuta",
+        "description": "Operação portuária alinhada com janela do terminal.",
+        "date": "Ontem"
+      }
+    ]
+  }
+]
