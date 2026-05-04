@@ -105,4 +105,49 @@ describe('PUT /api/auth/profile', () => {
       email: 'tiala@hydrorivers.com'
     });
   });
+
+  it('mantém id/role/approved originais mesmo se payload tentar sobrescrever', async () => {
+    const currentUser = {
+      id: 'u-shipper-1',
+      name: 'Tiala',
+      email: 'tiala@hydrorivers.com',
+      company: 'Cooperativa Açaí Norte',
+      role: 'shipper',
+      approved: true,
+      passwordHash: 'hash'
+    };
+
+    mockGetSessionUser.mockResolvedValue(currentUser);
+    mockToPublicUser.mockImplementation((user: any) => ({
+      id: user.id,
+      role: user.role,
+      approved: user.approved,
+      email: user.email
+    }));
+
+    const response = await PUT(new Request('http://localhost/api/auth/profile', {
+      method: 'PUT',
+      body: JSON.stringify({
+        id: 'u-admin-1',
+        role: 'admin',
+        approved: false,
+        name: 'Tiala Rocha',
+        email: 'tiala@hydrorivers.com',
+        company: 'Cooperativa Açaí Norte'
+      })
+    }));
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(mockUpsertUser).toHaveBeenCalledWith(expect.objectContaining({
+      id: 'u-shipper-1',
+      role: 'shipper',
+      approved: true
+    }));
+    expect(body.user).toMatchObject({
+      id: 'u-shipper-1',
+      role: 'shipper',
+      approved: true
+    });
+  });
 });

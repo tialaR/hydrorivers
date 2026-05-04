@@ -127,4 +127,39 @@ describe('PATCH /api/negociacoes', () => {
       expect.arrayContaining([expect.objectContaining({ id: 'cargo-1', status: 'reserved' })])
     );
   });
+
+  it('retorna 200 quando participante válido é o shipper', async () => {
+    const negotiations = [
+      {
+        id: 'neg-1',
+        shipperId: 'u-shipper-1',
+        carrierId: 'u-carrier-1',
+        stage: 'quote',
+        status: 'pending',
+        cargoId: 'cargo-1',
+        history: []
+      }
+    ];
+
+    mockGetSessionUser.mockResolvedValue({ id: 'u-shipper-1', company: 'Cooperativa Açaí Norte' });
+    mockReadMock.mockImplementation((key: string) => {
+      if (key === 'negotiations') return negotiations;
+      if (key === 'cargoes') return [{ id: 'cargo-1', status: 'open' }];
+      return [];
+    });
+
+    const request = new Request('http://localhost/api/negociacoes', {
+      method: 'PATCH',
+      body: JSON.stringify({ id: 'neg-1', status: 'rejected' })
+    });
+    const response = await PATCH(request);
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(body.data).toMatchObject({
+      id: 'neg-1',
+      status: 'rejected'
+    });
+    expect(mockWriteMock).toHaveBeenCalledWith('negotiations', expect.any(Array));
+  });
 });
