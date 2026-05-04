@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const { mockGetSessionUser, mockResetMockScenario } = vi.hoisted(() => ({
   mockGetSessionUser: vi.fn(),
@@ -22,6 +22,7 @@ import { POST } from '@/app/api/mock-mode/route';
 
 describe('POST /api/mock-mode', () => {
   beforeEach(() => {
+    vi.stubEnv('HYDRORIVERS_ALLOW_MOCK_MODE_RESET', 'true');
     vi.clearAllMocks();
     mockResetMockScenario.mockReturnValue({
       scenario: 'market-active',
@@ -33,6 +34,10 @@ describe('POST /api/mock-mode', () => {
         trackingEvents: [{ id: 'track-1' }]
       }
     });
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
   });
 
   it('retorna 401 quando não há sessão', async () => {
@@ -74,6 +79,24 @@ describe('POST /api/mock-mode', () => {
 
     expect(response.status).toBe(403);
     await expect(response.json()).resolves.toMatchObject({ error: 'forbidden' });
+    expect(mockResetMockScenario).not.toHaveBeenCalled();
+  });
+
+  it('retorna 403 para admin quando HYDRORIVERS_ALLOW_MOCK_MODE_RESET não é true', async () => {
+    vi.stubEnv('HYDRORIVERS_ALLOW_MOCK_MODE_RESET', 'false');
+    mockGetSessionUser.mockResolvedValue({ id: 'u-admin-1', role: 'admin' });
+
+    const request = new Request('http://localhost/api/mock-mode', {
+      method: 'POST',
+      body: JSON.stringify({ scenario: 'market-active' })
+    });
+    const response = await POST(request);
+
+    expect(response.status).toBe(403);
+    await expect(response.json()).resolves.toMatchObject({
+      error: 'forbidden',
+      reason: 'mock-mode-reset-disabled'
+    });
     expect(mockResetMockScenario).not.toHaveBeenCalled();
   });
 

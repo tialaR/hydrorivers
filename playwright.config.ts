@@ -11,7 +11,7 @@ export default defineConfig({
   },
   webServer: {
     command:
-      'HYDRORIVERS_EXPOSE_OTP_CODE=true npm run build && HYDRORIVERS_EXPOSE_OTP_CODE=true npm run start -- --hostname 127.0.0.1 --port 3100',
+      'HYDRORIVERS_EXPOSE_OTP_CODE=true HYDRORIVERS_ALLOW_MOCK_MODE_RESET=true npm run build && HYDRORIVERS_EXPOSE_OTP_CODE=true HYDRORIVERS_ALLOW_MOCK_MODE_RESET=true npm run start -- --hostname 127.0.0.1 --port 3100',
     url: 'http://127.0.0.1:3100',
     reuseExistingServer: false,
     timeout: 240000

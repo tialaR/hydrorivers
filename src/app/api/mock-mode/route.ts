@@ -1,7 +1,11 @@
 import { getActiveMockScenario, resetMockScenario } from '@/shared/server/mock-db';
 import { mockScenarioIds } from '@/shared/server/mock-scenarios';
 import { getSessionUser } from '@/shared/server/auth';
-import { invalidPayload } from '@/shared/server/api-errors';
+import { forbidden, invalidPayload } from '@/shared/server/api-errors';
+
+function isMockModeResetAllowed() {
+  return process.env.HYDRORIVERS_ALLOW_MOCK_MODE_RESET === 'true';
+}
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -39,6 +43,9 @@ export async function POST(request: Request) {
   const user = await getSessionUser();
   if (!user) return Response.json({ error: 'unauthenticated' }, { status: 401 });
   if (user.role !== 'admin') return Response.json({ error: 'forbidden' }, { status: 403 });
+  if (!isMockModeResetAllowed()) {
+    return forbidden('mock-mode-reset-disabled');
+  }
 
   const rawBody = await request.text();
   const parsed = parseMockModeBody(rawBody);
