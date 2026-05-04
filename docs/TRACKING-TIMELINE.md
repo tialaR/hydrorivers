@@ -1,83 +1,122 @@
-# Timeline operacional de rastreio (HydroRivers)
+# Timeline operacional auditável — Rastreio (HydroRivers)
 
-Este documento descreve o **primeiro estágio** da evolução do rastreio para uma **timeline operacional auditável**. Implementação atual cobre **modelo de dados**, **compatibilidade com mocks JSON**, **inferência para registros sem `kind`** e **ícones na UI** — sem upload de documentos nem mudanças em autenticação.
+**Tipo:** documentação de produto e arquitetura — complementa o código em `src/features/marketplace/domain`, `tracking-timeline` e `GET /api/rastreio`.
 
-## Estado atual (após etapa 1)
+**Escopo atual no código:** modelo `TrackingEvent` com `kind` operacional opcional, inferência quando `kind` ausente, seed mock, ícones e `aria-label` na UI, timestamps ISO opcionais (`occurredAt` / `recordedAt`). **Sem** upload de documentos, **sem** IA, **sem** mudanças de autenticação neste módulo.
 
-| Área | Situação |
-|------|-----------|
-| Domínio | `OperationalTrackingEventKind`, `TrackingActorRole` e campos opcionais auditáveis em `TrackingEvent` (`marketplace.types.ts`). |
-| Seed mock | Eventos em `marketplace.mock.ts` incluem **pelo menos um exemplo explícito de cada um dos nove `kind`s** (`cargo_created` … `proof_attached`), além de repetições realistas (`boarding_confirmed`, etc.). |
-| Legado em disco | Arquivos `.mock-data/trackingEvents.json` antigos continuam válidos: campos novos são opcionais; UI/API não quebram. |
-| Inferência | `resolveOperationalTrackingKind` (`tracking.helpers.ts`) deduz `kind` a partir de título, descrição, local e evidência quando `kind` está ausente. |
-| UI | `TrackingTimeline` escolhe ícone por tipo operacional resolvido (`tracking-timeline.tsx`) e expõe `aria-label` com `{kind}:{título}` para leitores de tela (carimbo auditável legível por máquina sem novo texto visual). |
-| API | `GET /api/rastreio` permanece pass-through de `readMock('trackingEvents')` — contrato JSON evolui de forma compatível. |
+---
 
-## Modelo ideal de evento
+## 1. Objetivo
 
-### Tipos operacionais (`OperationalTrackingEventKind`)
+Evoluir o **rastreio por eventos** para uma **timeline operacional auditável**:
 
-Ordem lógica no fluxo (não obrigatória para todos os casos):
+- cada marco é **tipado** (`OperationalTrackingEventKind`) para leitura humana e máquina;
+- tempos **`occurred_at`** / **`recorded_at`** (quando existirem) sustentam ordenação e compliance futuros;
+- **compatibilidade** com mocks JSON antigos (sem `kind` ou com kind renomeado) via inferência e normalização no cliente/helpers;
+- a UI permanece **incremental** — não substitui um TMS enterprise.
 
-1. `cargo_created` — carga criada/publicada no sistema.
-2. `proposal_sent` — proposta ou contraproposta registrada.
-3. `negotiation_accepted` — negociação aceita / contrato operacional iniciado.
-4. `documentation_pending` — pendência documental bloqueante ou em análise.
-5. `boarding_confirmed` — embarque confirmado (lacre, checklist, janela de atracação, documentos conferidos).
-6. `in_transit` — em movimento na hidrovia (inclui sincronização tardia como contexto).
-7. `delay_reported` — atraso ou revisão de ETA/previsão.
-8. `delivered` — entrega concluída (sem necessidade de comprovante anexo neste momento).
-9. `proof_attached` — comprovante (ex.: POD) registrado; campo futuro `evidenceDocumentId` referencia documento quando existir.
+---
 
-### Campos auditáveis (opcionais na etapa 1)
+## 2. Eventos suportados
+
+Os nove tipos operacionais (**canônicos**) em `OperationalTrackingEventKind`:
+
+| Ordem lógica | `kind` | Significado |
+|--------------|--------|-------------|
+| 1 | `cargo_created` | Carga criada/publicada no sistema. |
+| 2 | `proposal_sent` | Proposta ou contraproposta registrada. |
+| 3 | `negotiation_accepted` | Negociação aceita / contrato operacional iniciado. |
+| 4 | `documentation_pending` | Pendência documental ou análise (sem módulo de upload na UI). |
+| 5 | `shipment_confirmed` | Embarque/expedição confirmada (lacre, checklist, janela de atracação, documentos conferidos). |
+| 6 | `in_transit` | Em movimento na hidrovia (inclui contexto de sincronização tardia). |
+| 7 | `delay_reported` | Atraso ou revisão de ETA/previsão. |
+| 8 | `delivered` | Entrega concluída. |
+| 9 | `proof_attached` | Comprovante / POD registrado; `evidenceDocumentId` reserva vínculo ao **módulo de documentos** (roadmap). |
+
+**Legado:** registros em disco com `kind: "boarding_confirmed"` continuam válidos — `resolveOperationalTrackingKind` normaliza para **`shipment_confirmed`**.
+
+### Campos auditáveis (opcionais)
 
 | Campo | Descrição |
 |-------|-----------|
-| `kind` | Tipo operacional; ausência aciona inferência. |
-| `actorId` | Quem causou o evento (usuário mock quando aplicável). |
-| `actorRole` | `shipper` \| `carrier` \| `admin` \| `system`. |
-| `occurredAt` | Quando o fato operacional ocorreu (ISO 8601). |
-| `recordedAt` | Quando o sistema registrou o evento (ISO 8601). |
-| `evidenceDocumentId` | Reservado para vínculo com módulo de documentos (não implementado). |
-| `metadata` | Pares chave/valor livres para telemetria ou refs externas. |
+| `kind` | Tipo operacional; ausência aciona inferência por texto/status. |
+| `actorId`, `actorRole` | Quem causou o evento (`shipper` \| `carrier` \| `admin` \| `system`). |
+| `occurredAt`, `recordedAt` | ISO 8601 — na UI, `<time dateTime={occurredAt}>` quando existir. |
+| `evidenceDocumentId` | Roadmap — `docs/DOCUMENTS-MODULE.md`. |
+| `metadata` | Pares chave/valor livres. |
 
-Campos já existentes (`title`, `description`, `location`, `timestamp`, `status`, `evidence`, `cargoId`, `negotiationId`) permanecem a base para UI e i18n via `translateMock`.
+Campos já existentes (`title`, `description`, `location`, `timestamp`, `status`, `evidence`, `cargoId`, `negotiationId`) permanecem a base demo + i18n via `translateMock`.
 
-## Impacto na API (próximas etapas)
+---
 
-- Filtrar por `cargoId` / `negotiationId` e ordenar por `occurredAt` / `recordedAt`.
-- Validar permissões (participantes da carga/negociação) antes de expor timeline — ver `docs/API-SECURITY-AUDIT.md`.
-- Endpoints de escrita (`POST`/`PATCH`) para criar eventos com auditoria explícita (fora do escopo da etapa 1).
+## 3. Eventos futuros
 
-## Impacto na UI (próximas etapas)
+| Ideia | Estado |
+|-------|--------|
+| Tipos adicionais por domínio (ex.: `customs_cleared`) | Roadmap — exige catálogo versionado. |
+| Eventos gerados automaticamente a partir de `POST/PATCH` em cargas/negociações | Roadmap — orquestração server-side. |
+| Correlação obrigatória com documento comprovativo | Depende do **módulo de documentos**. |
+| Séries temporais e KPIs executivos | `docs/EXECUTIVE-DASHBOARD.md`. |
 
-- Consumir `GET /api/rastreio` ou dados filtrados por código de rastreio real.
-- Exibir carimbo de tempo auditável (`occurredAt`) além do `timestamp` localizado de demo.
-- Badges por `kind` e tooltips com `metadata`.
+---
 
-## Testes
+## 4. Relação com cargas, negociações e documentos
 
-| Tipo | Arquivo | Cobertura |
-|------|---------|-----------|
-| Unitário | `tests/unit/features/marketplace/tracking.helpers.test.ts` | `resolveOperationalTrackingKind`, lista de kinds. |
-| Integração | `tests/integration/api/rastreio.get.test.ts` | Resposta 200 com mix legado + evento rico. |
+| Entidade | Relação |
+|----------|---------|
+| **Cargo** | `cargoId` opcional no evento; timeline costuma seguir o ciclo da carga. |
+| **Negotiation** | `negotiationId` opcional; eventos após deal aceito ligam-se ao fluxo comercial. |
+| **Documentos** | **Roadmap:** `evidenceDocumentId` apontará para metadados em storage privado (`DOCUMENTS-MODULE.md`). Hoje apenas campo reservado no tipo. |
 
-## Implementação incremental sugerida
+A API **`GET /api/rastreio`** permanece **pass-through** do mock — sem filtros por participante até fase de segurança (`docs/API-SECURITY-AUDIT.md`).
 
-1. **Etapa 1 (concluída neste PR)** — Tipos, inferência, seed, ícones, testes, documentação.
-2. **Etapa 2** — Normalização na leitura (`readMock`) opcional + filtros na API + testes de autorização.
-3. **Etapa 3** — Criação automática de eventos a partir de mutações (`POST /api/cargas`, `PATCH /api/negociacoes`, etc.).
-4. **Etapa 4** — Integração com `evidenceDocumentId` e módulo de documentos (`docs/DOCUMENTS-MODULE.md`).
+---
+
+## 5. Permissões esperadas
+
+**Estado atual:** leitura ampla documentada como risco — timeline na UI usa import direto do seed em parte do fluxo demo.
+
+**Alvo produção (documentado, não obrigatoriamente implementado):**
+
+- apenas **participantes** da carga/negociação ou perfis institucionais autorizados veem eventos sensíveis;
+- escrita de eventos com **`actorId`** explícito e trilha em servidor;
+- **mock-mode** (admin) permanece ferramenta de cenário — separado da timeline operacional real.
+
+Ver `docs/SECURITY-PRODUCT-DECISIONS.md` para papéis e ownership.
+
+---
+
+## 6. Testes recomendados
+
+| Camada | Arquivo / foco |
+|--------|----------------|
+| Unitário | `tests/unit/features/marketplace/tracking.helpers.test.ts` — inferência, lista de kinds, cobertura do seed, **normalização `boarding_confirmed` → `shipment_confirmed`**. |
+| Integração | `tests/integration/api/rastreio.get.test.ts` — contrato JSON estável para cliente. |
+| E2E (futuro) | Smoke da página `/rastreio` quando fluxos críticos estiverem estáveis (`docs/E2E-PLAYWRIGHT.md`). |
+
+---
+
+## 7. Roadmap incremental
+
+1. **✓ Etapa atual** — Tipos canônicos (`shipment_confirmed`), inferência, normalização legado, seed, ícones, `aria-label`, `<time dateTime>` quando há `occurredAt`.
+2. **Próxima** — Repositório/`GET /api/rastreio` com filtros por `cargoId` / `negotiationId` + autorização.
+3. **Depois** — Escrita auditável (`POST`/`PATCH` eventos) e ordenação por `occurredAt`.
+4. **Com documentos** — Preencher `evidenceDocumentId` com políticas de `DOCUMENTS-MODULE.md`.
+
+---
 
 ## Riscos
 
-- **Inferência**: texto ambíguo pode classificar evento incorretamente até haver `kind` explícito em todas as fontes.
-- **Fuso horário**: `occurredAt`/`recordedAt` devem ser UTC na persistência real; `timestamp` segue como legenda humana demo.
-- **Segurança**: timeline continua pública na API atual — endurecimento é fase separada.
+- **Inferência ambígua** até todos os registros terem `kind` explícito na fonte.
+- **Fuso:** persistir UTC em produção; `timestamp` segue como legenda humana demo.
+- **Segurança:** timeline pública na API atual — endurecimento em fase dedicada.
+
+---
 
 ## Referências de código
 
-- `src/features/marketplace/domain/marketplace.types.ts` — tipos.
-- `src/features/marketplace/domain/tracking.helpers.ts` — inferência e constante de kinds.
-- `src/features/marketplace/data/marketplace.mock.ts` — dados seed.
+- `src/features/marketplace/domain/marketplace.types.ts` — `OperationalTrackingEventKind`, `TrackingEvent`.
+- `src/features/marketplace/domain/tracking.helpers.ts` — `resolveOperationalTrackingKind`, `OPERATIONAL_TRACKING_EVENT_KINDS`.
+- `src/features/marketplace/data/marketplace.mock.ts` — seed.
 - `src/features/tracking/components/tracking-timeline/tracking-timeline.tsx` — apresentação.
+- `src/app/api/rastreio/route.ts` — API mock.

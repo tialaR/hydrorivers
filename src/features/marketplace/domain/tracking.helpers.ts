@@ -5,12 +5,15 @@ export const OPERATIONAL_TRACKING_EVENT_KINDS: OperationalTrackingEventKind[] = 
   'proposal_sent',
   'negotiation_accepted',
   'documentation_pending',
-  'boarding_confirmed',
+  'shipment_confirmed',
   'in_transit',
   'delay_reported',
   'delivered',
   'proof_attached'
 ];
+
+/** Kind persistido em JSON legado antes da renomeação para `shipment_confirmed`. */
+const LEGACY_SHIPMENT_KIND = 'boarding_confirmed' as const;
 
 function blob(event: TrackingEvent): string {
   return `${event.title} ${event.description} ${event.location} ${event.evidence ?? ''}`.toLowerCase();
@@ -21,6 +24,8 @@ function blob(event: TrackingEvent): string {
  * Mantém compatibilidade: registros antigos só com title/description/evidence/status usam heurística.
  */
 export function resolveOperationalTrackingKind(event: TrackingEvent): OperationalTrackingEventKind {
+  const rawKind = (event as { kind?: string }).kind;
+  if (rawKind === LEGACY_SHIPMENT_KIND) return 'shipment_confirmed';
   if (event.kind) return event.kind;
 
   const text = blob(event);
@@ -51,15 +56,15 @@ export function resolveOperationalTrackingKind(event: TrackingEvent): Operationa
     return 'in_transit';
   }
   if (
-    /\bembarque confirmado\b|\blacre\b|\btemperatura conferida\b|\bjanela de atraca[cç][aã]o\b|\bdocumentos validados\b/i.test(
+    /\bembarque confirmado\b|\bshipment confirmed\b|\blacre\b|\btemperatura conferida\b|\bjanela de atraca[cç][aã]o\b|\bdocumentos validados\b/i.test(
       text
     )
   ) {
-    return 'boarding_confirmed';
+    return 'shipment_confirmed';
   }
   if (/\bdocumento\b|\bchecklist documental\b|\bromaneio\b|\bnf-e\b/i.test(text)) return 'documentation_pending';
 
-  if (event.status === 'done') return 'boarding_confirmed';
+  if (event.status === 'done') return 'shipment_confirmed';
   if (event.status === 'current') return 'in_transit';
   return 'documentation_pending';
 }

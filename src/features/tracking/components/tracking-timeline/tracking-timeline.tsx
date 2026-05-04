@@ -21,7 +21,7 @@ function iconForOperationalKind(kind: OperationalTrackingEventKind): HydroIconNa
       return 'check';
     case 'documentation_pending':
       return 'document';
-    case 'boarding_confirmed':
+    case 'shipment_confirmed':
       return 'dock';
     case 'in_transit':
       return 'ship';
@@ -108,7 +108,11 @@ export function TrackingTimeline() {
                     <div className={styles.eventBody}>
                       <div className={styles.eventTop}>
                         <h3>{headline}</h3>
-                        <time>{translateMock(locale, event.timestamp)}</time>
+                        {event.occurredAt ? (
+                          <time dateTime={event.occurredAt}>{translateMock(locale, event.timestamp)}</time>
+                        ) : (
+                          <span>{translateMock(locale, event.timestamp)}</span>
+                        )}
                       </div>
                       <p>{translateMock(locale, event.description)}</p>
                       <small>

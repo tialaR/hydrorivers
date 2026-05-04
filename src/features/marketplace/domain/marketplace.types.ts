@@ -107,7 +107,7 @@ export type OperationalTrackingEventKind =
   | 'proposal_sent'
   | 'negotiation_accepted'
   | 'documentation_pending'
-  | 'boarding_confirmed'
+  | 'shipment_confirmed'
   | 'in_transit'
   | 'delay_reported'
   | 'delivered'

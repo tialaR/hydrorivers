@@ -390,7 +390,7 @@ export const trackingEvents: TrackingEvent[] = [
     timestamp: '06 mai • 08:30',
     status: 'done',
     evidence: 'Checklist documental assinado',
-    kind: 'boarding_confirmed',
+    kind: 'shipment_confirmed',
     actorRole: 'system',
     occurredAt: '2026-05-06T11:30:00.000Z',
     recordedAt: '2026-05-06T11:31:00.000Z'
@@ -403,7 +403,7 @@ export const trackingEvents: TrackingEvent[] = [
     timestamp: '06 mai • 11:40',
     status: 'done',
     evidence: 'Foto do lacre + sensor 2 °C',
-    kind: 'boarding_confirmed',
+    kind: 'shipment_confirmed',
     actorRole: 'carrier',
     occurredAt: '2026-05-06T14:40:00.000Z',
     recordedAt: '2026-05-06T14:41:00.000Z'
@@ -470,7 +470,7 @@ trackingEvents.push(
     timestamp: '07 mai • 11:20',
     status: 'pending',
     evidence: 'Confirmação operacional',
-    kind: 'boarding_confirmed',
+    kind: 'shipment_confirmed',
     actorRole: 'carrier',
     occurredAt: '2026-05-07T14:20:00.000Z',
     recordedAt: '2026-05-07T14:21:00.000Z'
@@ -483,7 +483,7 @@ trackingEvents.push(
     timestamp: '07 mai • 13:05',
     status: 'pending',
     evidence: 'Checklist digital',
-    kind: 'boarding_confirmed',
+    kind: 'shipment_confirmed',
     actorRole: 'system',
     occurredAt: '2026-05-07T16:05:00.000Z',
     recordedAt: '2026-05-07T16:06:00.000Z'

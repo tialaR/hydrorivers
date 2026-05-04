@@ -17,7 +17,7 @@ describe('resolveOperationalTrackingKind', () => {
     expect(resolveOperationalTrackingKind(event)).toBe('cargo_created');
   });
 
-  it('infere boarding_confirmed para checklist documental sem kind', () => {
+  it('infere shipment_confirmed para checklist documental sem kind', () => {
     const event: TrackingEvent = {
       id: 't2',
       title: 'Documentos validados',
@@ -27,7 +27,20 @@ describe('resolveOperationalTrackingKind', () => {
       status: 'done',
       evidence: 'Checklist documental assinado'
     };
-    expect(resolveOperationalTrackingKind(event)).toBe('boarding_confirmed');
+    expect(resolveOperationalTrackingKind(event)).toBe('shipment_confirmed');
+  });
+
+  it('normaliza kind legado boarding_confirmed para shipment_confirmed', () => {
+    const event = {
+      id: 't-legacy-kind',
+      title: 'Legado',
+      description: '',
+      location: '',
+      timestamp: '',
+      status: 'done' as const,
+      kind: 'boarding_confirmed'
+    } as unknown as TrackingEvent;
+    expect(resolveOperationalTrackingKind(event)).toBe('shipment_confirmed');
   });
 
   it('infere documentation_pending para pendência explícita', () => {
