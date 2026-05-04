@@ -18,14 +18,19 @@
       "Romaneio validado"
     ],
     "nextStep": "Anexar laudo sanitário e confirmar lacre",
-    "riskLevel": "medium",
+    "riskLevel": "high",
     "history": [
       {
         "title": "Cotação recebida",
         "description": "Transportador compatível com cadeia fria e baixa conectividade.",
         "date": "10:40"
       }
-    ]
+    ],
+    "status": "rejected",
+    "cargoId": "cargo-001",
+    "vesselId": "vessel-001",
+    "shipperId": "u-shipper-1",
+    "carrierId": "u-carrier-1"
   },
   {
     "id": "neg-002",
@@ -53,7 +58,12 @@
         "description": "DOF e documentação da embarcação precisam de validação antes da reserva.",
         "date": "Ontem"
       }
-    ]
+    ],
+    "status": "rejected",
+    "cargoId": "cargo-002",
+    "vesselId": "vessel-002",
+    "shipperId": "u-shipper-1",
+    "carrierId": "u-carrier-1"
   },
   {
     "id": "neg-003",

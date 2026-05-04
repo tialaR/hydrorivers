@@ -21,7 +21,7 @@ export function AdminConsole() {
   const t = useTranslations('pages.adminConsole');
 
   return (
-    <section className={styles.grid}>
+    <section className={styles.grid} data-testid="admin-console">
       {queues.map((item) => {
         const Icon = item.icon;
         return (

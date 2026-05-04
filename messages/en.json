@@ -703,6 +703,20 @@
         "title": "Internationalization",
         "description": "Validates translations for components, mocks and navigation."
       }
+    },
+    "scenarioControlTitle": "Mock scenario (dataset)",
+    "scenarioActive": "Active: {label}",
+    "scenarioSelectLabel": "Scenario",
+    "applyScenario": "Apply scenario",
+    "scenarioApplying": "Applying…",
+    "applyScenarioError": "Could not apply the scenario.",
+    "scenarioIds": {
+      "empty-state": "Empty base",
+      "market-active": "Active marketplace",
+      "negotiation-flow": "Negotiation flow",
+      "in-transit": "In transit",
+      "completed": "Completed",
+      "error-scenarios": "Errors and pending items"
     }
   }
 }

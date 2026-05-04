@@ -5,7 +5,7 @@
     "route": "Manaus–Belém",
     "capacity": "2.400 t",
     "eta": "36h",
-    "status": "available",
+    "status": "maintenance",
     "owner": "Navega Norte",
     "vesselType": "Comboio de barcaças",
     "draft": "2,2 m",
@@ -20,7 +20,8 @@
       "Checklist digital"
     ],
     "sustainabilityScore": "A-",
-    "lastInspection": "2026-04-18"
+    "lastInspection": "2026-04-18",
+    "ownerId": "u-carrier-1"
   },
   {
     "id": "vessel-002",
@@ -43,7 +44,8 @@
       "Lacre digital"
     ],
     "sustainabilityScore": "A",
-    "lastInspection": "2026-04-20"
+    "lastInspection": "2026-04-20",
+    "ownerId": "u-carrier-1"
   },
   {
     "id": "vessel-003",
@@ -64,7 +66,8 @@
       "ANTAQ em revisão"
     ],
     "sustainabilityScore": "B+",
-    "lastInspection": "2026-03-29"
+    "lastInspection": "2026-03-29",
+    "ownerId": "u-carrier-1"
   },
   {
     "id": "vessel-004",
