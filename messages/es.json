@@ -703,6 +703,20 @@
         "title": "Internacionalización",
         "description": "Valida traducciones de componentes, mocks y navegación."
       }
+    },
+    "scenarioControlTitle": "Escenario mock (dataset)",
+    "scenarioActive": "Activo: {label}",
+    "scenarioSelectLabel": "Escenario",
+    "applyScenario": "Aplicar escenario",
+    "scenarioApplying": "Aplicando…",
+    "applyScenarioError": "No se pudo aplicar el escenario.",
+    "scenarioIds": {
+      "empty-state": "Base vacía",
+      "market-active": "Marketplace activo",
+      "negotiation-flow": "Flujo de negociación",
+      "in-transit": "En tránsito",
+      "completed": "Completado",
+      "error-scenarios": "Errores y pendencias"
     }
   }
 }

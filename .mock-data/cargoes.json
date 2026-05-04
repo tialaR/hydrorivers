@@ -19,7 +19,7 @@
     "predictability": "medium",
     "etaConfidence": "ETA 36–44h • confiança média",
     "connectivity": "delayedSync",
-    "documentReadiness": 72,
+    "documentReadiness": 12,
     "originContext": "Cooperativa com agregação de produtores e janela curta de embarque na safra.",
     "description": "Carga de bioeconomia amazônica com cadeia fria, origem cooperada e necessidade de sincronização de sinal em trechos de baixa conectividade.",
     "documents": [
@@ -51,8 +51,11 @@
     ],
     "operationalRisks": [
       "Janela curta de cadeia fria",
-      "Sinal intermitente entre terminais menores"
-    ]
+      "Sinal intermitente entre terminais menores",
+      "Cenário mock com pendência operacional"
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   },
   {
     "id": "cargo-002",
@@ -99,8 +102,11 @@
     ],
     "operationalRisks": [
       "Consolidação de lotes",
-      "Variação de prazo por parada em comunidade"
-    ]
+      "Variação de prazo por parada em comunidade",
+      "Cenário mock com pendência operacional"
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   },
   {
     "id": "cargo-003",
@@ -153,8 +159,11 @@
     ],
     "operationalRisks": [
       "Trecho sujeito a vazante",
-      "Coleta de evidência offline"
-    ]
+      "Coleta de evidência offline",
+      "Cenário mock com pendência operacional"
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   },
   {
     "id": "cargo-004",
@@ -213,8 +222,11 @@
     ],
     "operationalRisks": [
       "Cadeia fria crítica",
-      "Fiscalização sanitária"
-    ]
+      "Fiscalização sanitária",
+      "Cenário mock com pendência operacional"
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   },
   {
     "id": "cargo-005",

@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/core/i18n/navigation';
 import { HydroIcon } from '@/shared/ui/hydro-icon/hydro-icon';
+import { MockScenarioControl } from './mock-scenario-control';
 import styles from './mock-mode.module.scss';
 
 const accounts = [
@@ -47,6 +48,8 @@ export function MockMode() {
             </button>
           </div>
 
+          <MockScenarioControl />
+
           <section className={styles.section}>
             <div className={styles.sectionTitle}>
               <HydroIcon name="users" size={16} />
@@ -88,7 +91,14 @@ export function MockMode() {
         </div>
       ) : null}
 
-      <button type="button" className={styles.trigger} onClick={() => setOpen((value) => !value)} aria-expanded={open} aria-label={t('button')}>
+      <button
+        type="button"
+        className={styles.trigger}
+        data-testid="mock-mode-toggle"
+        onClick={() => setOpen((value) => !value)}
+        aria-expanded={open}
+        aria-label={t('button')}
+      >
         <span className={styles.triggerMark}>M</span>
         <span>{t('button')}</span>
       </button>

@@ -11,7 +11,7 @@ export default async function AdminPage() {
   if (user?.role !== 'admin') {
     return (
       <PageShell namespace="pages.admin">
-        <Card style={{ borderWidth: 3 }}>
+        <Card style={{ borderWidth: 3 }} data-testid="admin-unauthorized">
           <h2>{t('unauthorizedTitle')}</h2>
           <p>{t('unauthorizedDescription')}</p>
         </Card>
