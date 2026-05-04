@@ -110,4 +110,62 @@ describe('POST /api/mock-mode', () => {
       }
     });
   });
+
+  it('retorna 200 quando admin envia corpo vazio e chama reset sem cenário explícito', async () => {
+    mockGetSessionUser.mockResolvedValue({ id: 'u-admin-1', role: 'admin' });
+
+    const request = new Request('http://localhost/api/mock-mode', {
+      method: 'POST'
+    });
+    const response = await POST(request);
+
+    expect(response.status).toBe(200);
+    expect(mockResetMockScenario).toHaveBeenCalledTimes(1);
+    expect(mockResetMockScenario).toHaveBeenCalledWith(undefined);
+  });
+
+  it('retorna 400 e não chama reset quando corpo não é JSON válido', async () => {
+    mockGetSessionUser.mockResolvedValue({ id: 'u-admin-1', role: 'admin' });
+
+    const request = new Request('http://localhost/api/mock-mode', {
+      method: 'POST',
+      body: '{"scenario":broken'
+    });
+    const response = await POST(request);
+    const body = await response.json();
+
+    expect(response.status).toBe(400);
+    expect(body).toMatchObject({ error: 'invalid-payload', reason: 'invalid-json' });
+    expect(mockResetMockScenario).not.toHaveBeenCalled();
+  });
+
+  it('retorna 400 e não chama reset quando JSON é null', async () => {
+    mockGetSessionUser.mockResolvedValue({ id: 'u-admin-1', role: 'admin' });
+
+    const request = new Request('http://localhost/api/mock-mode', {
+      method: 'POST',
+      body: 'null'
+    });
+    const response = await POST(request);
+
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toMatchObject({
+      error: 'invalid-payload',
+      reason: 'invalid-json'
+    });
+    expect(mockResetMockScenario).not.toHaveBeenCalled();
+  });
+
+  it('retorna 400 e não chama reset quando JSON é array', async () => {
+    mockGetSessionUser.mockResolvedValue({ id: 'u-admin-1', role: 'admin' });
+
+    const request = new Request('http://localhost/api/mock-mode', {
+      method: 'POST',
+      body: '[]'
+    });
+    const response = await POST(request);
+
+    expect(response.status).toBe(400);
+    expect(mockResetMockScenario).not.toHaveBeenCalled();
+  });
 });
