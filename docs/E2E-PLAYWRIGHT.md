@@ -20,12 +20,15 @@
 
 | Arquivo | O que cobre |
 |---------|-------------|
+| [`cargas.spec.ts`](../tests/e2e/cargas.spec.ts) | Cargas (mock): shipper publica em `/cargas/nova`, `ownerId` na resposta API, bloqueio de carrier (403 + mensagem i18n), validação de formulário i18n, empty state na lista (busca sem resultados), e cenário `empty-state` com contagem 0 no `POST /api/mock-mode`. Viewport ≤1024px para campo de busca visível. |
 | [`admin-mock-mode.spec.ts`](../tests/e2e/admin-mock-mode.spec.ts) | Admin: acesso a `/admin`, bloqueio para não admin, controle de cenário mock no painel QA (apenas admin), troca de dataset via `POST /api/mock-mode` e reflexo na lista de cargas (`empty-state`, `in-transit`, `completed`, `error-scenarios`). |
 | [`auth.login.spec.ts`](../tests/e2e/auth.login.spec.ts) | Login demo com OTP (resposta contém `otpCode` quando `HYDRORIVERS_EXPOSE_OTP_CODE=true`) → redireciona ao dashboard. |
 | [`auth.session.spec.ts`](../tests/e2e/auth.session.spec.ts) | Após login: acesso a **`/perfil`**; **logout** via página `/{locale}/logout`; troca de idioma **com sessão** no dashboard (viewport desktop), botão “Log out” visível. |
 | [`private-route-redirect.spec.ts`](../tests/e2e/private-route-redirect.spec.ts) | Sem cookie de sessão: URLs privadas redirecionam para `/pt-BR/login` com query `next` igual ao pathname solicitado. |
 | [`locale.switch.spec.ts`](../tests/e2e/locale.switch.spec.ts) | Home pública: troca `pt-BR` → `en` via combobox de idioma. |
 | [`support/auth.ts`](../tests/e2e/support/auth.ts) | Helper `loginWithOtp(page, credentials?)` reutilizável (padrão: embarcador demo; passe `{ email, password }` para admin ou outras contas OTP). |
+| [`support/mock-scenario.ts`](../tests/e2e/support/mock-scenario.ts) | `openMockPanel` / `applyMockScenario` — painel QA admin para `POST /api/mock-mode`. |
+| [`support/cargo-context.ts`](../tests/e2e/support/cargo-context.ts) | `resetMockScenarioThenLogin` — aplica cenário como admin, logout estável e login com outra conta (dataset E2E). |
 
 ---
 

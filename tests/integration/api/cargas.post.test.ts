@@ -112,12 +112,14 @@ describe('POST /api/cargas', () => {
 
     expect(response.status).toBe(201);
     expect(mockUpsertCargo).toHaveBeenCalledWith(expect.objectContaining({
+      ownerId: 'u-shipper-1',
       origin: 'Belém, PA',
       destination: 'Santarém, PA',
       cargoType: 'Refrigerada',
       producer: 'Cooperativa Açaí Norte'
     }));
     expect(body.data).toMatchObject({
+      ownerId: 'u-shipper-1',
       origin: 'Belém, PA',
       destination: 'Santarém, PA',
       cargoType: 'Refrigerada'
@@ -145,12 +147,14 @@ describe('POST /api/cargas', () => {
 
     expect(response.status).toBe(201);
     expect(mockUpsertCargo).toHaveBeenCalledWith(expect.objectContaining({
+      ownerId: 'u-admin-1',
       origin: 'Manaus, AM',
       destination: 'Belém, PA',
       cargoType: 'Geral',
       producer: 'Órgão Piloto'
     }));
     expect(body.data).toMatchObject({
+      ownerId: 'u-admin-1',
       origin: 'Manaus, AM',
       destination: 'Belém, PA',
       cargoType: 'Geral'

@@ -14,11 +14,20 @@ export function NewCargoForm() {
   const common = useTranslations('common');
   const [submitted, setSubmitted] = useState(false);
   const [pending, setPending] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setPending(true);
+    setFormError(null);
     const form = new FormData(event.currentTarget);
+    const requiredKeys = ['origin', 'destination', 'cargoType', 'volume', 'window', 'targetPrice', 'description'] as const;
+    for (const name of requiredKeys) {
+      if (!String(form.get(name) ?? '').trim()) {
+        setFormError(t('fillAllRequired'));
+        return;
+      }
+    }
+    setPending(true);
     const title = String(form.get('cargoType') || t('fallbackCargoTitle'));
     const cargo: Cargo = {
       id: `mock-${Date.now()}`,
@@ -39,6 +48,9 @@ export function NewCargoForm() {
       await persistCargo(cargo);
       setSubmitted(true);
       event.currentTarget.reset();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : '';
+      setFormError(message === 'forbidden' ? t('carrierCannotPublish') : t('publishFailed'));
     } finally {
       setPending(false);
     }
@@ -46,7 +58,7 @@ export function NewCargoForm() {
 
   return (
     <Card className={styles.card}>
-      <form className={styles.form} onSubmit={onSubmit}>
+      <form className={styles.form} data-testid="new-cargo-form" noValidate onSubmit={onSubmit}>
         <label><span>{t('origin')}</span><div><MapPin size={18} /><input name="origin" required placeholder={t('originPlaceholder')} /></div></label>
         <label><span>{t('destination')}</span><div><MapPin size={18} /><input name="destination" required placeholder={t('destinationPlaceholder')} /></div></label>
         <label><span>{t('cargoType')}</span><div><Package size={18} /><input name="cargoType" required placeholder={t('cargoTypePlaceholder')} /></div></label>
@@ -54,7 +66,14 @@ export function NewCargoForm() {
         <label><span>{t('window')}</span><div><CalendarDays size={18} /><input name="window" required placeholder={t('windowPlaceholder')} /></div></label>
         <label><span>{t('targetPrice')}</span><div><Leaf size={18} /><input name="targetPrice" required placeholder={t('targetPricePlaceholder')} /></div></label>
         <label className={styles.full}><span>{t('description')}</span><textarea name="description" required placeholder={t('descriptionPlaceholder')} /></label>
-        <Button className={styles.full} loading={pending} loadingLabel={t('loading')}>{submitted ? common('published') : t('publish')}</Button>
+        {formError ? (
+          <p className={styles.formError} role="alert" data-testid="new-cargo-form-error">
+            {formError}
+          </p>
+        ) : null}
+        <Button type="submit" className={styles.full} data-testid="new-cargo-submit" loading={pending} loadingLabel={t('loading')}>
+          {submitted ? common('published') : t('publish')}
+        </Button>
       </form>
     </Card>
   );

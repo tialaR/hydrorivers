@@ -30,6 +30,7 @@ export async function POST(request: Request) {
 
   const cargo: Cargo = {
     id: payload.id ?? `mock-${Date.now()}`,
+    ownerId: user.id,
     title: isNonEmptyText(payload.title) ? String(payload.title).trim() : String(payload.cargoType).trim(),
     origin: String(payload.origin).trim(),
     destination: String(payload.destination).trim(),

@@ -418,7 +418,10 @@
     "windowPlaceholder": "May 08-12",
     "targetPricePlaceholder": "R$ 8,400",
     "descriptionPlaceholder": "Refrigerated cargo, collected at a cooperative and delivered to the regional port.",
-    "loading": "Publishing..."
+    "loading": "Publishing...",
+    "fillAllRequired": "Fill in all required fields before publishing.",
+    "carrierCannotPublish": "Carriers cannot publish cargoes in this flow.",
+    "publishFailed": "Could not publish the cargo. Please try again."
   },
   "common": {
     "co2": "CO₂ avoided",
