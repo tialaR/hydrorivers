@@ -1,210 +1,279 @@
-# Dashboard executivo — planejamento (HydroRivers)
+# Dashboard executivo — especificação de produto (HydroRivers)
 
-Documento **somente de planejamento**: não descreve UI implementada nem código entregue neste arquivo. Serve para alinhar objetivos, KPIs por perfil, fontes de dados, superfície de produto e evolução incremental.
+**Tipo:** documentação apenas — **sem** implementação de UI nova neste arquivo, **sem** alteração de código ou testes.
+
+**Leituras relacionadas:** `docs/DEVELOPER-AI-ONBOARDING.md` (produto e fluxos), `docs/DATABASE-PLANNING.md` (persistência futura), `docs/DOCUMENTS-MODULE.md` (documentos como roadmap), `docs/TRACKING-TIMELINE.md` (eventos `OperationalTrackingEventKind`), `docs/API-SECURITY-AUDIT.md` (exposição atual das APIs), `docs/SECURITY-PRODUCT-DECISIONS.md` (papéis, ownership, políticas).
+
+---
+
+### Legenda de estado
+
+| Marco | Significado |
+|-------|-------------|
+| **✓ Parcialmente no código** | Já existe algo na base de código que **ajuda** a narrativa (cards, páginas, mocks, APIs listagens), mas **não** equivale ao dashboard executivo descrito aqui como produto completo. |
+| **◇ Futuro / roadmap** | Planejado ou recomendado; depende de decisões de produto, dados ou segurança. |
+
+**Esclarecimento importante:** o HydroRivers **não possui**, neste momento, um **produto único nomeável “dashboard executivo”** que una KPIs por persona, filtros temporais, API agregadora escopada e políticas de interpretação documentadas **de ponta a ponta**. Existem **✓ parciais** (por exemplo overview em `/dashboard`, narrativa numérica em `/governo`, dados mock agregáveis via serviços). Este documento define **o alvo de produto** e separa **o que já existe como tijolo** do que **◇ ainda falta**.
 
 ---
 
 ## 1. Objetivo do dashboard
 
-Oferecer uma **visão consolidada e escopada por perfil** sobre o estado do marketplace hidroviário na HydroRivers: volume de cargas e negociações, capacidade de frota, rastreio operacional, impacto regional e sinais de alerta — com **definições explícitas de cada métrica** para evitar leituras equivocadas entre dados mock e futura produção.
+Centralizar, por **perfil de usuário**, uma **visão executiva** do estado da operação hidroviária na plataforma:
 
-Sucesso imediato (fases iniciais): o mesmo conjunto de **definições de KPI** pode ser calculado no servidor a partir dos mocks atuais e, depois, substituído por persistência real sem mudar o contrato mental do usuário.
+- **volume** de cargas e negociações no marketplace;
+- **capacidade** aparente de frota;
+- **movimento físico** via eventos de rastreio (timeline operacional — ver `docs/TRACKING-TIMELINE.md`);
+- **atrito** (tempo de negociação, pendências, atrasos);
+- **impacto regional** narrativo ou agregado (com disclaimers até série oficial existir);
+- **alertas operacionais** derivados de regras claras — não “achismo visual”.
+
+Sucesso na primeira entrega **◇ futura**: um usuário entende **em menos de um minuto** se “está pior ou melhor” **no seu escopo autorizado**, com **definições explícitas** de cada número e link para detalhar (telas existentes ou futuras).
 
 ---
 
-## 2. KPIs por perfil
+## 2. Problema que resolve
 
-Legenda dos KPIs candidatos:
+| Dor | Por que importa |
+|-----|------------------|
+| **Informação espalhada** | Embarcador, transportador e instituições veem pedaços do fluxo em telas diferentes; falta um **resumo decisório**. |
+| **Leituras equivocadas** | Mock e cenários (`mock-mode`) mudam volumes; sem rótulos e definições, métricas parecem “oficiais” quando são **demonstrativas**. |
+| **Escopo errado de permissão** | APIs de listagem hoje expõem coleções amplas sem sessão em vários GETs (`docs/API-SECURITY-AUDIT.md`) — um dashboard executivo **real** precisa **calcular no servidor** apenas o que o papel pode ver **◇**. |
+| **Gap temporal** | “Tempo médio de negociação” e tendências exigem **timestamps confiáveis** — lacuna documentada frente ao mock atual (`docs/DATABASE-PLANNING.md`). |
+| **Documentação vs lista de exigências** | “Documentação pendente” cruza cargas, negociações e **◇ futuro** módulo de documentos (`docs/DOCUMENTS-MODULE.md`); sem modelo único, o KPI deve declarar **qual versão** está sendo medida. |
 
-| KPI | Significado operacional |
-|-----|-------------------------|
-| **Cargas publicadas** | Volume de cargas no marketplace (total ou por filtros). |
-| **Negociações abertas** | Negociações não encerradas; definir contrato único (`stage` / `status`). |
-| **Negociações concluídas** | Negociações em estado terminal aceito / encerrado com sucesso (alinhar ao domínio). |
-| **Embarcações disponíveis** | Frota com `status` indicando disponibilidade (ex.: `available`). |
-| **Tempo médio de negociação** | Duração entre início e fechamento; **depende de timestamps normalizados** (hoje limitado no mock). |
-| **Eventos de rastreio** | Contagem ou série temporal de eventos (`trackingEvents`), opcionalmente por carga/negociação. |
-| **Impacto regional** | Agregações por corredor, família de produto, CO₂ narrativo (`co2Saving`), conectividade — combinável com conteúdo de impacto institucional. |
-| **Alertas operacionais** | Condições que merecem destaque: atrasos (`delay_reported`), pendências documentais, sincronização tardia, SLA de rastreio, inconsistências de dados — podem começar como **contadores derivados do mock** e evoluir para fila de alertas real. |
+---
 
-### Admin
+## 3. Visão por perfil
 
-| KPI | Prioridade | Observação |
-|-----|------------|------------|
-| Cargas publicadas | Alta | Visão global da plataforma; útil para operação e cenários de QA (`mock-mode`). |
-| Negociações abertas / concluídas | Alta | Funil global; comparável entre cenários mock. |
-| Embarcações disponíveis | Média | Capacidade aparente agregada. |
-| Tempo médio de negociação | Baixa até modelo temporal existir | Exige `createdAt` / `closedAt` ou equivalente. |
-| Eventos de rastreio | Média | Volume global e eventual distribuição por `kind`. |
-| Impacto regional | Média | Por corredor / tipo de produto (reuso de ideias da área governo). |
-| Alertas operacionais | Alta | Vista única de exceções (atrasos, pendências, volumes anômalos). |
+Visão **humana** do que cada persona espera tirar do dashboard — antes da tabela de KPIs.
+
+### Admin (`admin`)
+
+**✓ Parcial:** ferramentas de cenário e áreas administrativas existem no app; KPI global unificado **◇**.
+
+- Operação da **plataforma**: volumes globais, funil de negociações, sinais de exceção.
+- Suporte a **QA / demo**: conscientização de que **mock-mode** altera números (`docs/MOCK-MODE-USE-CASES.md` quando aplicável).
 
 ### Shipper (embarcador)
 
-| KPI | Prioridade | Observação |
-|-----|------------|------------|
-| Cargas publicadas | Alta | Escopo **suas cargas** (`ownerId` ou equivalente na sessão). |
-| Negociações abertas / concluídas | Alta | Onde o shipper é participante (`shipperId`). |
-| Embarcações disponíveis | Média | Contexto de mercado (global ou restrito aos corredores das cargas do usuário). |
-| Tempo médio de negociação | Média | Apenas deals do shipper; depende de datas confiáveis. |
-| Eventos de rastreio | Alta | Ligados às cargas/negociações do shipper. |
-| Impacto regional | Média | CO₂ / corredores das próprias cargas. |
-| Alertas operacionais | Alta | Ex.: documentação pendente, atraso na viagem das suas cargas. |
+**✓ Parcial:** fluxos de cargas e negociações como participante; resumo executivo dedicado **◇**.
+
+- “**Minhas** cargas”: publicadas, ativas, em negociação.
+- Saúde das **negociações** onde sou `shipperId`.
+- **Rastreio** e alertas ligados às **minhas** cargas/deals (**◇** escopo autorizado na API).
 
 ### Carrier (transportador)
 
-| KPI | Prioridade | Observação |
-|-----|------------|------------|
-| Cargas publicadas | Baixa/Média | Benchmark de mercado (não necessariamente “minhas cargas”). |
-| Negociações abertas / concluídas | Alta | Participação como `carrierId` / frota associada. |
-| Embarcações disponíveis | Alta | Frota própria: disponíveis vs em uso / indisponíveis. |
-| Tempo médio de negociação | Média | Apenas onde o carrier participa. |
-| Eventos de rastreio | Alta | Negociações e cargas sob sua operação. |
-| Impacto regional | Baixa | Opcional (mensagens ESG). |
-| Alertas operacionais | Alta | Embarques, janelas de atracação, atrasos reportados nas rotas ativas. |
+**✓ Parcial:** marketplace e negociações; frota em mock — painel executivo do carrier **◇**.
 
-### Governo / operação (persona institucional)
+- Negociações onde sou `carrierId`.
+- **Frota própria**: disponível vs comprometida (**definições de status** devem ser contrato único).
+- Alertas de **embarque / atraso / documentação** nas rotas sob minha operação **◇**.
 
-Esta persona usa hoje sobretudo **`/[locale]/governo`**; **não há role técnico dedicado** no mesmo nível que `admin` | `shipper` | `carrier` — planejar como audiência institucional (eventual role ou política de acesso futura).
+### Governo / operação institucional
 
-| KPI | Prioridade | Observação |
-|-----|------------|------------|
-| Cargas publicadas | Alta | Por corredor, tipo de produto, conectividade. |
-| Negociações abertas / concluídas | Alta | Panorama setorial; cuidado com **granularidade e privacidade**. |
-| Embarcações disponíveis | Média | Capacidade regional agregada. |
-| Tempo médio de negociação | Média | Indicador de atrito operacional quando dados permitirem. |
-| Eventos de rastreio | Alta | Fluxo físico, pontos de atraso, visibilidade de corredor. |
-| Impacto regional | Alta | Narrativa pública (bioeconomia, sazonalidade, métricas ambientais — alinhado ao que já existe na visão governo). |
-| Alertas operacionais | Alta | Indicadores de risco sistêmico (corredores congestionados, picos de pendência documental agregados — sempre com limiar definido). |
+**✓ Parcial:** página `/governo` com narrativa e números derivados do ecossistema demo; **persona institucional** não é sempre um quarto `role` técnico igual aos outros (`docs/DEVELOPER-AI-ONBOARDING.md`).
+
+- Panorama **regional / por corredor** com **atenção a privacidade** e anti-agregação identificável **◇**.
+- **Impacto regional** alinhado ao que for público e metodologicamente sustentável **◇**.
+- **Alertas sistêmicos** (picos de atraso, gargalo documental agregado) com limiares definidos **◇**.
 
 ---
 
-## 3. Fonte dos dados atuais
+## 4. KPIs por perfil
 
-| Necessidade | Fonte no projeto | Observações |
-|-------------|------------------|-------------|
-| Cargas | `readMock('cargoes')` → `listCargoes()` (`marketplace.service`) | Seeds em `marketplace.mock.ts` + persistência opcional em `.mock-data/cargoes.json`. Campos úteis: `status`, `ownerId`, `corridor`, `co2Saving`, `productFamily`, `connectivity`, etc. |
-| Negociações | `readMock('negotiations')` → `listNegotiations()` | `stage`, `status`, `shipperId`, `carrierId`, `cargoId`, `lastUpdate` (muitas vezes texto humano). |
-| Embarcações | `readMock('vessels')` → `listVessels()` | `status`, `ownerId`, contexto de corredor quando existir no modelo. |
-| Rastreio | `readMock('trackingEvents')` → `listTrackingEvents()` | Eventos com `kind` operacional opcional; ver `docs/TRACKING-TIMELINE.md`. |
-| Usuário / papel | Sessão mock (`getSessionUser` e fluxos em `features/auth`) | Base para escopo por perfil em UI/API futuras. |
-| Agregações existentes | `getMarketplaceSummary()` | Contagens simples; tendências tipo percentuais em cards podem ser **placeholder** — não assumir série temporal real. |
-| Impacto / narrativa | Páginas de impacto, i18n, dados em cargas (`co2Saving`) | KPI “impacto regional” combina agregações de cargas + conteúdo editorial até haver série oficial. |
-| Cenários / reset | `POST /api/mock-mode`, `mock-scenarios.ts` | Altera volumes observados; relevante para QA e para disclaimer “dados demonstrativos”. |
+Catálogo de **métricas candidatas**. Cada KPI deve ter **definição formal** (“o que conta”) antes de aparecer como número oficial na UI **◇**.
 
-**Lacuna explícita:** tempo médio de negociação exige **timestamps ISO** (criação/fechamento) nas negociações — ver planejamento de persistência em `docs/DATABASE-PLANNING.md`.
+| KPI | Definição operacional (resumo) |
+|-----|----------------------------------|
+| **Cargas publicadas** | Contagem de cargas em estado “publicada / visível ao marketplace” (alinhar ao enum `status` real do domínio). |
+| **Cargas ativas** | Subconjunto em trânsito operacional de interesse executivo (ex.: não encerradas); **◇** contrato único com produto (“ativa” ≠ só “não draft”). |
+| **Negociações abertas** | Deals não terminados; **cuidado** com divergência `stage` vs `status` até máquina de estados estar documentada. |
+| **Negociações concluídas** | Estado terminal “aceito / encerrado com sucesso” — definir campo canônico **◇**. |
+| **Embarcações disponíveis** | Frota com `status` indicando disponibilidade (ex.: `available`); mesma semântica para benchmark global vs frota do carrier. |
+| **Tempo médio de negociação** | Δ entre início e fechamento; exige **`createdAt` / `closedAt`** ou equivalente (**lacuna típica no mock** — `docs/DATABASE-PLANNING.md`). |
+| **Eventos de rastreio** | Volume ou série temporal de eventos (`tracking_events`); opcionalmente por `OperationalTrackingEventKind` (`docs/TRACKING-TIMELINE.md`). |
+| **Atrasos reportados** | Subconjunto de eventos com `kind === 'delay_reported'` (ou regra derivada **◇** em alertas). |
+| **Documentação pendente** | **◇** Ideal: cruzar exigências (`requiredDocuments`) + **◇** entidade `Document` pendente (`docs/DOCUMENTS-MODULE.md`). **MVP possível:** heurísticas sobre texto/status até módulo existir — sempre com disclaimer. |
+| **Impacto regional** | Agregações por corredor, família de produto, narrativa CO₂ (`co2Saving` etc.) — **demonstrativo** até metodologia oficial **◇**. |
+| **Alertas operacionais** | Contadores ou fila **◇**: combinação de regras (atraso, pendência doc, sincronização tardia, volumes anômalos); severidade futura **◇**. |
 
----
+### Priorização sugerida por perfil
 
-## 4. Fonte dos dados futuros
-
-| Área | Direção pretendida |
-|------|---------------------|
-| Persistência | Banco relacional ou document store conforme `docs/DATABASE-PLANNING.md`; substituir gradualmente `readMock` por repositórios. |
-| APIs dedicadas | Endpoint agregador escopado (ex.: `GET /api/dashboard/summary`) retornando apenas KPIs autorizados ao papel, em vez de enviar coleções completas ao cliente. |
-| Temporalidade | Campos `createdAt`, `updatedAt`, `closedAt` em negociações e cargas; possível fonte de eventos de domínio para séries temporais. |
-| Rastreio | Escrita auditável de eventos alinhada à timeline operacional; filtros por `cargoId` / `negotiationId` / período. |
-| Impacto regional | Integração com dados externos (IBGE, ANTAQ, inventários de carbono) quando houver projeto próprio — hoje fora de escopo técnico neste doc. |
-| Alertas operacionais | Motor de regras ou integração com observabilidade (logs, filas); políticas por severidade e canal (in-app, e-mail) — definir em produto/segurança. |
-
-Referência de segurança e exposição: `docs/API-SECURITY-AUDIT.md`.
-
----
-
-## 5. Componentes necessários (planejados — sem implementação neste doc)
-
-| Componente | Função |
-|------------|--------|
-| **Camada de agregação server-side** | Funções puras ou serviço server-only que calculam KPIs a partir de listas (mock → futuro repositório); uma fonte da verdade para admin/shipper/carrier/governo. |
-| **Faixa ou grade de KPIs executivos** | Cartões por métrica (reuso conceitual de `DashboardOverview` / `GovernmentDashboard`: `Card`, ícones Hydro). |
-| **Layout ou composição por papel** | Decidir quais blocos aparecem por `role` (e eventual política para governo). |
-| **Resumo de funil de negociações** | Abertas vs concluídas com tooltip ou doc-link para definição formal. |
-| **Bloco de rastreio** | Contagem total, últimos N eventos ou série por período quando dados permitirem. |
-| **Painel de impacto regional** | Agregações por corredor/família de produto/CO₂; alinhado à página governo para evitar números divergentes. |
-| **Centro de alertas (resumo)** | Lista curta ou contadores por tipo de alerta derivados de regras sobre cargas, negociações e `trackingEvents`. |
-
-Primeira entrega pode ser **somente contagens e tabelas compactas**, sem biblioteca de gráficos obrigatória.
+| KPI | Admin | Shipper | Carrier | Governo/operação |
+|-----|:-----:|:-------:|:-------:|:----------------:|
+| Cargas publicadas | Alta | Alta (escopo próprio **◇**) | Baixa/Média (benchmark **◇**) | Alta |
+| Cargas ativas | Alta | Alta | Média | Alta |
+| Negociações abertas | Alta | Alta | Alta | Alta |
+| Negociações concluídas | Alta | Alta | Alta | Alta |
+| Embarcações disponíveis | Média | Média | Alta (frota própria) | Média |
+| Tempo médio de negociação | Baixa **◇** dados | Média **◇** | Média **◇** | Média **◇** |
+| Eventos de rastreio | Média | Alta | Alta | Alta |
+| Atrasos reportados | Alta | Alta | Alta | Alta |
+| Documentação pendente | Alta | Alta | Alta | Alta |
+| Impacto regional | Média | Média | Baixa | Alta |
+| Alertas operacionais | Alta | Alta | Alta | Alta |
 
 ---
 
-## 6. Rotas afetadas
+## 5. Fonte dos dados atuais
 
-| Rota | Relação com o dashboard executivo |
-|------|-------------------------------------|
-| **`/[locale]/dashboard`** | Principal candidata a concentrar variantes por papel ou blocos condicionais executivos. |
-| **`/[locale]/governo`** | Alinhamento de KPIs institucionais com a mesma camada de agregação que alimenta o executivo (evitar duplicar lógica divergente). |
-| **`/[locale]/admin`** | Vista global para administradores; links para ferramentas de cenário (`mock-mode`) sem misturar reset com números “oficiais” de KPI. |
-| **`/[locale]/impacto`** | Deep-links opcionais (“detalhar impacto”) a partir de métricas agregadas. |
-| **`/[locale]/rastreio`** (ou equivalente) | Contexto da timeline operacional; KPI “eventos de rastreio” pode apontar para exploração detalhada. |
-| **Middleware (`middleware.ts`)** | Se KPIs agregados sensíveis forem expostos apenas a perfis específicos, ajustar rotas privadas e política de `/governo` (hoje pode ser pública — decisão de produto). |
-| **APIs existentes** | `GET /api/cargas`, `GET /api/negociacoes`, `GET /api/embarcacoes`, `GET /api/rastreio` como fontes atuais de dados brutos; futura **`GET /api/dashboard/summary`** (ou nome equivalente) recomendada antes de dados reais sensíveis. |
+Origens **✓ já utilizadas ou disponíveis** no projeto para montar protótipos e agregações locais — **não** substituem decisões **◇** de API escopada.
+
+| Necessidade | Fonte típica | Observações |
+|-------------|--------------|-------------|
+| Cargas | `readMock('cargoes')`, `listCargoes()`, `GET /api/cargas` | Campos: `status`, `ownerId` (**«a confirmar»** preenchimento em todos os fluxos — `docs/SECURITY-PRODUCT-DECISIONS.md`), corredor, `co2Saving`, etc. |
+| Negociações | `readMock('negotiations')`, `listNegotiations()`, `GET /api/negociacoes` | `stage`, `status`, `shipperId`, `carrierId`, `cargoId`; timestamps podem ser limitados. |
+| Embarcações | `readMock('vessels')`, `listVessels()`, `GET /api/embarcacoes` | `status`, `ownerId`. |
+| Rastreio | `readMock('trackingEvents')`, `listTrackingEvents()`, `GET /api/rastreio` | `kind` opcional + inferência (`docs/TRACKING-TIMELINE.md`). |
+| Resumo simples | **✓** `getMarketplaceSummary()` e componentes tipo overview | Agregações básicas; não são o dashboard executivo completo **◇**. |
+| Sessão / papel | `getSessionUser`, fluxos em `features/auth` | Base para escopo **◇** futuro. |
+| Cenários | `POST /api/mock-mode`, seeds | Altera contagens — sempre disclosure “demonstrativo”. |
+
+---
+
+## 6. Fonte dos dados futuros
+
+**◇ Roadmap** — alinhado a `docs/DATABASE-PLANNING.md`, `docs/API-SECURITY-AUDIT.md`, `docs/DOCUMENTS-MODULE.md`.
+
+| Área | Direção |
+|------|---------|
+| Persistência | Tabelas `cargoes`, `negotiations`, `vessels`, `tracking_events`; **◇** `documents` para KPI documental robusto. |
+| Temporalidade | `created_at`, `updated_at`, `closed_at` normalizados em **UTC** para médias e séries. |
+| API agregadora | **◇** `GET /api/dashboard/summary` (nome ilustrativo): retorna só KPIs autorizados; não espelhar listagens completas no cliente para dados sensíveis. |
+| Rastreio | Escrita auditável; filtros por `cargoId` / `negotiationId` / período (`docs/TRACKING-TIMELINE.md`). |
+| Alertas | **◇** motor de regras ou observabilidade; canais e severidades em produto/segurança. |
+| Impacto regional | **◇** eventual integração externa (IBGE, ANTAQ, inventários) — fora do escopo técnico imediato; até lá, derivado controlado + metodologia explícita. |
 
 ---
 
 ## 7. Filtros necessários
 
-| Filtro | Uso típico |
-|--------|------------|
-| **Papel na sessão** | Determina escopo automático (shipper → suas cargas/deals; carrier → sua participação e frota). |
-| **Intervalo de datas** | Séries temporais, alertas recentes, tempo médio de negociação (quando houver timestamps). |
+| Filtro | Uso |
+|--------|-----|
+| **Papel / sessão** | Escopo automático (shipper/carrier/admin); governo **◇** política dedicada (role futura ou claims institucionais). |
+| **Intervalo de datas** | Séries, médias, alertas recentes **◇**. |
 | **Corredor / hidrovia** | KPIs regionais e visão governo. |
-| **Estado da carga** | Aberta, em negociação, etc. (alinhar ao enum/status real). |
-| **Estado da negociação** | Aberta vs concluída (contrato explícito no domínio). |
-| **Tipo de produto / família** | Impacto e relatórios setoriais. |
-| **Disponibilidade de embarcação** | Frota disponível vs ocupada. |
-| **Tipo de evento de rastreio (`kind`)** | Distribuição de eventos operacionais (`OperationalTrackingEventKind`). |
-| **Severidade de alerta** | Quando o subsistema de alertas existir; MVP pode filtrar por “pendências” vs “atrasos”. |
+| **Estado da carga** | Publicada vs ativa vs encerrada — enums alinhados ao domínio. |
+| **Estado da negociação** | Aberta vs concluída — contrato único. |
+| **Família de produto / tipo** | Impacto e relatórios setoriais. |
+| **Disponibilidade de embarcação** | Capacidade vs ocupação. |
+| **`kind` de rastreio** | Distribuição operacional (`OperationalTrackingEventKind`). |
+| **Severidade de alerta** | **◇** quando subsistema de alertas existir. |
 
-Para mocks: filtros devem ser **determinísticos** e documentados ao lado da definição do KPI para testes reproduzíveis.
-
----
-
-## 8. Riscos de interpretação
-
-| Risco | Detalhe |
-|-------|---------|
-| **Mock ≠ mercado real** | Cenários e `mock-mode` alteram contagens; rótulo “dados demonstrativos” até backend oficial. |
-| **Tendências fictícias** | Percentuais de variação em cards podem não ser calculados; não apresentá-los como série temporal sem fonte. |
-| **Ambiguidade aberta/concluída** | Divergência entre `stage` e `status` exige contrato único documentado junto ao KPI. |
-| **Tempo médio de negociação** | Sem datas ISO consistentes, qualquer média é heurística ou ilustrativa. |
-| **Privacidade e anti-truste** | Agregações muito granulares em governo público podem expor estratégia de poucos players. |
-| **Impacto ambiental** | `co2Saving` e afins em mock não equivalem a auditoria oficial sem metodologia publicada. |
-| **Alertas falsos positivos** | Regras simplificadas sobre texto ou status podem gerar ruído; calibragem contínua necessária. |
+Para demos: filtros devem ser **determinísticos** e documentados ao lado da definição do KPI (`docs/TEST-DATA.md` pode complementar fixtures).
 
 ---
 
-## 9. Testes necessários
+## 8. Componentes sugeridos
 
-| Camada | O quê cobrir |
-|--------|----------------|
-| **Unitário** | Funções de agregação: contagens por status, filtros por `ownerId` / `shipperId` / `carrierId`, exclusão de registros inconsistentes, contagem por `kind` em rastreio. |
-| **Integração** | API de resumo (quando existir): `401` sem sessão, `403` quando o papel não autoriza o escopo, formato JSON estável e alinhado ao padrão de erros do projeto. |
-| **i18n** | Labels e descrições de KPI e alertas em `pt-BR`, `en`, `es`; `npm run check:i18n`. |
-| **E2E (fase tardia)** | Smoke por persona: shipper vê apenas escopo próprio; admin vê globais; depende de login/fixtures estáveis. |
-| **Contratos de definição** | Testes ou tabela versionada que fixem “o que conta como negociação aberta” para regressão quando o domínio mudar. |
+Todos **◇ futuros** como **composição de produto**; podem reutilizar **✓** primitives já existentes (`Card`, ícones Hydro, padrões de layout).
 
----
+| Componente (conceitual) | Função |
+|--------------------------|--------|
+| **Camada de agregação server-side** | Funções puras / serviço que calculam KPIs a partir de repositório ou mock — uma fonte para dashboard + governo. |
+| **Faixa de KPIs (cards)** | Uma métrica por cartão + tooltip “definição” + estado vazio/erro. |
+| **Funil negociações** | Abertas vs concluídas + link para lista filtrada **◇**. |
+| **Bloco rastreio** | Contagem, últimos eventos ou série **◇**. |
+| **Mapa ou tabela regional** | Impacto/agregação por corredor — cuidado com granularidade **◇**. |
+| **Centro de alertas (resumo)** | Top N alertas ou contadores por tipo **◇**. |
 
-## 10. Roadmap incremental
-
-1. **Congelar definições de KPI** — Documento de domínio (ou ADR) com fórmulas e filtros por papel; sem UI obrigatória.
-2. **Implementar agregações server-side + testes unitários** — Sobre fixtures pequenas ou `readMock`; funções puras reutilizáveis por dashboard e governo.
-3. **API de resumo escopado** — Ex.: `GET /api/dashboard/summary`; testes de integração de auth e payload.
-4. **UI por persona em ordem** — Primeiro uma persona (ex.: shipper), depois carrier, admin; governo alinhado à página existente ou extensão controlada.
-5. **Alertas operacionais MVP** — Contadores derivados (ex.: eventos `delay_reported`, cargas com documentação pendente) antes de motor complexo.
-6. **Temporalidade real** — Após migração de campos de data em negociações/cargas: tempo médio, sparklines e filtros por período.
-7. **Impacto regional integrado** — Uma única implementação numérica partilhada entre dashboard executivo e impacto/governo.
-8. **E2E e políticas de rota** — Endurecer middleware e permissões quando KPIs deixarem de ser exclusivamente demonstrativos.
+Primeira entrega **◇** pode ser **somente contagens e tabelas**, sem biblioteca de gráficos obrigatória.
 
 ---
 
-## Referências internas
+## 9. Rotas / páginas futuras
 
-- Dashboard atual: `src/features/dashboard/components/dashboard-overview/dashboard-overview.tsx`
-- Governo: `src/features/government/components/government-dashboard/government-dashboard.tsx`
-- Serviços mock: `src/features/marketplace/services/marketplace.service.ts`
-- Mock DB e cenários: `src/shared/server/mock-db.ts`, `src/shared/server/mock-scenarios.ts`
+**◇** Rotas-alvo conceituais; algumas **✓** já existem com outro propósito — evolução incremental.
+
+| Rota (padrão App Router) | Papel |
+|--------------------------|--------|
+| **`/[locale]/dashboard`** | **✓ Existe** área dashboard; **◇** evoluir para variantes por persona ou camada executiva explícita. |
+| **`/[locale]/governo`** | **✓ Existe** — alinhar KPIs institucionais à mesma camada de agregação **◇** para evitar números divergentes. |
+| **`/[locale]/admin`** | **✓ Existe** — visão global; separar métricas “cenário/mock” das métricas que seriam **oficiais** **◇**. |
+| **`/[locale]/impacto`** | Deep-links “detalhar impacto” **◇**. |
+| **`/[locale]/rastreio`** | Contexto da timeline; KPI de eventos pode apontar para exploração **◇**. |
+| **API `GET /api/dashboard/summary`** | **◇** recomendada antes de dados reais sensíveis — ver `docs/API-SECURITY-AUDIT.md`. |
+
+---
+
+## 10. Permissões
+
+**Estado atual (auditoria):** várias APIs retornam listas completas **sem sessão** — inadequado para tratamento como “dashboard executivo de produção” (`docs/API-SECURITY-AUDIT.md`).
+
+**Comportamento alvo ◇:**
+
+| Princípio | Detalhe |
+|-----------|---------|
+| **Least privilege** | Cada papel vê apenas KPIs derivados de entidades autorizadas (ex.: shipper → cargas `ownerId` / negociações como `shipperId`). |
+| **Admin** | Visão global + ferramentas de cenário claramente rotuladas. |
+| **Carrier** | Frota própria + deals como `carrierId`; policy `approved` onde aplicável (`docs/SECURITY-PRODUCT-DECISIONS.md`). |
+| **Governo/operação** | **◇** role institucional ou módulo separado com **agregação mínima** para não expor estratégia de players individuais. |
+| **Sem vazar séries brutas** | Preferir servidor agregador a baixar coleções inteiras no browser **◇**. |
+
+---
+
+## 11. Riscos de interpretação de dados
+
+| Risco | Mitigação |
+|-------|-----------|
+| **Mock ≠ realidade** | Rótulo fixo “dados demonstrativos”; cenários mudam volumes. |
+| **Tendências fictícias** | Não exibir variação percentual sem série real **◇**. |
+| **Aberta vs concluída** | ADR ou tabela versionada de definições junto ao KPI. |
+| **Tempo médio sem datas ISO** | Ocultar ou marcar “indisponível” até modelo temporal existir. |
+| **Privacidade / anti-truste** | Agregações regionais com k-anonymidade ou limiar **◇**. |
+| **Impacto ambiental** | `co2Saving` como narrativa até metodologia auditável **◇**. |
+| **Documentação pendente** | Duas camadas (lista vs arquivo armazenado) — KPI deve declarar escopo (`docs/DOCUMENTS-MODULE.md`). |
+| **Alertas falsos positivos** | Calibragem e feedback humano **◇**. |
+
+---
+
+## 12. Testes recomendados
+
+**◇** Quando houver implementação — sem obrigar mudanças neste commit de documentação.
+
+| Camada | Foco |
+|--------|------|
+| **Unitário** | Funções de agregação: filtros por `ownerId`, `shipperId`, `carrierId`; contagens por status; distribuição por `kind` em rastreio. |
+| **Integração** | API de resumo: `401`/`403`, payload estável, erros padronizados (`docs/API-SECURITY-AUDIT.md`). |
+| **i18n** | Labels e disclaimers em `pt-BR`, `en`, `es`. |
+| **E2E** | Smoke por persona quando login/fixtures estáveis (`docs/E2E-PLAYWRIGHT.md`). |
+| **Contratos de definição** | Testes ou fixtures que fixem “o que conta como negociação aberta”. |
+
+---
+
+## 13. Roadmap incremental
+
+1. **◇ Congelar definições de KPI** — Glossário numérico + filtros por papel (este doc como base).
+2. **◇ Agregações server-side + testes unitários** — Sobre mock/repositório; compartilhar com governo.
+3. **◇ API `GET /api/dashboard/summary` (ou equivalente)** — Auth + escopo + testes de integração.
+4. **◇ UI por persona** — Começar por uma persona (ex.: shipper); depois carrier, admin; governo alinhado à página existente.
+5. **◇ Alertas MVP** — Contadores (`delay_reported`, pendências doc heurísticas).
+6. **◇ Temporalidade real** — Campos de data → tempo médio, filtros por período.
+7. **◇ Impacto integrado** — Uma única implementação numérica entre dashboard e impacto/governo.
+8. **◇ E2E e políticas de rota** — Endurecer middleware quando KPIs deixarem de ser apenas demo.
+
+---
+
+## 14. Critérios de pronto
+
+Considera-se **◇ implementação futura “pronta” para Release 1 do dashboard executivo** quando:
+
+1. **Definições** — Cada KPI em uso tem texto de produto (“inclui / exclui”) referenciado na UI ou doc linkável.
+2. **Escopo** — KPIs respeitam papel e participação; não há lista sensível enviada ao cliente só para agregar no browser **◇**.
+3. **Dados** — Fontes documentadas (mock ou DB); timestamps suficientes para qualquer métrica temporal **exibida**.
+4. **Segurança** — APIs agregadoras alinhadas às recomendações em `docs/API-SECURITY-AUDIT.md` **◇**.
+5. **Qualidade** — `npm run lint`, `npm run typecheck`, `npm run check:i18n`, testes relevantes (unit/integration/E2E conforme escopo do PR).
+6. **Acessibilidade** — Hierarquia de títulos, textos alternativos para ícones de estado, contraste nos cards **◇**.
+7. **Honestidade** — Disclaimers visíveis onde dados forem demonstrativos ou parciais.
+
+---
+
+## Referências de código (✓ tijolos existentes — não equivalência ao produto final)
+
+- `src/features/dashboard/components/dashboard-overview/dashboard-overview.tsx`
+- `src/features/government/components/government-dashboard/government-dashboard.tsx`
+- `src/features/marketplace/services/marketplace.service.ts`
+- `src/shared/server/mock-db.ts`, `src/shared/server/mock-scenarios.ts`
 - APIs: `src/app/api/cargas`, `negociacoes`, `embarcacoes`, `rastreio`, `mock-mode`
-- Segurança de APIs: `docs/API-SECURITY-AUDIT.md`
-- Persistência futura: `docs/DATABASE-PLANNING.md`
-- Timeline de rastreio: `docs/TRACKING-TIMELINE.md`
