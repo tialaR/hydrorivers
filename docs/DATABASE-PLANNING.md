@@ -1,428 +1,315 @@
-# Planejamento de Banco Real — HydroRivers
+# Planejamento de migração para banco real — HydroRivers
 
-## Objetivo
+**Tipo:** documentação apenas — sem implementação de banco, sem ORM, sem alteração de código de produção neste arquivo.
 
-Planejar a migração gradual do HydroRivers de `.mock-data` para banco real, preservando o modo mock, os testes existentes e a arquitetura atual em Next.js App Router.
+**Base:** estado atual do repositório (App Router, `.mock-data`, domínios em `src/features`), `docs/REPOSITORY-BOUNDARY.md`, `docs/API-SECURITY-AUDIT.md`, `docs/SECURITY-PRODUCT-DECISIONS.md`.
 
-Este documento não implementa banco. Ele define o modelo alvo, riscos e ordem recomendada.
+---
 
-## 1. Modelo Relacional
+## 1. Objetivo da migração
 
-Entidades principais:
+Substituir gradualmente a persistência **somente em arquivo JSON** (`.mock-data`) por um **banco relacional transacional** (ex.: Postgres), mantendo:
 
-- `User`
-- `Cargo`
-- `Vessel`
-- `Negotiation`
-- `TrackingEvent`
-- `Document` (futura)
+- contratos HTTP estáveis para clientes existentes;
+- capacidade de **demo/QA** via dados controlados;
+- alinhamento com **autorização por entidade** (`owner_id`, participantes de negociação, decisões em `SECURITY-PRODUCT-DECISIONS.md`);
+- evolução da camada **`getRepositories()`** descrita em `REPOSITORY-BOUNDARY.md`.
 
-Modelo conceitual:
+O modelo SQL abaixo é **proposta inicial** — pode ser refinado em migrações futuras sem mudar o objetivo estratégico.
+
+---
+
+## 2. Por que não trocar mock direto por banco
+
+| Motivo | Explicação |
+|--------|------------|
+| **Acoplamento disperso** | Vários handlers chamam `readMock`/`writeMock`/`upsert*` diretamente; trocar tudo de uma vez quebra testes e aumenta regressões. |
+| **Transações** | Fluxos como «criar negociação + atualizar status da carga» precisam **atomicidade**; arquivo JSON não oferece transação segura em concorrência. |
+| **Autorização** | O projeto documenta GET públicos sensíveis (`docs/API-SECURITY-AUDIT.md`). Persistência real exige **filtros no servidor** alinhados a `owner_id` / participantes — decisão explicitada para **`owner_id` obrigatório em cargas** (`SECURITY-PRODUCT-DECISIONS.md`). |
+| **IDs e tipos** | IDs string derivados de timestamp no mock não são ideais para FK e unicidade global; migração gradual permite mapa ou fase intermediária `text` → `uuid`. |
+| **Repository boundary** | A primeira fatia já separa **`GET /api/cargas`** do acesso direto ao mock (`REPOSITORY-BOUNDARY.md`). Trocar «só o arquivo» pelo pool Postgres ignoraria esse boundary e duplicaria caminhos de dados. |
+| **Sem ORM neste plano** | O projeto pede **sem ORM na fase de planejamento**; SQL explícito ou query builder leve pode vir depois — o importante é contrato de **repositório** antes do motor físico. |
+
+Conclusão: introduzir **repositórios** + **flag de fonte de dados** + **migrations incrementais**, depois ligar Postgres atrás dos mesmos contratos.
+
+---
+
+## 3. Modelo relacional inicial
+
+Entidades principais alinhadas ao domínio TypeScript atual:
+
+| Entidade | Observação |
+|----------|------------|
+| **User** | `HydroUser`: roles `shipper` \| `carrier` \| `admin`, `approved`. |
+| **Cargo** | `Cargo`: status operacional, metadados logísticos, `owner_id` alvo (**decisão de produto**). |
+| **Vessel** | `Vessel`: frota ligada a transportador (`owner_id`). |
+| **Negotiation** | `Negotiation`: liga `cargo`, `vessel`, `shipper`, `carrier`; histórico pode ser `jsonb` inicialmente. |
+| **TrackingEvent** | `TrackingEvent`: timeline por `cargo` / `negotiation`; campos auditáveis (`kind`, `occurred_at`, …). |
+| **Document** (futura) | Metadados + storage externo; vínculo polimórfico ou por tipo de entidade. |
+
+Diagrama conceitual:
 
 ```txt
-users 1 ── N cargoes
-users 1 ── N vessels
+users 1 ── N cargoes             (owner_id)
+users 1 ── N vessels             (owner_id)
 cargoes 1 ── N negotiations
 vessels 1 ── N negotiations
-users 1 ── N negotiations (como shipper)
-users 1 ── N negotiations (como carrier)
+users 1 ── N negotiations        (shipper_id)
+users 1 ── N negotiations       (carrier_id)
 cargoes 1 ── N tracking_events
 negotiations 1 ── N tracking_events
-cargoes 1 ── N documents
-vessels 1 ── N documents
-negotiations 1 ── N documents
-users 1 ── N documents (uploaded_by)
+cargoes | vessels | negotiations | tracking_events ── N documents (futura)
+users 1 ── N documents           (uploaded_by)
 ```
 
-## 2. Tabelas
+---
+
+## 4. Tabelas propostas
+
+Nomes em **snake_case** SQL; mapeamento para o front/API mantém camelCase onde já existe.
 
 ### `users`
 
-Campos recomendados:
-
-- `id uuid primary key`
-- `name text not null`
-- `email text not null unique`
-- `company text not null`
-- `role text not null check (role in ('shipper', 'carrier', 'admin'))`
-- `approved boolean not null default false`
-- `avatar_url text`
-- `phone text`
-- `city text`
-- `password_hash text`
-- `created_at timestamptz not null default now()`
-- `updated_at timestamptz not null default now()`
-
-Observações:
-
-- `password_hash` existe porque o auth atual é mock. Em auth real, pode ser substituído por provider externo.
-- `email` deve ser normalizado para lowercase.
+- `id` `uuid` PK (ou `text` na fase intermediária **«a confirmar»**)
+- `name` `text` NOT NULL  
+- `email` `text` NOT NULL UNIQUE (normalizado lowercase)  
+- `company` `text` NOT NULL  
+- `role` `text` NOT NULL CHECK (`role` IN (`'shipper'`,`'carrier'`,`'admin'`))  
+- `approved` `boolean` NOT NULL DEFAULT false — política shipper/carrier conforme `SECURITY-PRODUCT-DECISIONS.md`  
+- `avatar_url`, `phone`, `city` `text`  
+- `password_hash` `text` (ou substituído por provider OAuth em auth real)  
+- `created_at`, `updated_at` `timestamptz` NOT NULL DEFAULT now()
 
 ### `cargoes`
 
-Campos recomendados:
-
-- `id uuid primary key`
-- `owner_id uuid references users(id)`
-- `title text not null`
-- `origin text not null`
-- `destination text not null`
-- `volume text not null`
-- `window text not null`
-- `cargo_type text not null`
-- `status text not null check (status in ('open', 'bidding', 'contracting', 'reserved', 'boarded', 'delivered'))`
-- `co2_saving text`
-- `target_price text`
-- `description text`
-- `producer text`
-- `temperature text`
-- `product_family text`
-- `corridor text`
-- `main_river text`
-- `service_type text`
-- `predictability text`
-- `eta_confidence text`
-- `connectivity text`
-- `document_readiness integer`
-- `origin_context text`
-- `operational_risks jsonb not null default '[]'`
-- `required_documents jsonb not null default '[]'`
-- `created_at timestamptz not null default now()`
-- `updated_at timestamptz not null default now()`
-
-Observações:
-
-- Campos como `requiredDocuments` e `operationalRisks` podem começar como `jsonb` para preservar flexibilidade do mock.
-- Em fase posterior, documentos reais devem migrar para a tabela `documents`.
+- `id` PK  
+- `owner_id` FK → `users(id)` **NOT NULL** na versão alvo de produção (alinhado à decisão de produto)  
+- Campos espelhando `Cargo`: `title`, `origin`, `destination`, `volume`, `window`, `cargo_type`, `status`, `co2_saving`, `target_price`, descrições, `product_family`, corredor, conectividade, etc.  
+- `required_documents`, `operational_risks` `jsonb` DEFAULT `'[]'` (flexível como no mock)  
+- `documents` `jsonb` opcional até migração para tabela `documents`  
+- `created_at`, `updated_at`
 
 ### `vessels`
 
-Campos recomendados:
-
-- `id uuid primary key`
-- `owner_id uuid references users(id)`
-- `name text not null`
-- `route text not null`
-- `capacity text not null`
-- `eta text`
-- `status text not null check (status in ('available', 'route', 'maintenance'))`
-- `owner text`
-- `image_url text`
-- `vessel_type text`
-- `year integer`
-- `draft text`
-- `flag text`
-- `certifications jsonb not null default '[]'`
-- `amenities jsonb not null default '[]'`
-- `sustainability_score text`
-- `last_inspection date`
-- `corridor text`
-- `document_status text`
-- `low_connectivity_ready boolean default false`
-- `checklist_ready boolean default false`
-- `available_from timestamptz`
-- `created_at timestamptz not null default now()`
-- `updated_at timestamptz not null default now()`
+- `id` PK  
+- `owner_id` FK → `users(id)` (transportador)  
+- Campos espelhando `Vessel`: `name`, `route`, `capacity`, `eta`, `status`, texto `owner` legado vs FK, imagens, certificações em `jsonb`, etc.  
+- `created_at`, `updated_at`
 
 ### `negotiations`
 
-Campos recomendados:
+- `id` PK  
+- `cargo_id` FK → `cargoes(id)`  
+- `vessel_id` FK → `vessels(id)`  
+- `shipper_id`, `carrier_id` FK → `users(id)`  
+- `cargo_title`, `vessel_name`, `stage`, `status`, `amount`, `last_update`  
+- `parties`, `documents`, `history` `jsonb` onde o mock já usa estruturas livres  
+- `created_at`, `updated_at`  
 
-- `id uuid primary key`
-- `cargo_id uuid references cargoes(id)`
-- `vessel_id uuid references vessels(id)`
-- `shipper_id uuid references users(id)`
-- `carrier_id uuid references users(id)`
-- `cargo_title text not null`
-- `vessel_name text not null`
-- `stage text not null`
-- `status text not null check (status in ('pending', 'accepted', 'rejected', 'cancelled'))`
-- `amount text not null`
-- `last_update timestamptz not null default now()`
-- `parties jsonb not null default '[]'`
-- `route text`
-- `payment_terms text`
-- `insurance text`
-- `documents jsonb not null default '[]'`
-- `next_step text`
-- `risk_level text`
-- `history jsonb not null default '[]'`
-- `created_at timestamptz not null default now()`
-- `updated_at timestamptz not null default now()`
-
-Observações:
-
-- `cargo_title`, `vessel_name` e `parties` podem ser denormalizados para histórico/auditoria.
-- O vínculo real deve ser feito por `cargo_id`, `vessel_id`, `shipper_id` e `carrier_id`.
+**Produto:** decisão documentada de **não permitir admin criando negociação operacional** via API — `carrier_id` deve refletir transportador real (`SECURITY-PRODUCT-DECISIONS.md`).
 
 ### `tracking_events`
 
-Campos recomendados:
-
-- `id uuid primary key`
-- `cargo_id uuid references cargoes(id)`
-- `negotiation_id uuid references negotiations(id)`
-- `title text not null`
-- `description text not null`
-- `location text not null`
-- `timestamp timestamptz not null`
-- `status text not null check (status in ('done', 'current', 'pending'))`
-- `evidence text`
-- `created_at timestamptz not null default now()`
+- `id` PK  
+- `cargo_id` FK nullable conforme regra de negócio  
+- `negotiation_id` FK nullable  
+- `title`, `description`, `location`, `timestamp` (label humana pode coexistir com `occurred_at`)  
+- `status` CHECK (`done` \| `current` \| `pending`)  
+- `evidence` `text`  
+- Opcional auditável: `kind` `text`, `actor_id` FK → `users`, `actor_role` `text`, `occurred_at`, `recorded_at` `timestamptz`, `evidence_document_id` `uuid` nullable, `metadata` `jsonb`  
+- `created_at`
 
 ### `documents` (futura)
 
-Campos recomendados:
+- `id` PK  
+- `entity_type` CHECK inclui `'cargo'`, `'vessel'`, `'negotiation'`, `'tracking_event'` (**«a confirmar»** inclusão de `user`)  
+- `entity_id` UUID (ou texto compatível com PKs intermediários)  
+- `name`, `document_type`, `status`  
+- `storage_key` / `storage_url` conforme política de segurança (URLs não públicas sem auth)  
+- `uploaded_by` FK → `users`  
+- `metadata` `jsonb`  
+- `created_at`, `updated_at`
 
-- `id uuid primary key`
-- `entity_type text not null check (entity_type in ('cargo', 'vessel', 'negotiation', 'tracking_event', 'user'))`
-- `entity_id uuid not null`
-- `name text not null`
-- `document_type text not null`
-- `status text not null`
-- `storage_url text`
-- `metadata jsonb not null default '{}'`
-- `uploaded_by uuid references users(id)`
-- `created_at timestamptz not null default now()`
-- `updated_at timestamptz not null default now()`
+---
 
-Observações:
+## 5. Relacionamentos
 
-- Usar `entity_type + entity_id` permite começar simples.
-- Se o domínio exigir constraints fortes, migrar depois para tabelas específicas (`cargo_documents`, `vessel_documents`, etc.).
+| De | Para | Cardinalidade |
+|----|------|----------------|
+| `users` | `cargoes` | 1:N (`owner_id`) |
+| `users` | `vessels` | 1:N (`owner_id`) |
+| `cargoes` | `negotiations` | 1:N |
+| `vessels` | `negotiations` | 1:N |
+| `users` | `negotiations` | N:M implícito via `shipper_id` e `carrier_id` |
+| `cargoes` | `tracking_events` | 1:N |
+| `negotiations` | `tracking_events` | 1:N |
+| `documents` | entidades | N:1 polimórfico (`entity_type`, `entity_id`) |
 
-## 3. Relacionamentos
+Integridade: ao apagar ou arquivar entidades, definir política **soft-delete** ou RESTRICT para não quebrar auditoria (**«a confirmar»** política de retenção).
 
-- `users.id -> cargoes.owner_id`
-- `users.id -> vessels.owner_id`
-- `cargoes.id -> negotiations.cargo_id`
-- `vessels.id -> negotiations.vessel_id`
-- `users.id -> negotiations.shipper_id`
-- `users.id -> negotiations.carrier_id`
-- `cargoes.id -> tracking_events.cargo_id`
-- `negotiations.id -> tracking_events.negotiation_id`
-- `users.id -> documents.uploaded_by`
+---
 
-Regras esperadas:
-
-- Uma carga pertence a um embarcador (`owner_id`).
-- Uma embarcação pertence a um transportador (`owner_id`).
-- Uma negociação liga carga, embarcação, embarcador e transportador.
-- Eventos de rastreio pertencem a carga e, quando aplicável, negociação.
-
-## 4. Índices Importantes
+## 6. Índices importantes
 
 ### `users`
 
-- `unique index users_email_unique on users(lower(email))`
-- `index users_role_idx on users(role)`
-- `index users_approved_idx on users(approved)`
+- UNIQUE em `lower(email)`  
+- `(role)`, `(approved)` para painéis admin/moderação  
 
 ### `cargoes`
 
-- `index cargoes_owner_id_idx on cargoes(owner_id)`
-- `index cargoes_status_idx on cargoes(status)`
-- `index cargoes_corridor_idx on cargoes(corridor)`
-- `index cargoes_product_family_idx on cargoes(product_family)`
-- `index cargoes_origin_destination_idx on cargoes(origin, destination)`
+- `(owner_id)`  
+- `(status)`, `(corridor)`, `(product_family)`  
+- `(origin, destination)` para buscas de marketplace  
 
 ### `vessels`
 
-- `index vessels_owner_id_idx on vessels(owner_id)`
-- `index vessels_status_idx on vessels(status)`
-- `index vessels_corridor_idx on vessels(corridor)`
+- `(owner_id)`, `(status)`, `(corridor)`  
 
 ### `negotiations`
 
-- `index negotiations_cargo_id_idx on negotiations(cargo_id)`
-- `index negotiations_vessel_id_idx on negotiations(vessel_id)`
-- `index negotiations_shipper_id_idx on negotiations(shipper_id)`
-- `index negotiations_carrier_id_idx on negotiations(carrier_id)`
-- `index negotiations_status_idx on negotiations(status)`
-- `index negotiations_stage_idx on negotiations(stage)`
+- `(cargo_id)`, `(vessel_id)`, `(shipper_id)`, `(carrier_id)`  
+- `(status)`, `(stage)`  
+- Composto opcional `(carrier_id, status)` para dashboards  
 
 ### `tracking_events`
 
-- `index tracking_events_cargo_id_idx on tracking_events(cargo_id)`
-- `index tracking_events_negotiation_id_idx on tracking_events(negotiation_id)`
-- `index tracking_events_status_idx on tracking_events(status)`
-- `index tracking_events_timestamp_idx on tracking_events(timestamp)`
+- `(cargo_id)`, `(negotiation_id)`  
+- `(occurred_at)` ou `(timestamp)` conforme colunas escolhidas  
+- `(kind)` se filtros por tipo operacional forem frequentes  
 
 ### `documents`
 
-- `index documents_entity_idx on documents(entity_type, entity_id)`
-- `index documents_uploaded_by_idx on documents(uploaded_by)`
-- `index documents_status_idx on documents(status)`
-- `index documents_document_type_idx on documents(document_type)`
+- `(entity_type, entity_id)`  
+- `(uploaded_by)`, `(status)`, `(document_type)`  
 
-## 5. Regras de Autorização por Entidade
+---
 
-### `User`
+## 7. Regras de autorização por entidade
 
-- Usuário autenticado pode ler e editar o próprio perfil.
-- Admin pode listar/aprovar usuários em fase futura.
-- Payload de perfil nunca pode alterar `id`, `role`, `approved` ou `password_hash`.
+Consolidado com `API-SECURITY-AUDIT.md` e decisões de produto **alvo** (nem todas aplicadas no código ainda):
 
-### `Cargo`
+### User
 
-- `shipper` aprovado pode criar carga.
-- `carrier` não pode criar carga.
-- Dono da carga (`owner_id`) pode editar/cancelar em fase futura.
-- Admin pode auditar/listar.
-- Leitura pública deve ser via DTO sanitizado; leitura completa deve exigir sessão.
+- Leitura/edição do **próprio** perfil; campos sensíveis (`id`, `role`, `approved`, segredo de auth) **imutáveis** via payload público (`SECURITY-PRODUCT-DECISIONS.md`).  
+- Admin: moderação/aprovação em fluxos futuros.
 
-### `Vessel`
+### Cargo
 
-- `carrier` aprovado pode criar/editar embarcação própria em fase futura.
-- `shipper` não deve editar embarcações.
-- Admin pode auditar/aprovar.
-- Leitura pública deve ser sanitizada.
+- Criação: **shipper** (ou papel institucional explícito); **carrier** bloqueado; respeitar `approved` conforme API atual e decisões.  
+- Leitura: hoje GET pode ser público — **produção** deve evoluir para lista **filtrada** ou DTO sanitizado (`API-SECURITY-AUDIT.md`).  
+- **`owner_id`** obrigatório na persistência alvo (`SECURITY-PRODUCT-DECISIONS.md`).  
 
-### `Negotiation`
+### Vessel
 
-- `carrier` pode criar proposta para carga válida.
-- `shipper_id` e `carrier_id` podem visualizar a negociação.
-- Apenas participante pode alterar status.
-- Regras futuras por transição:
-  - carrier cria proposta
-  - shipper aceita/rejeita
-  - ambos podem cancelar conforme estado
-- Admin pode auditar.
+- CRUD futuro restrito ao **owner** transportador ou admin institucional.  
+- GET público atual é **risco** documentado — mesmo tratamento que cargas em produção.
 
-### `TrackingEvent`
+### Negotiation
 
-- Participantes da carga/negociação podem visualizar eventos relacionados.
-- Operações/admin podem visualizar todos.
-- Criação de eventos deve ser restrita a usuário autorizado ou serviço operacional.
+- Criação: **carrier** aprovado (decisão: **não admin** como autor operacional — `SECURITY-PRODUCT-DECISIONS.md`).  
+- Leitura: participantes (`shipper_id`, `carrier_id`) + admin auditoria.  
+- PATCH status: apenas participantes (com máquina de estados futura).
 
-### `Document`
+### TrackingEvent
 
-- Upload permitido apenas para usuário autenticado com relação à entidade.
-- Leitura depende da entidade:
-  - documento de cargo: owner, participante de negociação, admin
-  - documento de embarcação: owner carrier, admin
-  - documento de negociação: participantes, admin
-- Nunca expor `storage_url` sensível sem autorização.
+- Leitura escopada por **cargo/negociação** autorizados ao usuário; institucional pode ter visão agregada com política própria.  
+- Escrita: usuário autorizado ou job/sistema com auditoria (`actor_id`, `recorded_at`).
 
-## 6. Estratégia de Seed Demo
+### Document (futura)
 
-Manter os dados atuais de mock como fonte inicial de seed.
+- Upload/leitura conforme vínculo à entidade e papel; sem expor storage sem autorização (`API-SECURITY-AUDIT.md`).
 
-Fases:
+---
 
-1. Criar script `seed:demo` futuro.
-2. Converter `defaultUsers`, `cargoes`, `vessels`, `negotiations` e `trackingEvents` para inserts.
-3. Preservar emails e usuários demo:
-   - `tiala@hydrorivers.com`
-   - `joao@naveganorte.com`
-   - `admin@hydrorivers.com`
-4. Mapear IDs atuais para UUIDs ou manter IDs string em fase intermediária.
-5. Criar seed idempotente:
-   - upsert por email em `users`
-   - upsert por slug/id externo nas demais entidades
+## 8. Estratégia de seed/demo
 
-Recomendação:
+1. Derivar seed dos mocks atuais: `auth.mock`, `marketplace.mock`, cenários em `mock-scenarios`.  
+2. Script futuro **`seed:demo`** idempotente: upsert por **email** em `users`; upsert por **chave estável** (ex.: slug/id demo) nas demais tabelas.  
+3. Preservar identidades demo conhecidas nos mocks (emails admin/carrier/shipper usados em QA).  
+4. Primeira migração pode usar **`text` PK** compatível com IDs atuais; segunda onda migra para **uuid**.  
+5. Separar **seed demo** de **migrations estruturais** (nunca misturar dados voláteis em migration obrigatória sem reversão).
 
-- Primeira versão pode manter `id text` para reduzir migração.
-- Versão de produção deve migrar para `uuid`.
+---
 
-## 7. Como Manter Mock e Banco em Paralelo
+## 9. Como manter mock e banco em paralelo
 
-A camada de repository deve selecionar a fonte de dados por ambiente:
+Variável de ambiente sugerida (exemplo):
 
 ```txt
-HYDRORIVERS_DATA_SOURCE=mock
-HYDRORIVERS_DATA_SOURCE=postgres
+HYDRORIVERS_DATA_SOURCE=mock | postgres
 ```
 
-Estratégia:
-
-- Default: `mock`
-- Testes unitários/integration atuais continuam usando mock.
-- Ambiente local pode alternar para `postgres`.
-- E2E pode rodar em `mock` inicialmente.
-- Staging pode rodar em `postgres` com seed demo.
-
-Fluxo esperado:
+Fluxo alinhado ao boundary:
 
 ```txt
-API Route
-  -> getRepositories()
-    -> mock repositories
-    -> postgres repositories (futuro)
+Route Handler → getRepositories() → implementação mock (readMock/writeMock)
+                                  → implementação Postgres (queries SQL)
 ```
 
-Não remover `.mock-data` até:
+Regras:
 
-- repository real estar estável
-- testes rodarem contra banco
-- seed demo estar confiável
-- estratégia de rollback existir
+- **Default local:** `mock` para desenvolvimento rápido e testes Vitest existentes.  
+- **CI opcional:** job separado com Postgres + migrations quando estável.  
+- **Não remover `.mock-data`** até repositório real, seeds e rollback estarem maduros (`REPOSITORY-BOUNDARY.md`).  
+- Expandir interfaces em `src/shared/server/repositories/` antes de duplicar SQL nos handlers.
 
-## 8. Riscos de Migração
+---
 
-- **Divergência mock vs banco:** regras podem passar em mock e falhar em Postgres.
-- **Transações:** fluxos como criar negociação + atualizar carga precisam ser atômicos no banco.
-- **IDs:** timestamps/string IDs atuais podem conflitar com UUIDs.
-- **Autorização:** relações como `owner_id`, `shipper_id` e `carrier_id` precisam estar sempre preenchidas.
-- **Dados sensíveis:** documentos, evidências e negociações não devem continuar públicos.
-- **Testes:** mocks atuais precisarão conviver com testes contra repository real.
-- **Seed:** seed não idempotente pode duplicar dados demo.
-- **Schema prematuro:** normalizar tudo cedo demais pode atrasar o MVP; `jsonb` é aceitável em campos flexíveis na primeira migração.
+## 10. Ordem incremental de implementação
 
-## 9. Ordem de Implementação
+| Etapa | Entrega |
+|-------|---------|
+| **E1** | Expandir repository mock: `cargoes.upsert`, listagens usadas por APIs — completar migração de **todas** as operações de **cargas** antes do SQL. |
+| **E2** | Introduzir `NegotiationsRepository` + transação lógica «negociação + atualização de carga» encapsulada (ainda mock ou unit-of-work em memória). |
+| **E3** | `VesselsRepository`, `TrackingRepository`; alinhar `marketplace.service` a `getRepositories()`. |
+| **E4** | Auth users via repositório (leitura/login/register/profile). |
+| **E5** | Schema SQL inicial + migrations **somente estrutura**; sem ligar produção. |
+| **E6** | Implementação Postgres **read-only** para uma entidade piloto (ex.: cargas). |
+| **E7** | Escrita Postgres + transações (`negotiations`). |
+| **E8** | Tabela `documents` + storage externo (**fora** deste plano detalhado). |
+| **E9** | Endurecer autorização nas APIs conforme matriz deste doc + auditoria. |
 
-### Fase 1 — Boundary de repository
+Estado **atual** documentado em `REPOSITORY-BOUNDARY.md`: piloto **`GET /api/cargas`** já usa `getRepositories().cargoes.list()`.
 
-Status: iniciada.
+---
 
-- Criar interfaces.
-- Criar mock repositories.
-- Migrar uma rota piloto.
-- Validar testes.
+## 11. Riscos
 
-### Fase 2 — Migrar rotas simples para repository
+| Risco | Mitigação |
+|-------|-----------|
+| Divergência comportamento mock vs Postgres | Contratos de repositório testados; smoke comparativo de payloads JSON. |
+| Ausência de transação na migração inicial | Introduzir fronteira única (`createNegotiationWithCargoUpdate`) antes do SQL. |
+| IDs incompatíveis | Plano explícito text→uuid ou mapa de correlação no seed. |
+| Exposição de dados sensíveis mantida após DB | Priorizar **auth em GET** conforme `API-SECURITY-AUDIT.md`. |
+| Schema excessivamente normalizado cedo | Manter `jsonb` onde o produto ainda iter (`history`, `required_documents`). |
+| Seed não idempotente | Upserts e constraints UNIQUE claros. |
+| ORM introduzido informalmente | Manter política «SQL explícito / camada fina» até decisão formal. |
 
-- `/api/embarcacoes`
-- `/api/rastreio`
-- `marketplace.service`
+---
 
-### Fase 3 — Migrar auth para repository
+## 12. Critérios de pronto
 
-- `getSessionUser`
-- `login`
-- `register`
-- `profile`
+Para considerar a migração **concluída em um ambiente** (ex.: staging):
 
-### Fase 4 — Migrar negociações para repository
+1. **Schema:** todas as tabelas deste documento criadas por migrations versionadas; FKs e índices mínimos aplicados.  
+2. **Repositories:** todas as rotas críticas em `src/app/api` passam apenas por implementações mock ou Postgres atrás de `getRepositories()` (sem `readMock` solto nos handlers).  
+3. **Auth:** usuários persistidos no banco; `approved` e roles aplicados nas queries autorizadas.  
+4. **Transações:** fluxos multi-linha (negociação + carga) atômicos no Postgres.  
+5. **Seed demo:** reproduz cenário utilizável pela UI sem `.mock-data`.  
+6. **Segurança:** ausência de GET públicos abertos para dados operacionais completos **ou** DTO sanitizado aceito por produto (`API-SECURITY-AUDIT.md`).  
+7. **Testes:** integração contra Postgres em CI opcional; regressão Vitest mock verde; decisões `SECURITY-PRODUCT-DECISIONS.md` cobertas onde aplicável (`owner_id`, papel em negociação).  
+8. **Rollback:** procedimento documentado para voltar `HYDRORIVERS_DATA_SOURCE=mock` sem perda de código.
 
-- `POST /api/negociacoes`
-- `PATCH /api/negociacoes`
-- concentrar escrita dupla em métodos de repository ou service transacional futuro
+---
 
-### Fase 5 — Preparar schema SQL
+## Referências cruzadas
 
-- Criar migrations iniciais.
-- Criar seed demo.
-- Não ativar em produção ainda.
+- `docs/REPOSITORY-BOUNDARY.md` — boundary atual e próximos passos  
+- `docs/API-SECURITY-AUDIT.md` — sessão, papéis, exposição de dados  
+- `docs/SECURITY-PRODUCT-DECISIONS.md` — `approved`, `ownerId`, admin em negociações, erros de API  
+- `docs/DOCUMENTS-MODULE.md` — evolução da entidade Document  
 
-### Fase 6 — Implementar Postgres repositories
+---
 
-- Começar por leitura.
-- Depois escrita simples.
-- Por último fluxos transacionais.
-
-### Fase 7 — Rodar em paralelo
-
-- `mock` para desenvolvimento e QA visual.
-- `postgres` para staging.
-- Comparar contratos de API.
-
-### Fase 8 — Hardening para produção
-
-- Auth real.
-- DTOs públicos/privados.
-- Storage real para documentos.
-- Logs/auditoria.
-- Testes de autorização contra banco.
-
+*Documento revisado para refletir as seções obrigatórias do planejamento de migração; ajustar datas e tecnologia exata do provedor (RDS, Neon, Supabase, etc.) em ADR futuro.*
