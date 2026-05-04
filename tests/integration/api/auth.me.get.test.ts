@@ -23,7 +23,7 @@ describe('GET /api/auth/me', () => {
     const response = await GET();
 
     expect(response.status).toBe(401);
-    await expect(response.json()).resolves.toEqual({ user: null });
+    await expect(response.json()).resolves.toEqual({ error: 'unauthenticated', user: null });
   });
 
   it('retorna usuário público quando há sessão', async () => {

@@ -39,7 +39,10 @@ describe('POST /api/auth/login', () => {
     const response = await POST(request);
 
     expect(response.status).toBe(400);
-    await expect(response.json()).resolves.toMatchObject({ error: 'invalid-json' });
+    await expect(response.json()).resolves.toMatchObject({
+      error: 'invalid-payload',
+      reason: 'invalid-json'
+    });
   });
 
   it('retorna 400 quando faltam credenciais', async () => {
@@ -50,7 +53,10 @@ describe('POST /api/auth/login', () => {
     const response = await POST(request);
 
     expect(response.status).toBe(400);
-    await expect(response.json()).resolves.toMatchObject({ error: 'missing-credentials' });
+    await expect(response.json()).resolves.toMatchObject({
+      error: 'invalid-payload',
+      reason: 'missing-credentials'
+    });
   });
 
   it('retorna 401 para usuário inexistente ou senha inválida', async () => {

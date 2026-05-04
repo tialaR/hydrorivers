@@ -1,4 +1,5 @@
 import { getSessionUser, isNonEmptyText } from '@/shared/server/auth';
+import { forbidden, invalidPayload, unauthenticated } from '@/shared/server/api-errors';
 import { readMock, writeMock } from '@/shared/server/mock-db';
 import type { Negotiation } from '@/features/marketplace/domain/marketplace.types';
 
@@ -13,12 +14,12 @@ export function GET() {
 
 export async function POST(request: Request) {
   const user = await getSessionUser();
-  if (!user) return Response.json({ error: 'unauthenticated' }, { status: 401 });
-  if (user.role === 'shipper') return Response.json({ error: 'role-not-allowed' }, { status: 403 });
+  if (!user) return unauthenticated();
+  if (user.role === 'shipper') return forbidden('role-not-allowed');
 
   const payload = await request.json().catch(() => null) as Partial<Negotiation> | null;
   if (!payload || !isNonEmptyText(payload.cargoId) || !isNonEmptyText(payload.vesselId) || !isNonEmptyText(payload.amount)) {
-    return Response.json({ error: 'missing-required-fields' }, { status: 400 });
+    return invalidPayload('missing-required-fields');
   }
 
   const cargoes = readMock('cargoes');
@@ -70,18 +71,18 @@ export async function POST(request: Request) {
 
 export async function PATCH(request: Request) {
   const user = await getSessionUser();
-  if (!user) return Response.json({ error: 'unauthenticated' }, { status: 401 });
+  if (!user) return unauthenticated();
 
   const payload = await request.json().catch(() => null) as { id?: string; status?: Negotiation['status'] } | null;
   if (!payload?.id || !validStatuses.includes(payload.status as NonNullable<Negotiation['status']>)) {
-    return Response.json({ error: 'invalid-payload' }, { status: 400 });
+    return invalidPayload('invalid-payload');
   }
 
   const negotiations = readMock('negotiations');
   const target = negotiations.find((item) => item.id === payload.id);
   if (!target) return Response.json({ error: 'negotiation-not-found' }, { status: 404 });
   if (target.shipperId !== user.id && target.carrierId !== user.id) {
-    return Response.json({ error: 'forbidden' }, { status: 403 });
+    return forbidden();
   }
 
   const nextNegotiations = negotiations.map((item) => item.id === payload.id

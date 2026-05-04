@@ -40,7 +40,10 @@ describe('POST /api/auth/register', () => {
       body: '{'
     }));
     expect(response.status).toBe(400);
-    await expect(response.json()).resolves.toMatchObject({ error: 'invalid-json' });
+    await expect(response.json()).resolves.toMatchObject({
+      error: 'invalid-payload',
+      reason: 'invalid-json'
+    });
   });
 
   it('retorna 400 quando faltam campos obrigatórios', async () => {
@@ -49,7 +52,10 @@ describe('POST /api/auth/register', () => {
       body: JSON.stringify({ name: '', email: 'x@x.com', company: '', password: '123' })
     }));
     expect(response.status).toBe(400);
-    await expect(response.json()).resolves.toMatchObject({ error: 'missing-required-fields' });
+    await expect(response.json()).resolves.toMatchObject({
+      error: 'invalid-payload',
+      reason: 'missing-required-fields'
+    });
   });
 
   it('retorna 403 para role inválida', async () => {
@@ -64,7 +70,10 @@ describe('POST /api/auth/register', () => {
       })
     }));
     expect(response.status).toBe(403);
-    await expect(response.json()).resolves.toMatchObject({ error: 'invalid-role' });
+    await expect(response.json()).resolves.toMatchObject({
+      error: 'forbidden',
+      reason: 'invalid-role'
+    });
   });
 
   it('retorna 409 para email já existente', async () => {

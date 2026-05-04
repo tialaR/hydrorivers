@@ -1,5 +1,6 @@
 import type { HydroUser } from '@/features/auth/domain/auth.types';
 import { getSessionUser, isNonEmptyText, toPublicUser } from '@/shared/server/auth';
+import { invalidPayload, unauthenticated } from '@/shared/server/api-errors';
 import { upsertUser } from '@/shared/server/mock-db';
 
 export const runtime = 'nodejs';
@@ -7,13 +8,13 @@ export const dynamic = 'force-dynamic';
 
 export async function PUT(request: Request) {
   const current = await getSessionUser();
-  if (!current) return Response.json({ error: 'unauthenticated' }, { status: 401 });
+  if (!current) return unauthenticated();
 
   const payload = await request.json().catch(() => null);
-  if (!payload) return Response.json({ error: 'invalid-json' }, { status: 400 });
+  if (!payload) return invalidPayload('invalid-json');
 
   if (!isNonEmptyText(payload.name) || !isNonEmptyText(payload.email) || !isNonEmptyText(payload.company)) {
-    return Response.json({ error: 'missing-required-fields' }, { status: 400 });
+    return invalidPayload('missing-required-fields');
   }
 
   const user: HydroUser = {

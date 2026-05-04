@@ -1,4 +1,5 @@
 import { getSessionUser, isNonEmptyText } from '@/shared/server/auth';
+import { forbidden, invalidPayload, unauthenticated } from '@/shared/server/api-errors';
 import { readMock, upsertCargo } from '@/shared/server/mock-db';
 import type { Cargo, CargoStatus } from '@/features/marketplace/domain/marketplace.types';
 
@@ -13,15 +14,15 @@ export function GET() {
 
 export async function POST(request: Request) {
   const user = await getSessionUser();
-  if (!user) return Response.json({ error: 'unauthenticated' }, { status: 401 });
-  if (user.role === 'carrier') return Response.json({ error: 'role-not-allowed' }, { status: 403 });
-  if (!user.approved) return Response.json({ error: 'user-not-approved' }, { status: 403 });
+  if (!user) return unauthenticated();
+  if (user.role === 'carrier') return forbidden('role-not-allowed');
+  if (!user.approved) return forbidden('user-not-approved');
 
   const payload = await request.json().catch(() => null) as Partial<Cargo> | null;
-  if (!payload) return Response.json({ error: 'invalid-json' }, { status: 400 });
+  if (!payload) return invalidPayload('invalid-json');
 
   if (!isNonEmptyText(payload.origin) || !isNonEmptyText(payload.destination) || !isNonEmptyText(payload.cargoType)) {
-    return Response.json({ error: 'missing-required-fields' }, { status: 400 });
+    return invalidPayload('missing-required-fields');
   }
 
   const status = allowedStatuses.includes(payload.status as CargoStatus) ? payload.status as CargoStatus : 'open';

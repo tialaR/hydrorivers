@@ -2,6 +2,7 @@
 import { createHash } from 'node:crypto';
 import { cookies } from 'next/headers';
 import { readMock } from '@/shared/server/mock-db';
+import { invalidPayload } from '@/shared/server/api-errors';
 import { toPublicUser, verifyPassword } from '@/shared/server/auth';
 
 export const runtime = 'nodejs';
@@ -23,7 +24,7 @@ function makeChallenge(userId: string, email: string) {
 
 export async function POST(request: Request) {
   const payload = await request.json().catch(() => null);
-  if (!payload) return Response.json({ error: 'invalid-json' }, { status: 400 });
+  if (!payload) return invalidPayload('invalid-json');
 
   const email = String(payload.email ?? '').trim().toLowerCase();
   const password = String(payload.password ?? '');
@@ -31,7 +32,7 @@ export async function POST(request: Request) {
   const challenge = String(payload.challenge ?? '').trim();
 
   if (!email || !password) {
-    return Response.json({ error: 'missing-credentials' }, { status: 400 });
+    return invalidPayload('missing-credentials');
   }
 
   const user = readMock('users').find((item) => item.email.toLowerCase() === email);

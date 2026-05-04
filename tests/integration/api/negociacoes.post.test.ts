@@ -42,7 +42,10 @@ describe('POST /api/negociacoes', () => {
       body: JSON.stringify({})
     }));
     expect(response.status).toBe(403);
-    await expect(response.json()).resolves.toMatchObject({ error: 'role-not-allowed' });
+    await expect(response.json()).resolves.toMatchObject({
+      error: 'forbidden',
+      reason: 'role-not-allowed'
+    });
   });
 
   it('retorna 400 quando payload obrigatório é inválido', async () => {
@@ -53,7 +56,10 @@ describe('POST /api/negociacoes', () => {
       body: JSON.stringify({ cargoId: '', vesselId: '', amount: '' })
     }));
     expect(response.status).toBe(400);
-    await expect(response.json()).resolves.toMatchObject({ error: 'missing-required-fields' });
+    await expect(response.json()).resolves.toMatchObject({
+      error: 'invalid-payload',
+      reason: 'missing-required-fields'
+    });
   });
 
   it('retorna 404 quando carga não existe', async () => {

@@ -44,7 +44,10 @@ describe('PUT /api/auth/profile', () => {
     }));
 
     expect(response.status).toBe(400);
-    await expect(response.json()).resolves.toMatchObject({ error: 'invalid-json' });
+    await expect(response.json()).resolves.toMatchObject({
+      error: 'invalid-payload',
+      reason: 'invalid-json'
+    });
   });
 
   it('retorna 400 para campos obrigatórios ausentes', async () => {
@@ -56,7 +59,10 @@ describe('PUT /api/auth/profile', () => {
     }));
 
     expect(response.status).toBe(400);
-    await expect(response.json()).resolves.toMatchObject({ error: 'missing-required-fields' });
+    await expect(response.json()).resolves.toMatchObject({
+      error: 'invalid-payload',
+      reason: 'missing-required-fields'
+    });
   });
 
   it('retorna 200 e persiste perfil atualizado', async () => {

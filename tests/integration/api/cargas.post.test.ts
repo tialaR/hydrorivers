@@ -42,7 +42,10 @@ describe('POST /api/cargas', () => {
       body: JSON.stringify({})
     }));
     expect(response.status).toBe(403);
-    await expect(response.json()).resolves.toMatchObject({ error: 'role-not-allowed' });
+    await expect(response.json()).resolves.toMatchObject({
+      error: 'forbidden',
+      reason: 'role-not-allowed'
+    });
   });
 
   it('retorna 403 quando usuário não está aprovado', async () => {
@@ -53,7 +56,10 @@ describe('POST /api/cargas', () => {
       body: JSON.stringify({})
     }));
     expect(response.status).toBe(403);
-    await expect(response.json()).resolves.toMatchObject({ error: 'user-not-approved' });
+    await expect(response.json()).resolves.toMatchObject({
+      error: 'forbidden',
+      reason: 'user-not-approved'
+    });
   });
 
   it('retorna 400 para json inválido', async () => {
@@ -64,7 +70,10 @@ describe('POST /api/cargas', () => {
       body: '{'
     }));
     expect(response.status).toBe(400);
-    await expect(response.json()).resolves.toMatchObject({ error: 'invalid-json' });
+    await expect(response.json()).resolves.toMatchObject({
+      error: 'invalid-payload',
+      reason: 'invalid-json'
+    });
   });
 
   it('retorna 400 para campos obrigatórios ausentes', async () => {
@@ -75,7 +84,10 @@ describe('POST /api/cargas', () => {
       body: JSON.stringify({ origin: '', destination: '', cargoType: '' })
     }));
     expect(response.status).toBe(400);
-    await expect(response.json()).resolves.toMatchObject({ error: 'missing-required-fields' });
+    await expect(response.json()).resolves.toMatchObject({
+      error: 'invalid-payload',
+      reason: 'missing-required-fields'
+    });
   });
 
   it('retorna 201 e persiste carga no sucesso', async () => {

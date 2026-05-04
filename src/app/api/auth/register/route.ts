@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import type { HydroUser, PublicUserRole } from '@/features/auth/domain/auth.types';
 import { hashPassword, isNonEmptyText, toPublicUser } from '@/shared/server/auth';
+import { forbidden, invalidPayload } from '@/shared/server/api-errors';
 import { readMock, upsertUser } from '@/shared/server/mock-db';
 
 export const runtime = 'nodejs';
@@ -10,18 +11,18 @@ const allowedPublicRoles: PublicUserRole[] = ['shipper', 'carrier'];
 
 export async function POST(request: Request) {
   const payload = await request.json().catch(() => null);
-  if (!payload) return Response.json({ error: 'invalid-json' }, { status: 400 });
+  if (!payload) return invalidPayload('invalid-json');
 
   const email = String(payload.email ?? '').trim().toLowerCase();
   const password = String(payload.password ?? '');
   const role = String(payload.role ?? 'shipper') as PublicUserRole;
 
   if (!isNonEmptyText(payload.name) || !isNonEmptyText(payload.company) || !email || password.length < 6) {
-    return Response.json({ error: 'missing-required-fields' }, { status: 400 });
+    return invalidPayload('missing-required-fields');
   }
 
   if (!allowedPublicRoles.includes(role)) {
-    return Response.json({ error: 'invalid-role' }, { status: 403 });
+    return forbidden('invalid-role');
   }
 
   const users = readMock('users');
