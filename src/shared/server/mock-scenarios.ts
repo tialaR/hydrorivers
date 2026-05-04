@@ -2,14 +2,10 @@ import type { HydroUser } from '@/features/auth/domain/auth.types';
 import { defaultUsers } from '@/features/auth/data/auth.mock';
 import { cargoes, negotiations, trackingEvents, vessels } from '@/features/marketplace/data/marketplace.mock';
 import type { Cargo, Negotiation, TrackingEvent, Vessel } from '@/features/marketplace/domain/marketplace.types';
+import { mockScenarioIds, type MockScenarioId } from '@/shared/config/mock-scenario-ids';
 
-export type MockScenarioId =
-  | 'empty-state'
-  | 'market-active'
-  | 'negotiation-flow'
-  | 'in-transit'
-  | 'completed'
-  | 'error-scenarios';
+export type { MockScenarioId };
+export { mockScenarioIds };
 
 export type MockScenarioData = {
   users: HydroUser[];
@@ -18,15 +14,6 @@ export type MockScenarioData = {
   negotiations: Negotiation[];
   trackingEvents: TrackingEvent[];
 };
-
-export const mockScenarioIds: MockScenarioId[] = [
-  'empty-state',
-  'market-active',
-  'negotiation-flow',
-  'in-transit',
-  'completed',
-  'error-scenarios'
-];
 
 function withRelationships(data: MockScenarioData): MockScenarioData {
   const cargoById = new Map(data.cargoes.map((cargo) => [cargo.id, cargo]));

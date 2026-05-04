@@ -49,7 +49,12 @@ export function CargoCard({ cargo }: { cargo: Cargo }) {
   })();
 
   return (
-    <Link href={`/cargas/${cargo.id}`} className={styles.linkWrap} aria-label={t('openCargo', { title: translateMock(locale, cargo.title) })}>
+    <Link
+      href={`/cargas/${cargo.id}`}
+      className={styles.linkWrap}
+      data-testid="cargo-card"
+      aria-label={t('openCargo', { title: translateMock(locale, cargo.title) })}
+    >
       <Card className={`${styles.card} ${styles[cargo.status]}`}>
         <div className={styles.topline}>
           <Badge tone={statusTone(cargo.status)}>

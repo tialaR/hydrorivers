@@ -2,7 +2,17 @@ import { expect, type Page } from '@playwright/test';
 
 const submitButtonName = /entrar|login|sign in|acceder|continuar|confirmar|otp/i;
 
-export async function loginWithOtp(page: Page) {
+const defaultShipper = {
+  email: 'tiala@hydrorivers.com',
+  password: 'hydro123'
+} as const;
+
+export type OtpCredentials = {
+  email: string;
+  password: string;
+};
+
+export async function loginWithOtp(page: Page, credentials: OtpCredentials = defaultShipper) {
   await page.goto('/pt-BR/login');
 
   const emailInput = page.getByLabel(/e-?mail|email/i);
@@ -14,8 +24,8 @@ export async function loginWithOtp(page: Page) {
   await expect(submitButton).toBeVisible();
   await expect(submitButton).toBeEnabled();
 
-  await emailInput.fill('tiala@hydrorivers.com');
-  await passwordInput.fill('hydro123');
+  await emailInput.fill(credentials.email);
+  await passwordInput.fill(credentials.password);
 
   const [firstLoginResponse] = await Promise.all([
     page.waitForResponse((response) =>

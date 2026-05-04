@@ -485,7 +485,7 @@ export function CargoList({ cargoes }: { cargoes: Cargo[] }) {
         {visible.length ? (
           <div className={styles.grid}>{visible.map((cargo) => <CargoCard key={cargo.id} cargo={cargo} />)}</div>
         ) : (
-          <div className={styles.emptyState}>
+          <div className={styles.emptyState} data-testid="cargo-list-empty">
             <HydroIcon name="cargo" size={30} />
             <h2>{t('emptyTitle')}</h2>
             <p>{t('emptyDescription')}</p>

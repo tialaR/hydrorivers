@@ -1,0 +1,26 @@
+[
+  {
+    "id": "track-000a",
+    "title": "Carga criada no marketplace",
+    "description": "Demanda registrada no corredor Belém–Santarém com janela operacional.",
+    "location": "Belém, PA",
+    "timestamp": "05 mai • 09:10",
+    "status": "done",
+    "kind": "cargo_created",
+    "actorRole": "shipper",
+    "occurredAt": "2026-05-05T12:10:00.000Z",
+    "recordedAt": "2026-05-05T12:11:00.000Z"
+  },
+  {
+    "id": "track-000b",
+    "title": "Proposta enviada ao armador",
+    "description": "Valores e SLA enviados para negociação da viagem refrigerada.",
+    "location": "Marketplace HydroRivers",
+    "timestamp": "05 mai • 11:05",
+    "status": "done",
+    "kind": "proposal_sent",
+    "actorRole": "shipper",
+    "occurredAt": "2026-05-05T14:05:00.000Z",
+    "recordedAt": "2026-05-05T14:06:00.000Z"
+  }
+]
