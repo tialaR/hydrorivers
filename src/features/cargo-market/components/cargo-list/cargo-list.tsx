@@ -442,7 +442,7 @@ export function CargoList({ cargoes }: { cargoes: Cargo[] }) {
         <div className={styles.nativeSearch}>
           <label>
             <HydroIcon name="map" size={18} />
-            <input value={filters.query} onChange={(event) => setFilter('query', event.target.value)} placeholder={t('nativeSearchPlaceholder')} />
+            <input value={filters.query} onChange={(event) => setFilter('query', event.target.value)} placeholder={t('nativeSearchPlaceholder')} data-testid="cargo-list-search" />
           </label>
           <button type="button" onPointerDown={openFilters} onClick={openFilters} aria-label={t('filter')}>
             <HydroIcon name="filter" size={18} />

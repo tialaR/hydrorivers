@@ -1,22 +1,8 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { loginWithOtp } from './support/auth';
+import { applyMockScenario } from './support/mock-scenario';
 
 const admin = { email: 'admin@hydrorivers.com', password: 'hydro123' } as const;
-
-async function openMockPanel(page: Page) {
-  await page.getByTestId('mock-mode-toggle').click();
-  await expect(page.getByTestId('mock-scenario-section')).toBeVisible();
-}
-
-async function applyMockScenario(page: Page, scenarioId: string) {
-  await openMockPanel(page);
-  const responsePromise = page.waitForResponse(
-    (response) => response.url().includes('/api/mock-mode') && response.request().method() === 'POST'
-  );
-  await page.getByTestId('mock-scenario-select').selectOption(scenarioId);
-  const [response] = await Promise.all([responsePromise, page.getByTestId('mock-scenario-apply').click()]);
-  return response;
-}
 
 test.describe('Admin e mock-mode', () => {
   test('admin autenticado acessa o painel administrativo', async ({ page }) => {

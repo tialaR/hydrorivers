@@ -418,7 +418,10 @@
     "windowPlaceholder": "08-12 maio",
     "targetPricePlaceholder": "R$ 8.400",
     "descriptionPlaceholder": "Carga refrigerada, com coleta em cooperativa e entrega no porto regional.",
-    "loading": "Publicando..."
+    "loading": "Publicando...",
+    "fillAllRequired": "Preencha todos os campos obrigatórios antes de publicar.",
+    "carrierCannotPublish": "Transportadores não podem publicar cargas neste fluxo.",
+    "publishFailed": "Não foi possível publicar a carga. Tente novamente."
   },
   "common": {
     "co2": "CO₂ evitado",
