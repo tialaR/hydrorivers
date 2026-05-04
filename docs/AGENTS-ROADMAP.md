@@ -1,347 +1,458 @@
 # Roadmap de agentes inteligentes — HydroRivers
 
-Documento de **planejamento apenas** (sem código). Define **agentes de produto** orientados a IA assistiva — **distintos** dos “agentes” descritos em `AGENTS.md` (instruções para ferramentas de desenvolvimento).
+**Tipo:** documentação **somente de planejamento — visão futura / roadmap**.
 
-Princípios herdados de `docs/AI-ROADMAP.md`:
+**Escopo:** descreve **agentes de produto** (assistência contextual sobre o domínio HydroRivers). **Não implementa agentes**, **não adiciona SDK**, **não altera código nem testes**. Qualquer comportamento descrito deve ser considerado **inexistente em produto** até passar pelos critérios mínimos deste documento.
 
-- IA não decide sozinha; não altera dados críticos sem confirmação humana.
-- Entradas/saídas preferencialmente **estruturadas** e validadas por schema.
-- **Fallback** determinístico obrigatório.
-- **Auditoria** em todas as invocações.
+**Distinção importante:** este arquivo não substitui **`AGENTS.md`** na raiz do repositório — aquele orienta **desenvolvimento humano e uso de ferramentas de IA na codificação**. Aqui, “agente” significa **pacote futuro de política + DTO + (opcional) modelo**, sempre subserviente à **`docs/AI-ROADMAP.md`**.
 
----
-
-## Document Agent
-
-### 1. Responsabilidade
-
-Sugerir e priorizar **pacotes documentais** (obrigatórios, condicionais, próxima fase) para cargas e negociações; explicar lacunas face ao que já está modelado em `requiredDocuments` / futura entidade `Document`; **nunca** substituir parecer oficial ou checklist regulatório definitivo.
-
-### 2. Dados que pode acessar
-
-Somente via servidor, após autorização no escopo do usuário:
-
-- Subconjuntos de **`Cargo`**: `cargoType`, `productFamily`, `temperature`, corredor, `requiredDocuments`, `documents`, `documentReadiness`, conectividade.
-- **`Negotiation`** ligada (IDs permitidos): `stage`, `status`, lista textual `documents` mock.
-- Futuro: metadados **`Document`** (`docs/DOCUMENTS-MODULE.md`) sem conteúdo binário bruto em prompt (apenas tipo, status, visibilidade).
-
-### 3. Ações permitidas
-
-- Emitir **JSON estruturado** de sugestões (`documentType`, `necessity`, `rationaleTag`, `source: 'rule'|'model'`).
-- Ordenar/racionalizar lista para exibição na UI.
-- Acionar **fallback** por matriz `productFamily` / corredor quando o modelo falhar.
-
-### 4. Ações proibidas
-
-- Upload, exclusão ou alteração direta de arquivos/armazenamento.
-- Alterar `requiredDocuments` ou status legal real sem fluxo humano confirmado no endpoint de domínio.
-- Acessar documentos de terceiros fora do escopo da sessão.
-- Inferir dados pessoais não presentes nos DTOs autorizados.
-
-### 5. Necessidade de aprovação humana
-
-**Obrigatória** para qualquer persistência (edição de carga, anexos, mudança de status documental). Sugestões são só **rascunho** até o usuário confirmar item a item ou submeter formulário validado.
-
-### 6. Logs necessários
-
-`requestId`, `agent=document`, `userId`, `role`, `cargoId`/`negotiationId`, versão do schema de entrada/saída, **hash** do payload estruturado, `usedFallback`, latência, resultado da validação schema, contagem de sugestões (não guardar texto integral sem política de retenção).
-
-### 7. Riscos
-
-Alucinação regulatória (exigências inventadas); excesso de confiança em checklist gerado; vazamento de metadados sensíveis em logs.
-
-### 8. Testes possíveis
-
-- Unitários: DTO allowlist + schema de saída + fallback por `productFamily`.
-- Integração: endpoint retorna só campos whitelisted; `401`/`403` fora de escopo.
-- Contrato: mesma resposta shape com modelo desligado (fallback).
-
-### 9. Ordem de implementação
-
-1. Fallback determinístico + API estável.  
-2. UI de revisão manual das sugestões.  
-3. Integração opcional com LLM após módulo de documentos esboçado em dados.  
-4. Auditoria persistente + revisão jurídica de disclaimers.
-
-**Prioridade global entre agentes:** *Baixa até médio prazo* — depende fortemente de `docs/DOCUMENTS-MODULE.md` e de regras regulatórias versionadas.
+**Base:** `docs/AI-ROADMAP.md`, `docs/DEVELOPER-AI-ONBOARDING.md`, `docs/API-SECURITY-AUDIT.md`, `docs/SECURITY-PRODUCT-DECISIONS.md`, `docs/DATABASE-PLANNING.md`, `docs/DOCUMENTS-MODULE.md`, `docs/TRACKING-TIMELINE.md`.
 
 ---
 
-## Risk Agent
+### Legenda
 
-### 1. Responsabilidade
-
-Consolidar e **priorizar** alertas operacionais a partir de dados já existentes (`operationalRisks`, `riskLevel`, conectividade, estágio de negócio); produzir narrativa auxiliar e **ações sugeridas** rotuladas como não vinculantes.
-
-### 2. Dados que pode acessar
-
-- **`Cargo`**: `operationalRisks`, `documentReadiness`, `predictability`, `connectivity`, status.
-- **`Negotiation`**: `riskLevel`, `stage`, `status`.
-- Opcional autorizado: lista resumida de **`TrackingEvent`** (`kind`, `status`, timestamps se existirem).
-
-### 3. Ações permitidas
-
-- Saída estruturada: severidade ordenada, drivers, `suggestedActions[]`, flags `inferred` quando extrapolar além dos campos explícitos.
-- Fallback: ordenação por `riskLevel` + cópia determinística de `operationalRisks`.
-
-### 4. Ações proibidas
-
-- Criar ou gravar incidentes reais no banco sem fluxo próprio.
-- Alterar `riskLevel` ou listas persistidas só pelo modelo.
-- Afirmar conformidade legal ou segurança física garantida.
-
-### 5. Necessidade de aprovação humana
-
-Persistência de novo risco ou mudança de classificação **exige** confirmação; modo leitura (painel) não persiste.
-
-### 6. Logs necessários
-
-Mesmo núcleo de auditoria + `agent=risk`; registrar se cada item da saída veio de **campo domínio** vs **inferência**.
-
-### 7. Riscos
-
-Sensacionalização de risco; mascarar ausência de dados críticos; decisões tomadas pela UI sem leitura humana.
-
-### 8. Testes possíveis
-
-- Golden files: entrada fixa mock → ordem esperada dos alertas no fallback.
-- Propriedade: nunca mais itens que uma lista máxima; todos os IDs citados existem no input.
-- Integração: usuário sem acesso à negociação não recebe dados da mesma.
-
-### 9. Ordem de implementação
-
-1. Fallback puro + schema de saída.  
-2. UI somente leitura com disclaimers.  
-3. Camada LLM opcional para wording (mesmo schema).  
-4. Ligação futura com ticketing/incidentes quando existir produto.
-
-**Prioridade global:** *Média* — alto valor no MVP atual porque o domínio já expõe `operationalRisks` / `riskLevel`.
+| Marco | Significado |
+|-------|-------------|
+| **◇ Futuro** | Planejado; depende de pré-requisitos de dados, segurança e produto. |
 
 ---
 
-## Negotiation Agent
+## Princípios transversais (◇ obrigatórios quando houver implementação)
 
-### 1. Responsabilidade
+Herança direta de **`docs/AI-ROADMAP.md`**:
 
-Gerar **resumos** e **próximos passos sugeridos** para negociações; auxiliar leitura de histórico mock; facilitar onboarding do usuário no estágio atual (`DealStage`).
-
-### 2. Dados que pode acessar
-
-- **`Negotiation`** autorizada: `stage`, `status`, valores textuais, `history`, rotas, partes **já visíveis** à sessão (nomes públicos conforme política).
-- Objeto **`Cargo`** / **`Vessel`** resumido se o usuário tiver permissão de leitura nos IDs ligados.
-
-### 3. Ações permitidas
-
-- Texto limitado + bullets estruturados; espelhar `stageInterpretation` coerente com o campo real ou marcar `unknown`.
-- Fallback: templates por `stage` + concatenação de `history`.
-
-### 4. Ações proibidas
-
-- `PATCH`/`POST` em negociação ou proposta sem confirm UI → endpoint legítimo.
-- Revelar identidade ou dados de contraparte além do permitido pela autorização atual.
-- Alterar valores (`amount`) ou estágio por conta própria.
-
-### 5. Necessidade de aprovação humana
-
-Qualquer **efeito lateral** (aceitar, recusar, contraproposta) permanece 100% humano via fluxos existentes; agente só informa.
-
-### 6. Logs necessários
-
-`agent=negotiation`, IDs autorizados, hash do subset usado, versão template/fallback.
-
-### 7. Riscos
-
-Resumo enviesado ou omissão de risco alto; dependência de `history` textual inconsistente.
-
-### 8. Testes possíveis
-
-- Snapshot estável do fallback por estágio.
-- Validação: `stageInterpretation === negotiation.stage` ou flag explícita de mismatch.
-- Segurança: usuário shipper não recebe negociação de terceiros.
-
-### 9. Ordem de implementação
-
-1. Fallback template + limite de caracteres.  
-2. Endpoint dedicado somente leitura.  
-3. Opcional LLM com mesmo schema.  
-4. Internacionalização das strings geradas por template (preferir keys i18n).
-
-**Prioridade global:** *Alta entre agentes de leitura* — encaixa no fluxo atual sem persistência.
+| Princípio | Significado para agentes |
+|-----------|---------------------------|
+| **Não decisório** | Agente não altera estado autoritativo sozinho. |
+| **Confirmação humana para escrita** | Persistência ou efeitos irreversíveis só após revisão explícita → endpoints de domínio validados. |
+| **Paridade de permissões** | Contexto montado apenas com dados que o usuário poderia ler pela API **◇ endurecida**. |
+| **DTO estruturado** | Entrada/saída versionadas e validadas por schema; texto livre do usuário isolado e limitado. |
+| **Fallback determinístico** | Mesmo contrato JSON com ou sem modelo; falha do provedor não amplia escopo. |
+| **Auditoria** | Toda invocação registrada com metadados mínimos (**◇** persistência durável com DB — `docs/DATABASE-PLANNING.md`). |
+| **Explicação** | Recomendações com âncoras em dados ou tag `inferred` quando não dedutíveis. |
 
 ---
 
-## Tracking Agent
+## Arquitetura geral dos agentes (◇ futura)
 
-### 1. Responsabilidade
+Visão em camadas — **nenhuma peça abaixo existe como produto só por estar documentada**:
 
-Explicar timeline operacional; gerar **checklist operacional** sugerido alinhado a status de carga/negócio e eventos (`OperationalTrackingEventKind` onde existir); destacar atrasos e lacunas de sincronização **com base em dados fornecidos**.
+```txt
+[ Cliente Next.js ]
+       |
+       v
+[ Route Handler / BFF ]          <-- sessão, autorização, rate limit; único lugar permitido para orquestrar agente/modelo
+       |
+       +--> [ Orquestrador "Agent Runner" ]   <-- resolve agentId, monta allowlist de campos, chama fallback ou modelo
+       |         |
+       |         +--> [ Provedor de modelo ]   <-- opcional, trocável; sem SDK obrigatório no browser
+       |
+       +--> [ Fallback determinístico por agente ]
+       |
+       v
+[ Auditoria ◇ persistência ]
+```
 
-### 2. Dados que pode acessar
-
-- **`TrackingEvent`** filtrados por `cargoId`/`negotiationId` autorizados.
-- **`Cargo.status`**, **`Negotiation.stage`** para contextualizar checklist.
-
-### 3. Ações permitidas
-
-- Gerar lista estruturada de passos (`id`, label, opcional obrigatório) + explicações curtas.
-- Fallback: máquina de estados determinística (`status` × `stage`) conforme `docs/TRACKING-TIMELINE.md` / regras internas.
-
-### 4. Ações proibidas
-
-- Inserir eventos de rastreio reais ou alterar `status`/`kind` persistidos sem API humana.
-- Simular posição GPS ou telemetria inexistente.
-
-### 5. Necessidade de aprovação humana
-
-Registro de novo evento ou “marcar etapa como concluída” em sistema persistido **exige** confirmação e uso do fluxo oficial (futuro `POST` auditável).
-
-### 6. Logs necessários
-
-`agent=tracking`, escopo temporal dos eventos considerados, contagem de eventos, uso de fallback.
-
-### 7. Riscos
-
-Falsa sensação de rastreio em tempo real; inferência errada quando `occurredAt` ausente.
-
-### 8. Testes possíveis
-
-- Unitários: checklist fallback para cada par estágio/status relevante.
-- Integração: lista de eventos vazia → mensagem segura sem inventar fatos.
-
-### 9. Ordem de implementação
-
-1. Checklist determinística + explicações i18n.  
-2. Leitura de eventos com schema estável (`docs/TRACKING-TIMELINE.md`).  
-3. Camada opcional de linguagem natural.  
-4. Integração com escrita de eventos só após API de tracking endurecida.
-
-**Prioridade global:** *Alta* — forte sinergia com domínio já modelado.
+- **Contratos:** entrada/saída por agente com versão (`schemaVersion`); validação estrita antes de responder ao cliente.
+- **Sem SDK no cliente:** chaves e integrações ficam **server-side**.
+- **Agentes são perfis de política**, não microsserviços obrigatórios: podem compartilhar o mesmo binário com **políticas diferentes** por `agentId`.
 
 ---
 
-## Impact Agent
+## Relação com permissões e roles (◇ futura)
 
-### 1. Responsabilidade
+| Role | Observação para todos os agentes |
+|------|-----------------------------------|
+| **shipper** | Contexto centrado em cargas onde é **`ownerId`** **◇** (decisão em `docs/SECURITY-PRODUCT-DECISIONS.md`) e negociações onde é **`shipperId`**. |
+| **carrier** | Negociações como **`carrierId`**; frota no escopo do usuário; respeitar **`approved`** — carriers não aprovados não devem receber assistência que dependa de mutações bloqueadas sem mascarar o motivo. |
+| **admin** | Escopo ampliado **somente** onde a política admin já permite leitura real; agente **não** é atalho para contornar segregação futura nem **`mock-mode`** para não-admin (`docs/API-SECURITY-AUDIT.md`). |
+| **Governo / institucional ◇** | Persona de produto (`docs/DEVELOPER-AI-ONBOARDING.md`) — **◇** claims ou role técnica dedicada antes de Impact Agent ou agregações sensíveis; agregação mínima para mitigar antitruste. |
 
-Traduzir indicadores de **impacto socioambiental** e valor público (ex.: `co2Saving`, corredor, família de produto) em linguagem acessível para o perfil do usuário; **não** produzir auditoria oficial ou relatório regulatório.
-
-### 2. Dados que pode acessar
-
-- Campos públicos/autorizados de **`Cargo`** e agregações já usadas em **`GovernmentDashboard`** / páginas de impacto (indicadores mock).
-- Não utilizar dados pessoais nem volumes estratégicos não autorizados ao papel.
-
-### 3. Ações permitidas
-
-- Resumo textual + bullets com referência aos **números de origem** (citados literalmente do DTO).
-- Fallback: templates por corredor / `productFamily` sem modelo.
-
-### 4. Ações proibidas
-
-- Inventar percentuais ou impacto não presentes nos dados estruturados.
-- Afirmar certificações ou cumprimento de leis específicas sem campo-fonte.
-- Expor benchmark competitivo identificável sem política de dados agregados.
-
-### 5. Necessidade de aprovação humana
-
-Publicação institucional de novo indicador ou alteração de narrativa oficial **fora** do escopo do agente; uso interno é leitura.
-
-### 6. Logs necessários
-
-`agent=impact`, IDs agregados ou cargas autorizadas, versão dos indicadores fonte.
-
-### 7. Riscos
-
-Greenwashing inadvertido; uso político de texto gerado sem revisão.
-
-### 8. Testes possíveis
-
-- Verificação: todo número citado na saída aparece no input (extração ou regex controlada).
-- Fallback snapshot por `productFamily`.
-
-### 9. Ordem de implementação
-
-1. Modo estritamente **extractivo** (só reorganiza dados existentes).  
-2. Templates i18n.  
-3. Parafrase opcional via modelo com validação numérica.  
-4. Revisão com stakeholders institucionais antes de texto voltado ao público externo.
-
-**Prioridade global:** *Média* — valor de UX alto; risco reputacional médio.
+**Regra de ouro:** se **`GET`** endurecido futuro não devolver um recurso ao usuário, **nenhum agente** pode incluí-lo no contexto — inclusive via linguagem natural.
 
 ---
 
-## Support Agent
+## Fallback sem agente (◇ obrigatório)
 
-### 1. Responsabilidade
+Para **cada** agente:
 
-Responder dúvidas **operacionais e de produto** dentro do HydroRivers (navegação, significado de campos, próximos passos não vinculantes), usando **base de conhecimento curada** + dados estruturados do objeto sob foco quando aplicável.
-
-### 2. Dados que pode acessar
-
-- Documentação interna versionada (FAQ, HELP.md futuro), glossário de domínio (`CargoStatus`, `DealStage`).
-- **DTO resumido** da entidade atualmente visualizada na sessão (ex.: só IDs e labels já visíveis na tela).
-- **Não** acessar todo o marketplace nem outros usuários.
-
-### 3. Ações permitidas
-
-- Respostas curtas; links para telas existentes; sugestão de fluxo “vá para Negociações”.
-- Escalação explícita: “entre em contato com suporte humano” para casos não cobertos.
-
-### 4. Ações proibidas
-
-- Executar operações em nome do usuário.
-- Revelar dados de terceiros ou conteúdo de APIs não autorizadas.
-- Dar instruções que burlem segurança ou políticas (ex.: mock-mode para não-admin).
-
-### 5. Necessidade de aprovação humana
-
-Qualquer ação de conta, pagamento ou dados sensíveis permanece fora do agente ou exige humano.
-
-### 6. Logs necessários
-
-`agent=support`, tópico intent (enum), satisfação opcional, truncamento da query do usuário com política de PII.
-
-### 7. Riscos
-
-Jailbreak / prompt injection via texto livre do usuário; respostas desatualizadas face ao produto.
-
-### 8. Testes possíveis
-
-- Lista de FAQs com resposta esperada (golden).
-- Testes de injeção: entrada maliciosa não deve gerar instruções proibidas (classificadores ou allowlist de intents).
-- Regressão i18n nas respostas template.
-
-### 9. Ordem de implementação
-
-1. FAQ determinístico + busca lexical (sem LLM).  
-2. Intents fechados com slots (qual tela, qual status).  
-3. LLM opcional **somente** sobre texto pré-aprovado + RAG interno.  
-4. Canal humano e métricas de escalação.
-
-**Prioridade global:** *Baixa inicialmente* — útil para adoção, mas superfície de abuso maior; implementar depois de hardening de auth/API.
+- Deve existir caminho **100% determinístico** (regras, templates i18n, tabelas estágio/status) que produz **o mesmo schema JSON** que o caminho com modelo.
+- Feature flag global **modelo desligado** deve manter o produto utilizável em CI e ambientes restritos (`docs/AI-ROADMAP.md`).
+- Circuit breaker no provedor → fallback automático **sem** elevação de privilégio.
 
 ---
 
-## Ordem sugerida entre agentes (visão macro)
+## Agentes previstos — fichas completas
 
-Implementação incremental segura no produto:
+Cada agente segue a mesma estrutura: **1–11**.
 
-| Ordem | Agente | Motivo |
+---
+
+### Document Agent (◇ futuro)
+
+#### 1. Responsabilidade
+
+Sugerir e priorizar **pacotes documentais** (obrigatórios, condicionais, próximos passos) para cargas e negociações; explicar lacunas face a `requiredDocuments` e **◇** entidade `Document`; **nunca** substituir parecer oficial ou checklist regulatório definitivo (`docs/DOCUMENTS-MODULE.md`).
+
+#### 2. Público-alvo
+
+Primário: **shipper** e **carrier** envolvidos na mesma negociação ou na carga visível. Secundário **◇**: **admin** em modo suporte/compliance (somente com política explícita). Não destinado ao público externo sem autenticação.
+
+#### 3. Dados que pode acessar (◇ após autorização)
+
+Subconjuntos autorizados no servidor:
+
+- **`Cargo`:** `cargoType`, `productFamily`, `temperature`, corredor/origem/destino, `requiredDocuments`, listas textuais de documentos mock, `documentReadiness`, conectividade narrativa.
+- **`Negotiation`** ligada por IDs permitidos: `stage`, `status`, lista textual `documents` quando existir no modelo.
+- **◇ Futuro:** metadados **`Document`** (tipo, status, visibilidade) — **sem** bytes de arquivo nem URLs pré-assinadas em prompt.
+
+#### 4. Dados que não pode acessar
+
+- Cargas ou negociações **fora do escopo** da sessão.
+- **Lista global** do marketplace ou “todos os documentos da plataforma”.
+- Conteúdo binário de arquivos, PII de terceiros não estritamente necessária, credenciais, logs de outros usuários.
+- **Hashes de senha** ou dados de sessão alheia.
+
+#### 5. Ações permitidas
+
+- Emitir **JSON estruturado** de sugestões (`documentType`, prioridade, `rationaleAnchors`, `source: 'rule' | 'model'`, `inferred` quando aplicável).
+- Ordenar e rotular para UI; acionar **fallback** por matriz produto/corredor.
+
+#### 6. Ações proibidas
+
+- Upload, exclusão ou alteração direta em storage.
+- Persistir mudanças em `requiredDocuments` ou status legal **sem** fluxo humano → endpoint de domínio.
+- Criar obrigações regulatórias **novas** não respaldadas por matriz versionada **◇**.
+
+#### 7. Quando precisa de aprovação humana
+
+**Sempre** que houver **persistência** ou efeito jurídico/operacional equivalente (aceitar documento, rejeitar, marcar compliance). Sugestões em tela são **rascunho** até confirmação explícita item a item ou lote auditável.
+
+#### 8. Logs / auditoria necessários
+
+`requestId`, timestamp UTC, `userId`, `role`, `agent=document`, `useCase`, `schemaVersion`, IDs autorizados (`cargoId`, `negotiationId`), hash do payload estruturado de entrada, `usedFallback`, resultado validação schema, contagem de sugestões, latência **◇** evitar texto integral sem política de retenção (`docs/DATABASE-PLANNING.md`).
+
+#### 9. Riscos
+
+Alucinação regulatória; excesso de confiança em checklist gerado; vazamento de metadados sensíveis em logs; confusão entre “sugerido pela plataforma” e “exigido pela lei”.
+
+#### 10. Testes possíveis (◇ planejamento)
+
+Unitários: allowlist + schema de saída + fallback por `productFamily`/corredor. Integração: `401`/`403` fora de escopo; shape idêntico com modelo desligado. Contrato: snapshots estáveis. Segurança: IDs não autorizados não aparecem na saída.
+
+#### 11. Métricas de sucesso (◇ produto)
+
+- Taxa de uso do fallback vs modelo (estabilidade).
+- **Adoption:** % de fluxos onde usuário **confirma** pelo menos uma sugestão vs abandono (sem medir “decisão da IA”).
+- Tempo até usuário marcar pendência como “entendida” (proxy de clareza).
+- Incidentes reportados de orientação documental incorreta / escalações ao suporte humano.
+
+---
+
+### Risk Agent (◇ futuro)
+
+#### 1. Responsabilidade
+
+Consolidar e **priorizar** alertas operacionais narrativos a partir de dados existentes (`operationalRisks`, `riskLevel`, conectividade, estágio de negócio); produzir **ações sugeridas** não vinculantes e marcadas quando **inferidas**.
+
+#### 2. Público-alvo
+
+**Shipper**, **carrier** e **admin** (este último ◇ apenas onde já há permissão de leitura das mesmas entidades). Adequado a telas de detalhe de carga/negociação.
+
+#### 3. Dados que pode acessar (◇ após autorização)
+
+- **`Cargo`:** `operationalRisks`, `documentReadiness`, `predictability`, `connectivity`, `status`.
+- **`Negotiation`:** `riskLevel`, `stage`, `status`.
+- **◇ Opcional:** lista resumida de **`TrackingEvent`** autorizados (`kind`, `status`, `occurredAt` se existir).
+
+#### 4. Dados que não pode acessar
+
+Negociações/cargas de terceiros; séries globais não filtradas; dados de telemetria/GPS **ineditos** no domínio; benchmarks competitivos identificáveis sem política.
+
+#### 5. Ações permitidas
+
+Saída estruturada: severidades ordenadas, drivers, `suggestedActions[]` de biblioteca **fechada**, flags `inferred`. Fallback: ordenação por `riskLevel` + eco determinístico de `operationalRisks`.
+
+#### 6. Ações proibidas
+
+Persistir incidentes ou alterar `riskLevel`/listas só pelo modelo; declarar conformidade legal ou segurança física **garantidas**; criar obrigações operacionais formais sem sistema dedicado.
+
+#### 7. Quando precisa de aprovação humana
+
+Qualquer **registro persistente** de incidente ou mudança de classificação oficial **◇** exige fluxo próprio + confirmação. Modo leitura **não persiste**.
+
+#### 8. Logs / auditoria necessários
+
+Núcleo padrão + `agent=risk`; por item da saída, indicar origem **campo domínio** vs **inferência**; IDs autorizados e versão do conjunto de regras fallback.
+
+#### 9. Riscos
+
+Sensacionalização; omitir ausência de dados críticos; usuário tomar decisão só pelo texto sem ler campos-fonte.
+
+#### 10. Testes possíveis
+
+Golden files no fallback; invariantes (tamanho máximo da lista; IDs citados ⊆ entrada); integração com escopo negado.
+
+#### 11. Métricas de sucesso
+
+- Correlação entre severidade exibida e campos `riskLevel`/`operationalRisks` (auditoria de consistência interna).
+- Redução de tickets “o que é esse risco?” **◇** medida por pesquisa ou menos tempo na página de ajuda.
+- Taxa de `inferred` quando dados são esparsos — monitorar para calibragem.
+
+---
+
+### Negotiation Agent (◇ futuro)
+
+#### 1. Responsabilidade
+
+Gerar **resumos** e **próximos passos sugeridos** para negociações; auxiliar leitura de histórico; clarificar estágio atual (**DealStage** / equivalente) sem alterar o registro.
+
+#### 2. Público-alvo
+
+**Shipper** e **carrier** participantes da negociação; **admin** ◇ apenas se política permitir leitura da mesma negociação.
+
+#### 3. Dados que pode acessar (◇ após autorização)
+
+**`Negotiation`:** `stage`, `status`, valores textuais, `history`, rotas; identidades públicas conforme política atual/futura.
+
+**`Cargo` / `Vessel`** apenas em **subconjunto resumido** se IDs ligados forem legíveis ao usuário.
+
+#### 4. Dados que não pode acessar
+
+Negociações de terceiros; campos internos de outros usuários; propostas ou histórico não exposto pela API autorizada; dados “admin-only” sem política.
+
+#### 5. Ações permitidas
+
+Texto limitado + bullets; `stageInterpretation` coerente com campos reais ou flag `unknown`; fallback por templates por estágio + concatenação controlada de `history`.
+
+#### 6. Ações proibidas
+
+`PATCH`/`POST` em negociação (aceitar, recusar, valores) sem UI humana → endpoints legítimos; revelar dados de contraparte além do permitido; alterar `amount`/estágio automaticamente.
+
+#### 7. Quando precisa de aprovação humana
+
+**Todo** efeito comercial ou mudança de estado permanece **100% humano** via fluxos existentes; agente só **informa**.
+
+#### 8. Logs / auditoria necessários
+
+`agent=negotiation`, IDs autorizados, hash do subset de entrada, versão de template/fallback, `usedFallback`, latência.
+
+#### 9. Riscos
+
+Resumo enviesado ou omissão de risco alto; dependência de `history` textual inconsistente; linguagem que sugira acordo já firmado.
+
+#### 10. Testes possíveis
+
+Snapshots do fallback por estágio; invariante `stageInterpretation` vs `negotiation.stage` ou mismatch explícito; testes de isolamento entre shipper/carrier.
+
+#### 11. Métricas de sucesso
+
+- Tempo médio até usuário executar próxima ação correta no fluxo (proxy — **◇** com cuidado causal).
+- Clareza: pesquisas rápidas pós-visualização ou redução de erros de estágio na UI **◇**.
+- Taxa de fallback — monitor de estabilidade.
+
+---
+
+### Tracking Agent (◇ futuro)
+
+#### 1. Responsabilidade
+
+Explicar **timeline operacional**; sugerir **checklist** alinhado a `Cargo.status`, `Negotiation.stage` e eventos (`OperationalTrackingEventKind` — `docs/TRACKING-TIMELINE.md`); destacar atrasos **somente** quando sustentados nos dados.
+
+#### 2. Público-alvo
+
+Participantes da carga/negociação (**shipper**, **carrier**) com eventos autorizados; **admin** ◇ conforme política.
+
+#### 3. Dados que pode acessar (◇ após autorização)
+
+**`TrackingEvent`** filtrados por `cargoId`/`negotiationId` autorizados; campos permitidos incluem `kind`, `status`, `title`, `description`, `occurredAt`, `recordedAt` **◇**.
+
+**`Cargo.status`**, **`Negotiation.stage`** para contextualizar checklist.
+
+#### 4. Dados que não pode acessar
+
+Eventos de outras cargas; posição GPS ou telemetria não modelada; dados de outros usuários; inferências de localização física **sem** campo-fonte.
+
+#### 5. Ações permitidas
+
+Lista estruturada de passos sugeridos + explicações curtas com âncoras; fallback por máquina determinística (`status` × `stage` × últimos eventos).
+
+#### 6. Ações proibidas
+
+Inserir ou alterar eventos persistidos **sem** API humana auditável; simular sincronização ou ETA não presentes nos dados; marcar etapa como “oficialmente concluída” no sistema só pelo agente.
+
+#### 7. Quando precisa de aprovação humana
+
+**Todo** registro novo na timeline oficial ou mudança de estado persistido **◇** exige confirmação e uso do fluxo dedicado (`docs/TRACKING-TIMELINE.md`).
+
+#### 8. Logs / auditoria necessários
+
+`agent=tracking`, intervalo temporal dos eventos considerados, contagem de eventos, IDs autorizados, `usedFallback`, presença/ausência de timestamps ISO.
+
+#### 9. Riscos
+
+Falsa sensação de rastreio em tempo real; inferência incorreta quando `occurredAt` ausente; linguagem que substitua evidência oficial.
+
+#### 10. Testes possíveis
+
+Matrizes de checklist fallback; lista vazia de eventos → mensagem segura sem inventar fatos; escopo negado por participante.
+
+#### 11. Métricas de sucesso
+
+- Consistência entre texto do agente e eventos `kind` efetivamente presentes (amostragem auditada).
+- Redução de dúvidas sobre “em que etapa estou?” **◇**.
+- Taxa de uso de fallback vs modelo.
+
+---
+
+### Impact Agent (◇ futuro)
+
+#### 1. Responsabilidade
+
+Traduzir indicadores de **impacto socioambiental** e valor público (ex.: `co2Saving`, corredor, família de produto) em linguagem acessível — **sem** emitir relatório regulatório oficial nem auditoria ambiental certificada.
+
+#### 2. Público-alvo
+
+Usuários autenticados com **leitura** da carga ou agregação autorizada; persona **governo/institucional ◇** apenas após política de escopo explícita (agregação mínima). Uso público externo **◇** exige revisão institucional prévia.
+
+#### 3. Dados que pode acessar (◇ após autorização)
+
+Campos **já autorizados** de **`Cargo`** e **◇** agregações utilizadas em páginas de impacto/governo — apenas números e labels presentes nos DTOs.
+
+#### 4. Dados que não pode acessar
+
+Volumes estratégicos ou dados competitivos não autorizados ao papel; séries brutas identificáveis de terceiros; PII desnecessária.
+
+#### 5. Ações permitidas
+
+Resumo textual **extractivo** + bullets referenciando **literalmente** números-fonte do DTO; fallback por templates (`productFamily`, corredor).
+
+#### 6. Ações proibidas
+
+Inventar percentuais ou métricas não presentes nos dados; afirmar certificações ou cumprimento legal sem campo-fonte; greenwashing por linguagem gloriosa sem âncora numérica.
+
+#### 7. Quando precisa de aprovação humana
+
+**Qualquer** publicação institucional de novo indicador ou mudança de narrativa oficial **fora** do escopo do agente; uso interno somente leitura não dispensa disclaimer **◇**.
+
+#### 8. Logs / auditoria necessários
+
+`agent=impact`, IDs de cargas ou IDs de agregação autorizada, versão/indicadores-fonte citados, `usedFallback`.
+
+#### 9. Riscos
+
+Greenwashing inadvertido; uso político de texto sem revisão humana; confundir dados demo com série oficial.
+
+#### 10. Testes possíveis
+
+Invariante: todo número na saída ⊆ entrada (extração validada); snapshots de fallback; testes de escopo por role.
+
+#### 11. Métricas de sucesso
+
+- **Violations:** contagem de saídas que falham validação extractiva — deve tender a zero.
+- Engajamento com links “ver metodologia” **◇** quando existirem.
+- Feedback institucional em revisões de conteúdo (qualitativo).
+
+---
+
+### Support Agent (◇ futuro)
+
+#### 1. Responsabilidade
+
+Responder dúvidas **de produto e navegação** (“o que faço aqui?”) usando **base curada** + **DTO resumido** do recurso em foco quando aplicável; encaminhar a humano quando fora do escopo.
+
+#### 2. Público-alvo
+
+**Shipper**, **carrier**, **admin** autenticados — intents fechados por role e rota; **não** substituir suporte jurídico/compliance formal.
+
+#### 3. Dados que pode acessar (◇ após autorização)
+
+FAQ/help versionado **◇**, glossário de enums (`Cargo.status`, estágios de negociação), **rótulos já visíveis** na tela atual (IDs permitidos).
+
+#### 4. Dados que não pode acessar
+
+Todo o marketplace; dados de outros usuários; conteúdo de APIs não autorizadas; instruções para **`mock-mode`** ou bypass de segurança para não-admin.
+
+#### 5. Ações permitidas
+
+Respostas curtas; deep-links para telas reais; escalação explícita ao suporte humano.
+
+#### 6. Ações proibidas
+
+Executar operações remotas em nome do usuário; revelar dados de terceiros; ensinar evasão de políticas; responder sobre dados não confirmados na sessão.
+
+#### 7. Quando precisa de aprovação humana
+
+Alterações de conta, dados sensíveis, disputas contratuais e qualquer tema que exija parecer especializado — **fora** do agente ou com humano obrigatório.
+
+#### 8. Logs / auditoria necessários
+
+`agent=support`, intent enum (taxonomia fechada), `pathname`, locale, truncamento/redação da query livre conforme política PII, `usedFallback`.
+
+#### 9. Riscos
+
+Prompt injection / jailbreak; respostas desatualizadas face ao produto; confundir FAQ com obrigação legal.
+
+#### 10. Testes possíveis
+
+Golden FAQs; testes negativos de injeção (entrada maliciosa não produz ações proibidas); regressão i18n em templates.
+
+#### 11. Métricas de sucesso
+
+- Taxa de escalação para humano bem-sucedida (issues resolvidos vs abandonados).
+- **Unsafe suggestion rate ◇** — amostragem manual ou classificador para respostas que violariam política (meta: zero tolerância).
+- Satisfação opcional (CSAT) em fluxos de ajuda.
+
+---
+
+## Ordem incremental de implementação (◇ recomendada)
+
+Ordem macro entre agentes — alinhada à **`docs/AI-ROADMAP.md`** (pré-requisitos de segurança antes de modelo):
+
+| Etapa | Agente | Motivo |
 |-------|--------|--------|
-| 1 | **Negotiation Agent** | Só leitura; dados já estruturados; alto valor na UI atual. |
-| 2 | **Tracking Agent** | Checklist/explicação alinhados ao roadmap de timeline; fallback claro. |
-| 3 | **Risk Agent** | Usa campos já presentes (`operationalRisks`, `riskLevel`); exige disclaimers fortes. |
-| 4 | **Impact Agent** | Começar extractivo/templates antes de parafrasear com modelo. |
-| 5 | **Document Agent** | Depende de módulo de documentos e governança regulatória. |
-| 6 | **Support Agent** | Depende de base de conhecimento madura e controles anti-abuso. |
+| 1 | **Negotiation Agent** | Somente leitura; forte encaixe no fluxo atual; fallback por templates claro. |
+| 2 | **Tracking Agent** | Sinergia com `docs/TRACKING-TIMELINE.md`; risco médio se timestamps esparsos — mitigar com texto cauteloso. |
+| 3 | **Risk Agent** | Campos `operationalRisks` / `riskLevel` já narrativos no domínio; disclaimers obrigatórios. |
+| 4 | **Impact Agent** | Começar **extractivo**; revisão institucional antes de texto voltado ao público externo. |
+| 5 | **Document Agent** | Depende de **`docs/DOCUMENTS-MODULE.md`** e matriz regulatória versionada. |
+| 6 | **Support Agent** | Superfície de abuso maior (texto livre); implementar após hardening de auth/API e base FAQ estável. |
 
-Pré-requisito transversal (todas as ordens): políticas em `docs/AI-ROADMAP.md`, endurecimento progressivo de APIs (`docs/API-SECURITY-AUDIT.md`) e política **“sem IA antes de segurança, validação e testes”** em `AGENTS.md`.
+**Pré-requisito transversal:** políticas **`docs/AI-ROADMAP.md` §13**, endurecimento progressivo **`docs/API-SECURITY-AUDIT.md`**, política **`AGENTS.md`** (sem IA/agents prematuramente).
 
 ---
 
-## Referências
+## Critérios mínimos antes de implementar qualquer agente
 
-- `docs/AI-ROADMAP.md` — princípios e arquitetura da camada assistiva  
-- `docs/DOCUMENTS-MODULE.md` — Document Agent  
-- `docs/TRACKING-TIMELINE.md` — Tracking Agent  
-- `docs/API-SECURITY-AUDIT.md` — escopo e exposição de dados  
-- `AGENTS.md` — política de desenvolvimento (inclui restrição sobre IA prematura)  
+**◇ Gate conjunto** — espelho enxuto de `docs/AI-ROADMAP.md` §13, especializado para agentes:
+
+| ID | Critério |
+|----|----------|
+| A1 | Princípios transversais (topo deste doc) aceitos e RFC técnica por agente |
+| A2 | Schema JSON entrada/saída **versionado** + validação obrigatória |
+| A3 | **Fallback** funcional com **paridade de contrato** para o agente escolhido |
+| A4 | **Auditoria** mínima implementável (logs estruturados ou tabela ◇) |
+| A5 | **Feature flag** desliga modelo sem quebrar build ou UX crítica |
+| A6 | **Disclaimers** i18n onde confusão com parecer oficial for plausível |
+| A7 | Escopo servidor consistente com **paridade de API ◇ endurecida** — sem montar contexto “por conveniência” |
+| A8 | Sem SDK obrigatório no browser; segredos apenas server-side |
+| A9 | Baseline verde: `npm run lint`, `npm run typecheck`, `npm run check:i18n`, `npm run test` no PR que introduz infraestrutura |
+| A10 | Document Agent / partes documentais de Tracking **◇**: alinhamento com `docs/DOCUMENTS-MODULE.md` antes de produção real |
+
+---
+
+## Referências internas
+
+| Documento | Uso |
+|-----------|-----|
+| `docs/AI-ROADMAP.md` | Princípios, arquitetura assistiva, critérios de pronto |
+| `docs/DEVELOPER-AI-ONBOARDING.md` | Domínios e público |
+| `docs/API-SECURITY-AUDIT.md` | Escopo e riscos atuais das APIs |
+| `docs/SECURITY-PRODUCT-DECISIONS.md` | Roles, `approved`, ownership |
+| `docs/DATABASE-PLANNING.md` | Persistência e auditoria durável |
+| `docs/DOCUMENTS-MODULE.md` | Document Agent |
+| `docs/TRACKING-TIMELINE.md` | Tracking Agent |
+| `AGENTS.md` | Política de desenvolvimento — IA/agents após segurança e testes |
+
+Este arquivo **não** substitui parecer jurídico, DPIA ou política corporativa de uso de modelos; revise antes de dados reais identificáveis.
