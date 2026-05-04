@@ -1,20 +1,64 @@
-# Roadmap da camada de IA — HydroRivers
+# Camada de IA aplicada — HydroRivers (planejamento)
 
-Documento de **planejamento apenas**. Não implementa código. Objetivo: definir como introduzir capacidades de IA **assistiva** sem violar as políticas do projeto (**segurança, validação e testes antes de IA em produto**, vide `AGENTS.md`) e sem substituir decisão humana ou persistência autoritativa.
-
-## Princípios obrigatórios (regras de produto)
-
-| Regra | Implicação técnica |
-|--------|---------------------|
-| **IA não decide sozinha** | Saídas são **propostas** (sugestão, rascunho, classificação auxiliar). Fluxos que alteram estado exigem **ação explícita** do usuário ou sistema legível sem modelo. |
-| **IA não altera dados críticos sem confirmação humana** | Nenhum `POST`/`PATCH`/`PUT` direto gerado só pelo modelo. Escrita opcional apenas via **confirm UI** → endpoint que valida permissões e payload **determinístico** (schema). |
-| **IA deve usar dados estruturados** | Entrada principal: JSON/schema estável derivado do domínio (`Cargo`, `Negotiation`, `Vessel`, `TrackingEvent`, futuro `Document`). Texto livre só como campo secundário rotulado. |
-| **IA deve ter fallback** | Mesmo caso de uso deve funcionar **sem modelo**: regras determinísticas, templates, ou “dados crus” formatados na UI. Timeout, rate limit e erro de provedor caem no fallback. |
-| **IA deve registrar logs/auditoria** | Cada invocação: `requestId`, `userId`, `role`, escopo (`cargoId`, `negotiationId`, …), versão do prompt/schema, hash do input estruturado, latência, sucesso/falha, uso de fallback, **sem gravar dados pessoais desnecessários** (minimização). |
+Documento **somente de planejamento**. **Não implementa IA**, **não adiciona SDK ao cliente nem ao servidor neste artefato** e **não altera código**. Objetivo: definir como introduzir IA **assistiva** respeitando as políticas do repositório (**segurança, validação e testes antes de IA em produto**, vide `AGENTS.md`) e sem substituir decisão humana nem persistência autoritativa.
 
 ---
 
-## Arquitetura proposta
+## 1. Visão da IA no produto
+
+A IA no HydroRivers é **auxiliar**, não decisória: reduz atrito cognitivo (ler negociações longas, priorizar riscos, sugerir documentos), sempre sobre **dados já autorizados ao usuário**, com **mesma forma de saída** com ou sem modelo (fallback determinístico).
+
+**Princípios obrigatórios (contrato de produto)**
+
+| Regra | Implicação |
+|-------|-------------|
+| **IA não decide sozinha** | Saídas são **propostas** (sugestão, rascunho, classificação auxiliar). Mudanças de estado exigem **ação explícita** humana ou fluxo legível sem modelo. |
+| **IA não altera dados críticos sem confirmação humana** | Nenhum `POST`/`PATCH`/`PUT` disparado apenas pelo modelo. Qualquer escrita: **UI de confirmação** → endpoint de domínio com permissões e payload validados por **schema determinístico**. |
+| **IA deve usar dados estruturados** | Entrada principal: JSON/DTO versionado derivado do domínio (`Cargo`, `Negotiation`, `Vessel`, `TrackingEvent`, futuro `Document`). Texto livre do usuário só como campo **opcional e rotulado**, nunca como substituto do DTO autorizado. |
+| **IA deve ter fallback sem IA** | Cada caso de uso funciona **sem modelo**: regras, templates ou dados formatados; falhas de rede, timeout, rate limit ou provedor indisponível caem no fallback **sem degradar permissões**. |
+| **IA deve registrar logs/auditoria** | Cada invocação gera registro mínimo (metadados); ver §6. |
+| **IA deve respeitar permissões do usuário** | O servidor só monta inputs **após** resolver sessão e escopo como na app hoje/futuro (`ownerId`, participação em negociação, papel `shipper`/`carrier`/`admin`); nunca enviar ao modelo dados que o usuário **não poderia ler** via API autorizada. |
+
+---
+
+## 2. Casos de uso priorizados
+
+Ordem sugerida equilibra **risco**, **dependência de dados** e **valor**. Todas as linhas assumem §§3–7.
+
+| Prioridade | Caso | Objetivo | Natureza |
+|------------|------|----------|----------|
+| **P1** | **5. Explicação de status da carga** | Traduzir `Cargo.status` e próximos marcos em linguagem clara, com bloqueadores explícitos. | Somente leitura; fallback forte via i18n. |
+| **P2** | **2. Resumo de negociação** | Painel com estágio, valores e próximos passos em texto curto + bullets. | Somente leitura; não altera `Negotiation`. |
+| **P3** | **3. Análise de risco operacional** | Ordenar e explicar riscos a partir de campos mock (`operationalRisks`, `riskLevel`, conectividade) e, futuro, eventos de rastreio. | Somente leitura; inferências marcadas (`inferred`). |
+| **P4** | **4. Checklist operacional** | Etapas pré-embarque / trânsito / atracação alinhadas a `Cargo.status` × `Negotiation.stage`. | Leitura + UX local até existir entidade persistida de checklist. |
+| **P5** | **1. Sugestão de documentos obrigatórios** | Expandir/refinar lista esperada por corredor, produto, temperatura. | **Alto impacto regulatório**; depende de `docs/DOCUMENTS-MODULE.md` e revisão humana antes de persistir. |
+| **P6** | **6. Suporte contextual (shipper / carrier / admin)** | Respostas curtas “o que faço aqui?” baseadas na **rota**, **papel** e **IDs resolvíveis** no escopo (ex.: página da negociação atual). | Somente leitura orientativa; links para fluxos reais; sem executar ações. |
+
+**Observação:** a ordem **P1→P2** pode ser invertida por produto se o valor do resumo de negociação for prioridade máxima; **P5** deve ficar **deliberadamente tarde** até regras documentais estarem versionadas.
+
+---
+
+## 3. Dados necessários
+
+### Princípios de origem
+
+- Dados vêm **apenas do servidor**, após **autenticação** e **autorização de escopo** (evolução alinhada a `docs/API-SECURITY-AUDIT.md`).
+- O cliente **não** envia blobs arbitrários como “contexto”; no máximo **identificadores** já validados (`cargoId`, `negotiationId`) + **tipo de caso de uso** + locale.
+
+### Por caso de uso
+
+| Caso | DTO / Fonte mínima | Campos típicos (subconjuntos autorizados) | Dependências futuras |
+|------|-------------------|--------------------------------------------|----------------------|
+| **1. Documentos** | `Cargo` (+ `Negotiation` se ligada) | `cargoType`, `productFamily`, `temperature`, origem/destino, `requiredDocuments`, `documents`, `documentReadiness`, conectividade | Entidade `Document`, matriz regulatória versionada (`docs/DOCUMENTS-MODULE.md`) |
+| **2. Resumo negociação** | `Negotiation` + refs autorizadas | `stage`, `status`, valores, rota, `riskLevel`, histórico resumido, `cargoId`/`vesselId` só se leitura permitida | Timestamps ISO para narrativa factual |
+| **3. Risco operacional** | `Cargo` + `Negotiation` + opcional `TrackingEvent[]` | `operationalRisks`, `predictability`, `connectivity`, `documentReadiness`; eventos com `kind`, `status`, timestamps | Dados externos (porto, clima) — fora do escopo atual |
+| **4. Checklist** | `Cargo`, `Negotiation`, `Vessel` resumido | `status`, `stage`, capacidades/calado quando aplicável | Entidade checklist ou vínculo com timeline |
+| **5. Status carga** | `Cargo` | `status`, janela, `documentReadiness`, resumo de documentos | Máquina de transição explícita no backend |
+| **6. Suporte contextual** | Sessão + rota + recurso opcional | `role`, ids resolvíveis, título da página/caso; **sem** dados de terceiros fora do escopo | Mapa de ajuda i18n por rota |
+
+---
+
+## 4. Arquitetura proposta
 
 ### Visão em camadas
 
@@ -22,169 +66,157 @@ Documento de **planejamento apenas**. Não implementa código. Objetivo: definir
 [ Cliente Next.js ]
        |
        v
-[ API de orquestração / BFF ]  <-- autenticação, autorização, rate limit
+[ Route Handler / BFF ]     <-- sessão, autorização, rate limit; único lugar habilitado a chamar modelo no futuro
        |
-       +--> [ Serviço "AI Assist" ]  <-- monta payload estruturado + política do caso de uso
+       +--> [ Serviço "AI Assist" ]   <-- monta DTO versionado + política do caso de uso
        |         |
-       |         +--> [ Provedor de modelo ] (opcional, trocaável)
+       |         +--> [ Provedor de modelo ]   <-- opcional, trocável; **sem SDK obrigatório no browser**
        |
-       +--> [ Fallback determinístico ]  <-- mesma interface de saída (schema JSON)
+       +--> [ Fallback determinístico ]   <-- mesma interface de saída validada por schema
        |
        v
-[ Armazenamento de auditoria ]  <-- append-only ou tabela dedicada (futuro DB)
+[ Auditoria ]                   <-- append-only / tabela dedicada / log estruturado (evolução com DB)
 ```
 
-- **BFF / Route Handler dedicado** (ex.: `POST /api/ai/assist` ou rotas por caso): único ponto que chama o modelo; **nunca** expor API keys ao browser.
-- **Serviço “AI Assist”** no servidor:
-  - Valida sessão e **escopo** (usuário só vê cargas/negociações que já pode ler hoje).
-  - Monta **input estruturado** (DTO versionado, ex.: `AiNegotiationSummaryInputV1`).
-  - Chama provedor ou **fallback**.
-  - Valida **saída** contra schema (ex.: Zod) antes de responder — texto livre apenas em campos permitidos e com limites de tamanho.
-- **Provedor**: plugável (HTTP para LLM, ou modelo interno). Troca não altera contratos públicos estáveis.
-- **Auditoria**: persistência separada de dados operacionais; retenção e LGPD/GDPR alinhadas ao backend real quando existir (`docs/DATABASE-PLANNING.md`).
+- **Sem SDK no cliente:** qualquer integração futura com provedor permanece **server-side**; variáveis sensíveis não aparecem no bundle.
+- **Contratos versionados:** exemplos conceituais `AiNegotiationSummaryInputV1`, `AiAssistResponseV1` — nomes ilustrativos até haver RFC interna.
+- **Validação de saída:** toda resposta passa por **schema** (ex.: Zod mencionado em `docs/ARCHITECTURE.md` como direção); rejeitar se inválida → fallback ou erro controlado.
 
-### Fluxo de escrita (proibido automático)
+### Fluxo de escrita (vedado automático pela IA)
 
 ```txt
-IA sugere JSON estruturado → UI mostra diff/resumo → usuário confirma
-→ cliente envia payload VALIDADO pelo mesmo schema que o servidor esperaria sem IA
-→ endpoint de domínio existente ou novo endpoint “apply suggestion” que só aceita IDs + campos já whitelisted
+IA propõe JSON estruturado → UI exibe revisão → usuário confirma
+→ cliente chama endpoint de domínio já existente (ou “apply suggestion”) com payload **whitelistado**
+→ servidor valida permissões + schema **sem distinguir** se veio da IA ou formulário manual
 ```
 
-A IA **não** substitui o handler de negócio; no máximo pré-preenche uma **proposta** que o usuário submete pelo fluxo normal.
+---
+
+## 5. Limites de segurança
+
+1. **Autenticação obrigatória** para casos que carregam dados de negócio (alinhado ao endurecimento desejado das APIs — `docs/API-SECURITY-AUDIT.md`).
+2. **Allowlist por caso de uso:** apenas campos necessários entram no DTO enviado ao modelo ou ao fallback.
+3. **Sem treino em dados de cliente** no MVP; preferir **processamento efêmero**; política de retenção definida antes de guardar texto completo.
+4. **Contract stuffing / injection:** schemas fechados, limites de tamanho em campos de texto natural; sanitização onde houver markdown.
+5. **Rate limit** por usuário, por caso de uso e global — custo e abuso.
+6. **Circuit breaker** quando o provedor falhar repetidamente → fallback apenas.
+7. **Disclaimer jurídico-regulatório** na UI para casos 1 e 3–6 onde o texto possa ser confundido com parecer oficial (**texto fixo em i18n**, não gerado pelo modelo).
+8. **Menor privilégio:** admin não recebe “dump” extra via IA que não esteja já autorizado pela política de administração.
 
 ---
 
-## Casos de uso
+## 6. Permissões e auditoria
 
-### 1. Sugestão de documentos obrigatórios
+### Permissões
 
-| Aspecto | Detalhe |
-|---------|---------|
-| Objetivo | Completar ou revisar lista de documentos esperados para uma **carga** ou **negociação**, dados corredor, produto, temperatura e regulatório implícito no mock. |
-| Entrada estruturada | `Cargo` (ou subset): `cargoType`, `productFamily`, `temperature`, `origin`/`destination`, `requiredDocuments[]`, `documents[]`, `documentReadiness`, metadados de conectividade. |
-| Saída estruturada | Lista de `{ documentType, necessity: 'required'|'conditional', rationaleTag, confidenceBand }` + referência a regra determinística quando aplicável (`source: 'rule'|'model'`). |
-| Fallback | Matriz fixa por `productFamily` + cópia de `requiredDocuments` já existente na carga; ordenação e labels só via template. |
-| Confirmação | Usuário **adiciona/remove** itens na UI; persistência só via fluxo atual/futuro de edição de carga ou módulo de documentos (`docs/DOCUMENTS-MODULE.md`). |
+- **Paridade com a API:** se `GET /api/negociacoes/:id` (futuro) ou lista filtrada não devolver uma negociação ao usuário, o caso **2**, **3**, **4**, **6** não podem incluí-la no contexto.
+- **Shipper:** foco em cargas próprias e negociações onde `shipperId` coincide com o usuário (ou política documentada equivalente).
+- **Carrier:** foco em negociações/cargas/embarcações no seu escopo; respeitar **`approved`** e bloqueios já definidos (`docs/SECURITY-PRODUCT-DECISIONS.md`).
+- **Admin:** acesso ampliado **somente** onde o produto já permitir ao admin ler dados reais; IA não é atalho para contornar segregação futura.
 
-### 2. Resumo de negociação
+### Auditoria (registro mínimo recomendado)
 
-| Aspecto | Detalhe |
-|---------|---------|
-| Objetivo | Texto curto para painel: estágio, partes (IDs mascarados ou nomes já autorizados), valores, próximo passo sugerido **em linguagem natural**. |
-| Entrada estruturada | `Negotiation`: `stage`, `status`, `amount`, `route`, `riskLevel`, `history[]`, IDs ligados (`cargoId`, `vesselId`) resolvidos **somente se** o usuário tiver permissão de leitura. |
-| Saída estruturada | `{ summary: string (limitado), bullets: string[], stageInterpretation: DealStage }` onde `stageInterpretation` deve **coincidir** com o campo real ou vir marcado como `unknown`. |
-| Fallback | Template por `stage` + concatenação de `history` já no mock; sem LLM. |
-| Confirmação | Somente leitura; não altera negociação. |
+| Campo | Descrição |
+|-------|-----------|
+| `requestId` | Correlação ponta a ponta |
+| `timestamp` | UTC |
+| `userId` | Identificador interno |
+| `role` | `shipper` \| `carrier` \| `admin` |
+| `useCase` | Enum estável (ex.: `document_suggestion`) |
+| `schemaVersion` | Versão do DTO entrada/saída |
+| `resourceScope` | Ex.: `{ cargoIds: [...], negotiationIds: [...] }` — apenas autorizados |
+| `inputHash` | Hash do payload estruturado de entrada (não necessariamente plaintext) |
+| `usedFallback` | boolean |
+| `providerOutcome` | `ok` \| `timeout` \| `invalid_schema` \| `rate_limited` |
+| `latencyMs` | Observabilidade |
 
-### 3. Análise de risco operacional
-
-| Aspecto | Detalhe |
-|---------|---------|
-| Objetivo | Priorizar alertas legíveis a partir de `operationalRisks`, `riskLevel`, conectividade, documentação e (futuro) eventos de tracking. |
-| Entrada estruturada | `Cargo` + `Negotiation` + opcional lista resumida de `TrackingEvent` (kinds, status). |
-| Saída estruturada | `{ severityOrdered: RiskItem[], drivers: string[], suggestedActions: string[] }` com `severityOrdered` espelhando ou **refinando** riscos já listados — nunca inventar novos IDs de incidente sem flag `inferred`. |
-| Fallback | Ordenação por `riskLevel` + lista fixa `operationalRisks`; `suggestedActions` de biblioteca interna por tag. |
-| Confirmação | Não grava risco novo; usuário pode **copiar** para comentário ou abrir ticket manual. Qualquer campo persistido no domínio exige fluxo apartado. |
-
-### 4. Checklist operacional
-
-| Aspecto | Detalhe |
-|---------|---------|
-| Objetivo | Lista de etapas (pré-embarque, em trânsito, atracação) alinhada ao estágio atual e ao tipo de serviço. |
-| Entrada estruturada | `Cargo.status`, `Negotiation.stage`, `Vessel` resumido (calado, capabilities), política de conectividade. |
-| Saída estruturada | `{ steps: { id, labelKeyOrText, done: boolean, optional: boolean }[], source }` — preferir `labelKeyOrText` referenciando i18n quando possível. |
-| Fallback | Checklist estática por máquina de estados (`status` × `stage`); já é auditável sem modelo. |
-| Confirmação | Marcar “feito” só grava se o produto tiver entidade de checklist; caso contrário, **somente UX local** ou integração futura com `TrackingEvent` / documentos. |
-
-### 5. Explicação de status da carga
-
-| Aspecto | Detalhe |
-|---------|---------|
-| Objetivo | Explicar em linguagem natural o que significa `CargoStatus` para o usuário e o que falta para avançar. |
-| Entrada estruturada | `Cargo` (status, janela, documentReadiness, requiredDocuments resumo). |
-| Saída estruturada | `{ explanation: string, nextMilestones: CargoStatus[], blockers: string[] }` com `nextMilestones` **subconjunto válido** da enum de domínio. |
-| Fallback | Strings fixas por `CargoStatus` em `messages/*` (i18n); garantir paridade pt/en/es. |
-| Confirmação | Leitura apenas; não muda status. |
+**Minimização LGPD/GDPR:** evitar guardar texto livre completo até política de retenção existir (`docs/DATABASE-PLANNING.md`).
 
 ---
 
-## Limites de segurança
+## 7. Fallback sem IA
 
-1. **Autenticação obrigatória** para todos os casos que carregam dados de negócio (alinhado à evolução desejada das APIs públicas — `docs/API-SECURITY-AUDIT.md`).
-2. **Autorização por escopo**: mesmas regras de owner/participante que o restante da app; servidor monta DTO **após** filtrar campos permitidos (allowlist por caso de uso).
-3. **Sem treinamento em dados de cliente** no MVP; preferir **processamento efêmero** (não armazenar prompt/saída completa sem política); auditoria guarda metadados + hash, não necessariamente texto integral.
-4. **Output schema + limite de tokens** para conter injection e vazamento de instruções; rejeitar respostas que não validem no schema.
-5. **Rate limit por usuário e por caso** para conter abuso e custo.
-6. **Dados sensíveis**: mascarar emails, hashes, internal IDs em logs; usar IDs opacos já autorizados na UI.
-7. **Compliance regulatória**: qualquer texto que pareça parecer “parecer jurídico” deve trazer **disclaimer** fixo (não gerado pelo modelo) na UI.
+| Caso | Estratégia determinística |
+|------|---------------------------|
+| **1. Documentos** | Matriz por `productFamily` / corredor + cópia literal de `requiredDocuments` já na carga; ordenação fixa; `source: 'rule'` em todos os itens. |
+| **2. Resumo** | Template por `DealStage` + bullets montados de `history[]` mock sem parafrasear. |
+| **3. Risco** | Ordenação por `riskLevel` + lista `operationalRisks`; `suggestedActions` de biblioteca interna por tags. |
+| **4. Checklist** | Tabela estática `(Cargo.status × Negotiation.stage)` → lista de passos; labels via i18n. |
+| **5. Status carga** | Strings por enum em `messages/*` (pt-BR, en, es); `nextMilestones` derivados por regra, não por LLM. |
+| **6. Suporte** | FAQ/rota estática por `(locale, role, pathname)` + links para telas reais; sem geração livre ou com modelo opcional apenas para reformulação **depois** que baseline existe. |
 
----
-
-## Dados necessários (por caso)
-
-| Caso | Dados mínimos | Dependências futuras |
-|------|----------------|----------------------|
-| Documentos obrigatórios | `Cargo` (+ negociação se amarrada) | `Document` persistido, matriz regulatória versionada |
-| Resumo de negociação | `Negotiation` + metadados de carga/embarcação autorizados | Timestamps ISO para linha do tempo factual |
-| Risco operacional | `Cargo`, `Negotiation`, riscos mock | Eventos de tracking enriquecidos, clima/porto (futuro) |
-| Checklist operacional | `Cargo.status`, `Negotiation.stage`, `Vessel` | Entidade checklist ou só tracking events |
-| Status da carga | `Cargo` completo autorizado | Regras de transição explícitas no backend |
-
-Todos os inputs devem ser obtidos por **serviços/server** já validados — não aceitar blob JSON arbitrário do cliente.
+**Requisito:** o contrato JSON de **saída** é **idêntico** nos ramos “modelo” e “fallback”, para a UI não bifurcar comportamento crítico.
 
 ---
 
-## Riscos
+## 8. Riscos
 
 | Risco | Mitigação |
 |-------|-----------|
-| **Alucinação regulatória** | Fallback obrigatório; disclaimers; saída estruturada com `source` e revisão humana antes de qualquer uso externo. |
-| **Vazamento lateral** | Prompt só com dados do escopo autorizado; não enviar lista completa do marketplace. |
-| **Dependência de provedor** | Interface estável + fallback + circuit breaker. |
-| **Custo e latência** | Cache por hash do input estruturado (TTL curto), debounce na UI. |
-| **Auditoria incompleta** | Modelo de log antes do primeiro deploy; testes de que todo caminho grava auditoria mínima. |
-| **Desvio de roadmap** | Implementar apenas após lint/typecheck/testes de segurança estáveis na baseline (`AGENTS.md`). |
+| **Alucinação regulatória** (documentos) | Fallback obrigatório; revisão humana; `source` por item; disclaimers fixos. |
+| **Alucinação operacional** (risco, checklist) | Marcar inferências; não persistir automaticamente; biblioteca de ações sugeridas fechada. |
+| **Vazamento lateral via prompt** | Nunca incluir lista global do marketplace; só objetos já autorizados. |
+| **Dependência de provedor** | Interface estável; circuit breaker; flag “model off”. |
+| **Custo e latência** | Cache por hash do input (TTL curto); debounce; limites de tokens. |
+| **Auditoria incompleta** | Gate de release: todo caminho registra auditoria mínima; testes §9. |
+| **Violação de roadmap de segurança** | IA só após baseline verde em lint/typecheck/testes e endurecimento progressivo (`AGENTS.md`). |
 
 ---
 
-## Ordem segura de implementação
+## 9. Testes possíveis
 
-1. **Pré-requisitos (sem IA)**  
-   - Consolidar autorização nas **leituras** sensíveis.  
-   - Schemas de payload (Zod ou equivalente) nos endpoints que a IA poderia “sugerir” em paralelo.  
-   - Baseline de testes verde conforme política do repositório.
-
-2. **Infraestrutura transversal**  
-   - Contrato `AiAssistRequest` / `AiAssistResponse` versionados + validação saída.  
-   - Armazenamento de auditoria (tabela ou log estruturado).  
-   - Fallback determinístico como implementação **primeira** (feature flag “model off”).
-
-3. **Casos somente leitura (menor risco)**  
-   - **5. Explicação de status da carga** (fallback i18n primeiro).  
-   - **2. Resumo de negociação** (sem persistência).
-
-4. **Casos com maior superfície semântica**  
-   - **3. Análise de risco operacional** (sempre rotular inferências).  
-   - **4. Checklist operacional** (priorizar checklist determinística + opcional LLM para wording).
-
-5. **Caso com impacto em compliance**  
-   - **1. Sugestão de documentos obrigatórios** — somente após alinhamento com **módulo de documentos** e clareza jurídica de origem das regras (`docs/DOCUMENTS-MODULE.md`).
-
-6. **Observabilidade e durabilidade**  
-   - Métricas (taxa fallback, latência, erros schema), revisão de retenção de logs.
-
-7. **E2E seletivo**  
-   - Fluxos com flag de modelo desligada (fallback) para CI estável; opcional smoke com sandbox do provedor fora do caminho crítico.
+| Camada | Escopo |
+|--------|--------|
+| **Unitário** | Montagem de DTO allowlist; validação de schema de saída; funções de fallback (matrizes estágio/status); hashing/redação para logs. |
+| **Integração** | Handler `POST /api/ai/assist` (futuro): `401` sem sessão; `403` fora de escopo; resposta só com campos whitelistados; ramo `usedFallback: true` retorna mesmo shape que ramo modelo simulado. |
+| **Contrato** | Snapshots estáveis do JSON de saída para cada caso com entrada fixture pequena (sem chamar rede). |
+| **Segurança** | Testes negativos: tentativa de solicitar recurso por ID não autorizado → `403` ou lista vazia de contexto. |
+| **i18n** | Fallback dos casos 5 e 6 coberto por `npm run check:i18n` onde houver chaves novas. |
+| **E2E (tardio)** | Fluxo com feature flag modelo desligada (sempre fallback) para CI estável; smoke opcional com sandbox de provedor fora do caminho crítico. |
 
 ---
 
-## Relação com documentos existentes
+## 10. Roadmap incremental
 
-- Política global (IA depois de segurança/testes): `AGENTS.md`  
-- Modelo de dados alvo e auditoria futura: `docs/DATABASE-PLANNING.md`  
-- Documentos e permissões: `docs/DOCUMENTS-MODULE.md`  
-- Eventos operacionais: `docs/TRACKING-TIMELINE.md`  
-- Exposição de dados nas APIs: `docs/API-SECURITY-AUDIT.md`  
+1. **Pré-requisitos sem IA** — Endurecer leituras nas APIs conforme `docs/API-SECURITY-AUDIT.md`; definir/atribuir `ownerId` onde aplicável (`docs/SECURITY-PRODUCT-DECISIONS.md`); schemas nos endpoints que receberão “apply suggestion”.
+2. **Infra transversal** — Contratos entrada/saída versionados; armazenamento de auditoria; feature flag global **modelo desligado** com fallback 100%.
+3. **Entregar P1 e P2** — Explicação de status + resumo de negociação (somente leitura).
+4. **Entregar P3 e P4** — Risco + checklist com rotulagem de inferência e sem persistência implícita.
+5. **Entregar P5** — Somente após alinhamento com `docs/DOCUMENTS-MODULE.md` e origem das regras regulatórias.
+6. **Entregar P6** — Suporte contextual sobre baseline i18n + opcional parafraseo por modelo.
+7. **Observabilidade** — Métricas: taxa de fallback, latência, erros de schema, custo estimado por caso.
+8. **Revisão legal/DPO** — Antes de qualquer ambiente com dados reais identificáveis.
 
-Este roadmap **não** substitui parecer jurídico nem políticas de dados pessoais; deve ser revisado antes de qualquer processamento em produção.
+---
+
+## 11. Agentes futuros
+
+Este roadmap define **casos de uso** transversais. O documento **`docs/AGENTS-ROADMAP.md`** especializa **agentes de produto** (nomeados, com dados permitidos/proibidos e ordem macro):
+
+| Agente (futuro) | Relação com §2 |
+|-----------------|----------------|
+| **Document Agent** | Caso **1** |
+| **Risk Agent** | Caso **3** |
+| **Negotiation Agent** | Caso **2** |
+| **Tracking Agent** | Enriquece **3** e **4** com eventos (`docs/TRACKING-TIMELINE.md`) |
+| **Impact Agent** | Opcional para narrativa de impacto regional em painéis executivos (`docs/EXECUTIVE-DASHBOARD.md`) — sempre subsidiário |
+| **Support Agent** | Caso **6** |
+
+**Regra:** agentes não substituem os princípios da §1; são **empacotamentos** de política + DTO + prompts internos versionados. Implementação futura deve seguir a **ordem sugerida** em `docs/AGENTS-ROADMAP.md` e manter **fallback determinístico** como caminho obrigatório.
+
+---
+
+## Referências internas
+
+| Documento | Uso |
+|-----------|-----|
+| `AGENTS.md` | IA depois de segurança, validação e testes |
+| `docs/AGENTS-ROADMAP.md` | Agentes nomeados e limites |
+| `docs/API-SECURITY-AUDIT.md` | Exposição atual das APIs e direção de auth |
+| `docs/SECURITY-PRODUCT-DECISIONS.md` | Papéis, `approved`, ownership |
+| `docs/DOCUMENTS-MODULE.md` | Documentos e permissões futuras |
+| `docs/TRACKING-TIMELINE.md` | Eventos operacionais |
+| `docs/DATABASE-PLANNING.md` | Persistência e auditoria durável |
+| `docs/ARCHITECTURE.md` | Próximo salto (Zod, Postgres, etc.) |
+
+Este arquivo **não** substitui parecer jurídico nem DPIA; deve ser revisado antes de processamento em produção.
