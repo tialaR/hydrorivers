@@ -54,7 +54,7 @@ Visão estratégica consolidada (incluindo matriz técnica e de segurança em al
 - **Marketplace:** cargas, embarcações, negociações (listagem, detalhe, fluxos de UI e APIs em `/api/*`).  
 - **Rastreio** com timeline e modelo de eventos operacionais (ver `docs/TRACKING-TIMELINE.md` para o desenho completo).  
 - **Impacto**, **dashboard**, **admin** (área restrita por papel).  
-- **Mock mode** para cenários de demo/QA (`GET`/`POST` `/api/mock-mode` — restrições documentadas na auditoria).  
+- **Mock mode** para cenários de demo/QA (`GET`/`POST` `/api/mock-mode` — `POST` exige **admin**, **`HYDRORIVERS_ALLOW_MOCK_MODE_RESET=true`** para reset e regras na auditoria; ver [`docs/ENVIRONMENT.md`](docs/ENVIRONMENT.md)).  
 - **Internacionalização** de UI com script de paridade de chaves.  
 - Testes automatizados **Vitest** e suíte **Playwright** configurada no projeto.  
 

@@ -35,7 +35,7 @@ Até haver código que leia `HYDRORIVERS_APP_ENV`, trate esse nome como **conven
 | `HYDRORIVERS_APP_ENV` | **Plano** | `development` | Rótulo lógico: `development` \| `test` \| `demo` \| `production`. Nenhuma rota lê obrigatoriamente esta variável **nesta baseline**; útil para documentação e futuros guards. |
 | `HYDRORIVERS_EXPOSE_OTP_CODE` | **Implementado** | `false` | Se `=== 'true'`, o `POST /api/auth/login` inclui `otpCode` na resposta para facilitar E2E/Playwright. **Código:** `src/app/api/auth/login/route.ts`. |
 | `NEXT_PUBLIC_APP_URL` | **Plano** | `http://localhost:3000` | Base para URLs absolutos/redirects quando o projeto passar a consumir; **não** é exigência do MVP atual. |
-| `HYDRORIVERS_ALLOW_MOCK_MODE_RESET` | **Plano** | `true` em dev | Intenção: em **production**, `false` para bloquear `POST /api/mock-mode` mesmo com admin (ou remover rota via deploy). **Ainda não lido pelo código.** |
+| `HYDRORIVERS_ALLOW_MOCK_MODE_RESET` | **Implementado** | `true` para habilitar reset | `POST /api/mock-mode`: se **não** for exatamente `true`, admin recebe **403** `mock-mode-reset-disabled` e **não** há reset. `GET` não exige esta flag. |
 | `DATABASE_URL` | **Plano** | URI Postgres fictícia | Migrações futuras (`docs/DATABASE-PLANNING.md`). Ignorado pelo app mock. |
 | `BLOB_READ_WRITE_TOKEN` | **Plano** | token fake | Uploads futuros de avatar/documentos. |
 | `SUPABASE_URL` / `SUPABASE_ANON_KEY` | **Plano** | placeholders | Alternativa futura de backend; não usados hoje. |
@@ -50,7 +50,7 @@ Até haver código que leia `HYDRORIVERS_APP_ENV`, trate esse nome como **conven
 | Flag | Comportamento quando ativa |
 |------|----------------------------|
 | `HYDRORIVERS_EXPOSE_OTP_CODE=true` | OTP visível na API de login — **somente** para automação controlada ou laboratório. |
-| **`HYDRORIVERS_ALLOW_MOCK_MODE_RESET` (planejada)** | Quando existir wiring, deve impedir resets de dataset em hospedagens “production”. |
+| `HYDRORIVERS_ALLOW_MOCK_MODE_RESET=true` | Obrigatória para **admin** conseguir **reset** via `POST /api/mock-mode`; caso contrário **403** com `reason: mock-mode-reset-disabled`. |
 
 Cenários de dados globais continuam sendo trocados via **`POST /api/mock-mode`** com corpo `{ "scenario": "…" }` (somente admin autenticado no fluxo atual) — vide [`docs/MOCK-MODE-USE-CASES.md`](MOCK-MODE-USE-CASES.md) e [`docs/API-SECURITY-AUDIT.md`](API-SECURITY-AUDIT.md).
 
@@ -58,7 +58,7 @@ Cenários de dados globais continuam sendo trocados via **`POST /api/mock-mode`*
 
 ## 5. Comportamento esperado do mock-mode por ambiente
 
-*Necessidade de produto/documentação — o código atual baseia-se em **role admin** para `POST`, não na variável `HYDRORIVERS_ALLOW_MOCK_MODE_RESET`.*
+*Atualização:* `POST /api/mock-mode` exige sessão **admin** e `HYDRORIVERS_ALLOW_MOCK_MODE_RESET === 'true'` antes de ler o corpo e chamar `resetMockScenario`.
 
 | Ambiente | Esperado |
 |----------|----------|
@@ -74,7 +74,7 @@ Cenários de dados globais continuam sendo trocados via **`POST /api/mock-mode`*
 1. **Nunca commitar secrets** — passwords, tokens reais de Supabase/Vercel, chaves de API. O Git ignora `.env`, `.env.local` (vide [`.gitignore`](../.gitignore)).  
 2. **Local:** use **`.env.local`** (copiando de `.env.example`) para experimentos; cada dev mantém o seu arquivo fora do controle de versão.  
 3. **CI / hosting:** configurar segredos no painel da plataforma (GitHub Encrypted Secrets, Vercel Environment Variables, etc.), nunca no repositório.  
-4. **Restringir mock-mode em production:** combinado à decisão futura em `HYDRORIVERS_ALLOW_MOCK_MODE_RESET` (ou equivalente); até lá, tratamento deve ser **infra + revision de rotas** (ex.: não deploy de handlers de cenário na borda pública).
+4. **Restringir mock-mode em production:** definir `HYDRORIVERS_ALLOW_MOCK_MODE_RESET` como **`false`** ou omitir no host público (reset bloqueado mesmo para admin); complementar com revisão de deploy das rotas `/api/mock-mode` se necessário.
 
 ---
 
@@ -86,9 +86,7 @@ cp .env.example .env.local
 ```
 
 - Para desenvolvimento normal: **`HYDRORIVERS_EXPOSE_OTP_CODE=false`** (omissão também se comporta como não exposto).  
-- Para depurar OTP manualmente (**não** em público): temporariamente `true` apenas na sua máquina.  
-
-O Next.js carrega `.env.local` automaticamente (`next dev` / `next build`).
+- Para reset de cenários mock (`POST /api/mock-mode`): em **dev local**, use **`HYDRORIVERS_ALLOW_MOCK_MODE_RESET=true`** em `.env.local` (o `.env.example` já traz `true`). Sem isso, admin recebe **403** ao tentar reset.
 
 ---
 
@@ -97,7 +95,7 @@ O Next.js carrega `.env.local` automaticamente (`next dev` / `next build`).
 - **Smoke manual:** subir `npm run dev`, login com usuário demo do `README.md`, confirmar ausência de `otpCode` na resposta de login quando a flag está desligada.  
 - **Alinhamento com CI:** `npm ci` + `npm run lint` + `npm run typecheck` + `npm run test` (vide [`docs/CI-QUALITY-GATES.md`](CI-QUALITY-GATES.md)).  
 - **`check:onboarding`** e **`check:i18n`** conforme `AGENTS.md` quando tocado em artefatos de onboarding ou traduções.  
-- **E2E:** Playwright já injeta `HYDRORIVERS_EXPOSE_OTP_CODE=true` no comando do `webServer` em [`playwright.config.ts`](../playwright.config.ts) — não exige `.env.local` para isso.
+- **E2E:** Playwright injeta `HYDRORIVERS_EXPOSE_OTP_CODE=true` e `HYDRORIVERS_ALLOW_MOCK_MODE_RESET=true` no comando do `webServer` em [`playwright.config.ts`](../playwright.config.ts) — não exige `.env.local` para esses valores no job de E2E.
 
 ---
 
@@ -105,8 +103,9 @@ O Next.js carrega `.env.local` automaticamente (`next dev` / `next build`).
 
 | Suíte | Relação com env |
 |--------|------------------|
-| **Vitest (unit/integration)** | `tests/integration/api/auth.login.post.test.ts` define **programaticamente** `process.env.HYDRORIVERS_EXPOSE_OTP_CODE` em exemplos onde precisa OTP exposto ou não; remover a variável do ambiente onde o teste limpa o valor. `.env.local` não é carregado automaticamente pelo Vitest neste projeto (`vitest.config.ts` não usa dotenv). |
-| **E2E** | Build/start do servidor de teste passa OTP via variável inline no comando (Playwright); independente do `.env.local` do desenvolvedor. |
+| **Vitest** | `tests/integration/api/auth.login.post.test.ts` manipula `HYDRORIVERS_EXPOSE_OTP_CODE` quando necessário; `.env.local` não é carregado automaticamente (`vitest.config.ts` sem dotenv). |
+| **Vitest (`mock-mode`)** | `vi.stubEnv('HYDRORIVERS_ALLOW_MOCK_MODE_RESET', 'true')` no `beforeEach`; teste de gate usa `false`; `afterEach` chama `vi.unstubAllEnvs()`. |
+| **E2E** | Build/start pode passar OTP e gate mock via variáveis inline no `playwright.config.ts` — ver ficheiro. |
 
 Adicionar variáveis novas ao **`.env.example`** não deve quebrar testes **desde que o código não mude comportamento padrão** sem atualizar asserts — esta alteração ficou apenas em exemplo + doc.
 
@@ -115,7 +114,6 @@ Adicionar variáveis novas ao **`.env.example`** não deve quebrar testes **desd
 ## 10. Próximos passos futuros
 
 - Ler **`HYDRORIVERS_APP_ENV`** (ou similar) para **gates** claros entre demo e production builds.  
-- Implementar **`HYDRORIVERS_ALLOW_MOCK_MODE_RESET`** (ou negar mock-mode quando `NODE_ENV === 'production'`).  
 - Conectar **`DATABASE_URL`**, **`AUTH_SECRET`** quando a migração em [`docs/DATABASE-PLANNING.md`](DATABASE-PLANNING.md) e auth real entrarem em escopo.  
 - Opcionalmente carregar **`NEXT_PUBLIC_APP_URL`** em metadata/canonical links.  
 - Revisitar este arquivo quando o primeiro deploy “production real” definir política definitiva para mock-mode e OTP.
