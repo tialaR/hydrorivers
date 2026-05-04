@@ -1,0 +1,66 @@
+.grid {
+  display: grid;
+  gap: clamp(1rem, 2.5vw, 1.35rem);
+}
+
+.cardTitle {
+  margin: 0 0 0.85rem;
+  font-size: 1.05rem;
+  font-weight: 720;
+  letter-spacing: -0.02em;
+  color: var(--foreground);
+}
+
+.levels {
+  margin: 0;
+  padding-left: 1.25rem;
+  line-height: 1.65;
+  color: var(--muted-soft);
+}
+
+.levels li {
+  margin-bottom: 0.35rem;
+}
+
+.listPlain {
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.code {
+  display: inline-block;
+  padding: 0.35rem 0.55rem;
+  border-radius: var(--radius-md);
+  border: 1px solid color-mix(in srgb, var(--line-strong) 85%, transparent);
+  background: color-mix(in srgb, var(--surface-strong) 94%, transparent);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+  font-size: 0.88rem;
+  color: var(--foreground);
+}
+
+.docRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.docHint {
+  font-size: 0.92rem;
+  color: var(--muted-soft);
+  line-height: 1.45;
+}
+
+.disclaimer {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1px dashed color-mix(in srgb, var(--brand-strong) 35%, var(--line));
+  background: color-mix(in srgb, var(--brand) 6%, var(--surface));
+  color: var(--muted-soft);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
