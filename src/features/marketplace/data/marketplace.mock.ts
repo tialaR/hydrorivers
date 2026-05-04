@@ -334,14 +334,98 @@ negotiations.push(...extraNegotiations);
 
 
 export const trackingEvents: TrackingEvent[] = [
-  { id: 'track-001', title: 'Documentos validados', description: 'NF-e, romaneio e exigências condicionais conferidas.', location: 'Belém, PA', timestamp: '06 mai • 08:30', status: 'done', evidence: 'Checklist documental assinado' },
-  { id: 'track-002', title: 'Lacre e temperatura conferidos', description: 'Cadeia fria registrada antes do embarque.', location: 'Terminal de Belém', timestamp: '06 mai • 11:40', status: 'done', evidence: 'Foto do lacre + sensor 2 °C' },
-  { id: 'track-003', title: 'Navegação em curso', description: 'Evento sincronizado com atraso por baixa conectividade.', location: 'Rio Amazonas', timestamp: '06 mai • 19:15', status: 'current', evidence: 'Sincronização tardia de sinal' },
-  { id: 'track-004', title: 'Previsão de atracação atualizada', description: 'ETA ajustado conforme janela de vazante e tráfego local.', location: 'Santarém, PA', timestamp: '07 mai • 09:00', status: 'pending', evidence: 'Atualização operacional pendente' },
-  { id: 'track-005', title: 'POD recebido', description: 'Comprovante de entrega e aceite digital.', location: 'Santarém, PA', timestamp: '07 mai • 15:30', status: 'pending', evidence: 'Assinatura do recebedor' }
+  {
+    id: 'track-001',
+    title: 'Documentos validados',
+    description: 'NF-e, romaneio e exigências condicionais conferidas.',
+    location: 'Belém, PA',
+    timestamp: '06 mai • 08:30',
+    status: 'done',
+    evidence: 'Checklist documental assinado',
+    kind: 'boarding_confirmed',
+    actorRole: 'system',
+    occurredAt: '2026-05-06T11:30:00.000Z',
+    recordedAt: '2026-05-06T11:31:00.000Z'
+  },
+  {
+    id: 'track-002',
+    title: 'Lacre e temperatura conferidos',
+    description: 'Cadeia fria registrada antes do embarque.',
+    location: 'Terminal de Belém',
+    timestamp: '06 mai • 11:40',
+    status: 'done',
+    evidence: 'Foto do lacre + sensor 2 °C',
+    kind: 'boarding_confirmed',
+    actorRole: 'carrier',
+    occurredAt: '2026-05-06T14:40:00.000Z',
+    recordedAt: '2026-05-06T14:41:00.000Z'
+  },
+  {
+    id: 'track-003',
+    title: 'Navegação em curso',
+    description: 'Evento sincronizado com atraso por baixa conectividade.',
+    location: 'Rio Amazonas',
+    timestamp: '06 mai • 19:15',
+    status: 'current',
+    evidence: 'Sincronização tardia de sinal',
+    kind: 'in_transit',
+    actorRole: 'system',
+    occurredAt: '2026-05-06T22:15:00.000Z',
+    recordedAt: '2026-05-06T23:05:00.000Z'
+  },
+  {
+    id: 'track-004',
+    title: 'Previsão de atracação atualizada',
+    description: 'ETA ajustado conforme janela de vazante e tráfego local.',
+    location: 'Santarém, PA',
+    timestamp: '07 mai • 09:00',
+    status: 'pending',
+    evidence: 'Atualização operacional pendente',
+    kind: 'delay_reported',
+    actorRole: 'system',
+    occurredAt: '2026-05-07T12:00:00.000Z',
+    recordedAt: '2026-05-07T12:02:00.000Z'
+  },
+  {
+    id: 'track-005',
+    title: 'POD recebido',
+    description: 'Comprovante de entrega e aceite digital.',
+    location: 'Santarém, PA',
+    timestamp: '07 mai • 15:30',
+    status: 'pending',
+    evidence: 'Assinatura do recebedor',
+    kind: 'proof_attached',
+    actorRole: 'shipper',
+    occurredAt: '2026-05-07T18:30:00.000Z',
+    recordedAt: '2026-05-07T18:31:00.000Z'
+  }
 ];
 
 trackingEvents.push(
-  { id: 'track-006', title: 'Janela de atracação confirmada', description: 'Equipe local confirmou berço e equipe de descarga.', location: 'Santarém, PA', timestamp: '07 mai • 11:20', status: 'pending', evidence: 'Confirmação operacional' },
-  { id: 'track-007', title: 'Checklist de descarga em preparação', description: 'Equipe prepara conferência final de volumes e integridade.', location: 'Santarém, PA', timestamp: '07 mai • 13:05', status: 'pending', evidence: 'Checklist digital' }
+  {
+    id: 'track-006',
+    title: 'Janela de atracação confirmada',
+    description: 'Equipe local confirmou berço e equipe de descarga.',
+    location: 'Santarém, PA',
+    timestamp: '07 mai • 11:20',
+    status: 'pending',
+    evidence: 'Confirmação operacional',
+    kind: 'boarding_confirmed',
+    actorRole: 'carrier',
+    occurredAt: '2026-05-07T14:20:00.000Z',
+    recordedAt: '2026-05-07T14:21:00.000Z'
+  },
+  {
+    id: 'track-007',
+    title: 'Checklist de descarga em preparação',
+    description: 'Equipe prepara conferência final de volumes e integridade.',
+    location: 'Santarém, PA',
+    timestamp: '07 mai • 13:05',
+    status: 'pending',
+    evidence: 'Checklist digital',
+    kind: 'boarding_confirmed',
+    actorRole: 'system',
+    occurredAt: '2026-05-07T16:05:00.000Z',
+    recordedAt: '2026-05-07T16:06:00.000Z'
+  }
 );

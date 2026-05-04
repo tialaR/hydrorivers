@@ -6,20 +6,38 @@ import { Card } from '@/shared/ui/card/card';
 import { Button } from '@/shared/ui/button/button';
 import { HydroIcon, type HydroIconName } from '@/shared/ui/hydro-icon/hydro-icon';
 import { trackingEvents } from '@/features/marketplace/data/marketplace.mock';
+import type { OperationalTrackingEventKind, TrackingEvent } from '@/features/marketplace/domain/marketplace.types';
+import { resolveOperationalTrackingKind } from '@/features/marketplace/domain/tracking.helpers';
 import { translateMock } from '@/shared/i18n/mock-content';
-import type { TrackingEvent } from '@/features/marketplace/domain/marketplace.types';
 import styles from './tracking-timeline.module.scss';
 
+function iconForOperationalKind(kind: OperationalTrackingEventKind): HydroIconName {
+  switch (kind) {
+    case 'cargo_created':
+      return 'cargo';
+    case 'proposal_sent':
+      return 'message';
+    case 'negotiation_accepted':
+      return 'check';
+    case 'documentation_pending':
+      return 'document';
+    case 'boarding_confirmed':
+      return 'dock';
+    case 'in_transit':
+      return 'ship';
+    case 'delay_reported':
+      return 'globe';
+    case 'delivered':
+      return 'check';
+    case 'proof_attached':
+      return 'document';
+    default:
+      return 'clock';
+  }
+}
+
 function iconForEvent(event: TrackingEvent): HydroIconName {
-  const text = `${event.title} ${event.description} ${event.evidence ?? ''}`.toLowerCase();
-  if (text.includes('document')) return 'document';
-  if (text.includes('lacre') || text.includes('checklist')) return 'shield';
-  if (text.includes('navega') || text.includes('rota')) return 'ship';
-  if (text.includes('sinal') || text.includes('sincron')) return 'globe';
-  if (text.includes('atraca') || text.includes('entrega')) return 'dock';
-  if (event.status === 'done') return 'check';
-  if (event.status === 'current') return 'map';
-  return 'clock';
+  return iconForOperationalKind(resolveOperationalTrackingKind(event));
 }
 
 export function TrackingTimeline() {

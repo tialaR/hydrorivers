@@ -101,6 +101,21 @@ export type Negotiation = {
   status?: 'pending' | 'accepted' | 'rejected' | 'cancelled';
 };
 
+/** Milestones da timeline operacional (auditável); futuras APIs/UI podem filtrar por `kind`. */
+export type OperationalTrackingEventKind =
+  | 'cargo_created'
+  | 'proposal_sent'
+  | 'negotiation_accepted'
+  | 'documentation_pending'
+  | 'boarding_confirmed'
+  | 'in_transit'
+  | 'delay_reported'
+  | 'delivered'
+  | 'proof_attached';
+
+/** Quem registrou o evento no modelo auditável (mock pode omitir). */
+export type TrackingActorRole = 'shipper' | 'carrier' | 'admin' | 'system';
+
 export type TrackingEvent = {
   id: string;
   title: string;
@@ -111,4 +126,15 @@ export type TrackingEvent = {
   evidence?: string;
   cargoId?: string;
   negotiationId?: string;
+  /** Tipo operacional explícito; legados sem campo continuam válidos (inferência em `tracking.helpers`). */
+  kind?: OperationalTrackingEventKind;
+  actorId?: string;
+  actorRole?: TrackingActorRole;
+  /** Momento declarado da ocorrência (ISO 8601). Opcional nos mocks legados em disco. */
+  occurredAt?: string;
+  /** Momento em que o evento foi registrado no sistema (ISO 8601). */
+  recordedAt?: string;
+  /** Referência futura a documento comprobatório (sem implementação de upload nesta fase). */
+  evidenceDocumentId?: string;
+  metadata?: Record<string, string>;
 };
