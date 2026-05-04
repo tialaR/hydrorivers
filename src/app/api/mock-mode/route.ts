@@ -1,6 +1,7 @@
 import { getActiveMockScenario, resetMockScenario } from '@/shared/server/mock-db';
 import { mockScenarioIds } from '@/shared/server/mock-scenarios';
 import { getSessionUser } from '@/shared/server/auth';
+import { invalidPayload } from '@/shared/server/api-errors';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -14,13 +15,38 @@ export function GET() {
   });
 }
 
+function parseMockModeBody(raw: string): { scenario?: string } | Response {
+  const trimmed = raw.trim();
+  if (!trimmed) {
+    return {};
+  }
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(trimmed);
+  } catch {
+    return invalidPayload('invalid-json');
+  }
+
+  if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) {
+    return invalidPayload('invalid-json');
+  }
+
+  return parsed as { scenario?: string };
+}
+
 export async function POST(request: Request) {
   const user = await getSessionUser();
   if (!user) return Response.json({ error: 'unauthenticated' }, { status: 401 });
   if (user.role !== 'admin') return Response.json({ error: 'forbidden' }, { status: 403 });
 
-  const payload = await request.json().catch(() => null) as { scenario?: string } | null;
-  const result = resetMockScenario(payload?.scenario);
+  const rawBody = await request.text();
+  const parsed = parseMockModeBody(rawBody);
+  if (parsed instanceof Response) {
+    return parsed;
+  }
+
+  const result = resetMockScenario(parsed.scenario);
 
   return Response.json({
     data: {
