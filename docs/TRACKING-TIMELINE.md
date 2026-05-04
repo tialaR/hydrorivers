@@ -7,10 +7,10 @@ Este documento descreve o **primeiro estágio** da evolução do rastreio para u
 | Área | Situação |
 |------|-----------|
 | Domínio | `OperationalTrackingEventKind`, `TrackingActorRole` e campos opcionais auditáveis em `TrackingEvent` (`marketplace.types.ts`). |
-| Seed mock | Eventos em `marketplace.mock.ts` incluem `kind`, `actorRole`, `occurredAt`, `recordedAt` onde faz sentido para demo. |
+| Seed mock | Eventos em `marketplace.mock.ts` incluem **pelo menos um exemplo explícito de cada um dos nove `kind`s** (`cargo_created` … `proof_attached`), além de repetições realistas (`boarding_confirmed`, etc.). |
 | Legado em disco | Arquivos `.mock-data/trackingEvents.json` antigos continuam válidos: campos novos são opcionais; UI/API não quebram. |
 | Inferência | `resolveOperationalTrackingKind` (`tracking.helpers.ts`) deduz `kind` a partir de título, descrição, local e evidência quando `kind` está ausente. |
-| UI | `TrackingTimeline` escolhe ícone por tipo operacional resolvido (`tracking-timeline.tsx`). |
+| UI | `TrackingTimeline` escolhe ícone por tipo operacional resolvido (`tracking-timeline.tsx`) e expõe `aria-label` com `{kind}:{título}` para leitores de tela (carimbo auditável legível por máquina sem novo texto visual). |
 | API | `GET /api/rastreio` permanece pass-through de `readMock('trackingEvents')` — contrato JSON evolui de forma compatível. |
 
 ## Modelo ideal de evento

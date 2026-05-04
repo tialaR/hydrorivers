@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { trackingEvents } from '@/features/marketplace/data/marketplace.mock';
 import type { TrackingEvent } from '@/features/marketplace/domain/marketplace.types';
 import { OPERATIONAL_TRACKING_EVENT_KINDS, resolveOperationalTrackingKind } from '@/features/marketplace/domain/tracking.helpers';
 
@@ -69,5 +70,10 @@ describe('resolveOperationalTrackingKind', () => {
   it('mantém lista de kinds estável para contratos futuros', () => {
     expect(OPERATIONAL_TRACKING_EVENT_KINDS).toHaveLength(9);
     expect(new Set(OPERATIONAL_TRACKING_EVENT_KINDS).size).toBe(9);
+  });
+
+  it('seed mock cobre todos os kinds operacionais para demo auditável', () => {
+    const kinds = new Set(trackingEvents.map((event) => resolveOperationalTrackingKind(event)));
+    expect(OPERATIONAL_TRACKING_EVENT_KINDS.every((kind) => kinds.has(kind))).toBe(true);
   });
 });

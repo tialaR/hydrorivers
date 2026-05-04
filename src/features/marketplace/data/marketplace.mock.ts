@@ -335,6 +335,54 @@ negotiations.push(...extraNegotiations);
 
 export const trackingEvents: TrackingEvent[] = [
   {
+    id: 'track-000a',
+    title: 'Carga criada no marketplace',
+    description: 'Demanda registrada no corredor Belém–Santarém com janela operacional.',
+    location: 'Belém, PA',
+    timestamp: '05 mai • 09:10',
+    status: 'done',
+    kind: 'cargo_created',
+    actorRole: 'shipper',
+    occurredAt: '2026-05-05T12:10:00.000Z',
+    recordedAt: '2026-05-05T12:11:00.000Z'
+  },
+  {
+    id: 'track-000b',
+    title: 'Proposta enviada ao armador',
+    description: 'Valores e SLA enviados para negociação da viagem refrigerada.',
+    location: 'Marketplace HydroRivers',
+    timestamp: '05 mai • 11:05',
+    status: 'done',
+    kind: 'proposal_sent',
+    actorRole: 'shipper',
+    occurredAt: '2026-05-05T14:05:00.000Z',
+    recordedAt: '2026-05-05T14:06:00.000Z'
+  },
+  {
+    id: 'track-000c',
+    title: 'Negociação aceita',
+    description: 'Armador aceitou termos operacionais e janela de embarque.',
+    location: 'Belém, PA',
+    timestamp: '05 mai • 14:40',
+    status: 'done',
+    kind: 'negotiation_accepted',
+    actorRole: 'carrier',
+    occurredAt: '2026-05-05T17:40:00.000Z',
+    recordedAt: '2026-05-05T17:41:00.000Z'
+  },
+  {
+    id: 'track-000d',
+    title: 'Documentação pendente registrada',
+    description: 'NF-e condicional e manifesto em análise antes do boarding.',
+    location: 'Terminal de Belém',
+    timestamp: '05 mai • 16:55',
+    status: 'done',
+    kind: 'documentation_pending',
+    actorRole: 'admin',
+    occurredAt: '2026-05-05T19:55:00.000Z',
+    recordedAt: '2026-05-05T19:56:00.000Z'
+  },
+  {
     id: 'track-001',
     title: 'Documentos validados',
     description: 'NF-e, romaneio e exigências condicionais conferidas.',
@@ -385,6 +433,18 @@ export const trackingEvents: TrackingEvent[] = [
     actorRole: 'system',
     occurredAt: '2026-05-07T12:00:00.000Z',
     recordedAt: '2026-05-07T12:02:00.000Z'
+  },
+  {
+    id: 'track-004b',
+    title: 'Entrega concluída no destino',
+    description: 'Volumes conferidos no berço de Santarém; aguardando formalização do POD.',
+    location: 'Santarém, PA',
+    timestamp: '07 mai • 17:45',
+    status: 'done',
+    kind: 'delivered',
+    actorRole: 'carrier',
+    occurredAt: '2026-05-07T20:45:00.000Z',
+    recordedAt: '2026-05-07T20:46:00.000Z'
   },
   {
     id: 'track-005',
