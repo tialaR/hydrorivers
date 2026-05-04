@@ -1,38 +1,105 @@
-# HydroRivers Template
+# HydroRivers
 
-Template Next.js 16.2.4 + React 19 para o MVP **HydroRivers**, marketplace de frete fluvial e cabotagem com foco em Amazônia, pequenos produtores, redução de custo logístico, sustentabilidade, BR do Mar e desburocratização.
+Plataforma web para **operações logísticas hidroviárias e cabotagem**, com foco em contextos onde **oferta**, **frota**, **negociação** e **rastreabilidade** precisam conviver na mesma experiência — hoje como **MVP demonstrável**, com dados **mock** e documentação explícita de limites e próximos passos.
 
-## Stack
+---
 
-- Next.js 16.2.4 com App Router
-- React 19
-- Sass Modules / CSS Modules
-- next-intl com `pt-BR`, `en`, `es`
-- Tema light/dark próprio, sem `next-themes`
-- Ícones SVG internos + lucide-react em formulários
-- Persistência mock server-side em `.mock-data/*.json`
-- Vercel Analytics
+## Pitch (em poucas linhas)
 
-## Rodando
+O HydroRivers reúne em um só lugar o que, na prática, costuma ficar disperso para quem opera em **hidrovias e cabotagem**: marketplace (cargas, embarcações, negociações), **rastreio com linha do tempo**, visão de **impacto** e uma superfície **institucional** (Amazônia, corredores, baixa conectividade).  
+
+O código é uma base **executável**: Next.js App Router, TypeScript, três idiomas e qualidade automatizada — **sem confundir** essa demo com TMS/ERP enterprise ou produção blindada contra todos os cenários regulatórios.
+
+---
+
+## Problema que o produto endereça
+
+- **Coordenação fragmentada** entre demanda de transporte, oferta de frota, propostas e acompanhamento físico.  
+- **Assimetria de informação** e custo de alinhamento entre embarcadores e transportadores.  
+- Necessidade de **visibilidade agregada** (impacto, narrativa operacional) para políticas e operações — sem misturar, no estágio atual, **dados auditáveis oficiais** com campos apenas **demonstrativos** do mock.
+
+Este repositório ataca isso como **produto validável em engenharia**: fluxos navegáveis, APIs em Route Handlers e persistência local em JSON **apenas para desenvolvimento/demo**. Detalhes de personas e fluxos aparecem em [`docs/DEVELOPER-AI-ONBOARDING.md`](docs/DEVELOPER-AI-ONBOARDING.md).
+
+---
+
+## Legenda: implementado · em evolução · futuro
+
+| Marco | Significado neste projeto |
+|--------|---------------------------|
+| **Implementado** | Presente no repositório: você pode rodar e inspecionar o código (UI, APIs, mocks, scripts de qualidade conforme configurados). |
+| **Em evolução** | Parcialmente no código ou **decisão já documentada** guiando trabalho incremental (nem toda política já está uniforme nos handlers). |
+| **Futuro (roadmap)** | Descrito em `docs/` — **não** deve ser comunicado como já entregue em produção. |
+
+Visão estratégica consolidada (incluindo matriz técnica e de segurança em alto nível): [`docs/ENTERPRISE-ROADMAP.md`](docs/ENTERPRISE-ROADMAP.md).
+
+---
+
+## Stack técnica
+
+- **Framework:** Next.js **16.2.4** (App Router), **React 19**, **TypeScript**  
+- **Estilo:** Sass Modules; tema claro/escuro próprio (sem `next-themes`)  
+- **i18n:** **next-intl** — locales `pt-BR`, `en`, `es`  
+- **Dados:** persistência mock **server-side** em `.mock-data/*.json` (não usar como produção nem serverless com escrita concorrente em arquivo)  
+- **Qualidade:** ESLint, `tsc --noEmit`, checagem de chaves i18n, **Vitest**; **Playwright** para E2E (vide documentação abaixo)  
+- **Observabilidade de produto:** Vercel Analytics  
+
+*Número de versão do pacote conforme [`package.json`](package.json) (pacote interno listado lá; roadmap enterprise referencia **0.8.6** alinhado ao portfólio).*
+
+---
+
+## Funcionalidades **implementadas** (neste MVP)
+
+- Rotas por locale (`/pt-BR`, `/en`, `/es`); página **`/governo`** para narrativa institucional.  
+- **Auth mock** (login, cadastro público **shipper** / **carrier**, logout, perfil), cookie `hydrorivers_session`, **middleware** em rotas privadas; senhas com **PBKDF2** no servidor; cliente sem `passwordHash` nas respostas (detalhes em [`docs/API-SECURITY-AUDIT.md`](docs/API-SECURITY-AUDIT.md)).  
+- **Marketplace:** cargas, embarcações, negociações (listagem, detalhe, fluxos de UI e APIs em `/api/*`).  
+- **Rastreio** com timeline e modelo de eventos operacionais (ver `docs/TRACKING-TIMELINE.md` para o desenho completo).  
+- **Impacto**, **dashboard**, **admin** (área restrita por papel).  
+- **Mock mode** para cenários de demo/QA (`GET`/`POST` `/api/mock-mode` — restrições documentadas na auditoria).  
+- **Internacionalização** de UI com script de paridade de chaves.  
+- Testes automatizados **Vitest** e suíte **Playwright** configurada no projeto.  
+
+O que **não** é produto final neste estado: banco transacional enterprise, módulo completo de **documentos** com storage privado, **autorização forte em todas as leituras GET** das APIs operacionais, **IA em runtime**, etc. — ver matriz em [`docs/API-SECURITY-AUDIT.md`](docs/API-SECURITY-AUDIT.md) e [`docs/PORTFOLIO-CASE.md`](docs/PORTFOLIO-CASE.md).
+
+---
+
+## Funcionalidades **em evolução**
+
+- **Camada de repositório** para isolar persistência (**piloto** em parte das rotas; demais handlers podem ainda acessar mock direto) — [`docs/REPOSITORY-BOUNDARY.md`](docs/REPOSITORY-BOUNDARY.md).  
+- **Ownership e escopo** (ex.: `ownerId` em cargas criadas pela API — decisão de produto vs. comportamento atual em todos os caminhos) — [`docs/SECURITY-PRODUCT-DECISIONS.md`](docs/SECURITY-PRODUCT-DECISIONS.md).  
+- **Endurecimento de segurança** nas leituras sensíveis (recomendações já escritas; migração incremental esperada).  
+- **E2E** com cobertura inicial; expansão quando fluxos críticos estabilizarem — [`docs/E2E-PLAYWRIGHT.md`](docs/E2E-PLAYWRIGHT.md).  
+
+---
+
+## Roadmap **futuro** (alto nível)
+
+Síntese alinhada a [`docs/ENTERPRISE-ROADMAP.md`](docs/ENTERPRISE-ROADMAP.md): persistência relacional (**[`docs/DATABASE-PLANNING.md`](docs/DATABASE-PLANNING.md)**), autorização nas leituras, **documentos/compliance**, **dashboard executivo** formalizado (**[`docs/EXECUTIVE-DASHBOARD.md`](docs/EXECUTIVE-DASHBOARD.md)**), **IA apenas assistiva** após gates de segurança e testes (**[`docs/AI-ROADMAP.md`](docs/AI-ROADMAP.md)**, **`docs/AGENTS-ROADMAP.md`**, **`AGENTS.md`**). Nada disso deve ser assumido como já implementado no app atual.
+
+---
+
+## Como rodar localmente
+
+Requisitos: **Node.js** compatível com o projeto (a pipeline de CI usa **22** — ver [`docs/CI-QUALITY-GATES.md`](docs/CI-QUALITY-GATES.md)).
 
 ```bash
 npm install
 npm run dev
 ```
 
-Acesse:
+Aplicação (exemplo pt-BR):
 
 ```txt
 http://localhost:3000/pt-BR
 ```
 
-## Rotas principais
+A raiz `/` redireciona para `/pt-BR`.
+
+### Rotas principais (exemplos)
 
 ```txt
 /pt-BR
 /pt-BR/login
 /pt-BR/cadastro
-/pt-BR/logout
 /pt-BR/perfil
 /pt-BR/dashboard
 /pt-BR/cargas
@@ -46,81 +113,125 @@ http://localhost:3000/pt-BR
 /pt-BR/admin
 /pt-BR/impacto
 /pt-BR/impacto/[id]
+/pt-BR/governo
 ```
 
-Também há suporte para `/en` e `/es`.
+Rotas equivalentes existem sob `/en` e `/es`.
 
-## Arquitetura feature-based
+### Persistência mock e reset
 
-```txt
-src/app             Rotas, layouts e route handlers
-src/core            i18n e navegação localizada
-src/features        Domínios do produto
-src/shared          UI, layout, providers e config compartilhada
-messages            Traduções
-.mock-data          Banco mock local em JSON para desenvolvimento
-```
-
-## Ajustes visuais desta versão
-
-- Marca alterada de HydroFrete para **HydroRivers**.
-- Tipografia do hero suavizada, com menos peso e melhor espaçamento.
-- Border radius global reduzido em cards, header, botões, inputs, dropdowns e ícones.
-- Dark mode em cinza escuro com acento verde água/river.
-- Dropdown e bottom sheet com visual glass mais consistente.
-- Timeline de rastreio com ícones SVG e fallback para evitar quebra de ícones desconhecidos.
-
-## Persistência mock server-side
-
-Os dados de produto não usam `localStorage`. Os Route Handlers do Next.js gravam dados mockados em:
-
-```txt
-.mock-data/users.json
-.mock-data/cargoes.json
-.mock-data/vessels.json
-.mock-data/negotiations.json
-.mock-data/trackingEvents.json
-```
-
-Para resetar os mocks:
+Dados de produto em desenvolvimento ficam em `.mock-data/*.json` (usuários, cargas, embarcações, negociações, eventos de rastreio). Para **resetar**:
 
 ```bash
 rm -f .mock-data/*.json
 npm run dev
 ```
 
-Observação: persistência em arquivo é para desenvolvimento local. Em produção na Vercel, use um banco ou storage persistente como Vercel Postgres, Neon, Supabase, KV ou Blob.
+Cenários globais de mock (use cases) estão documentados em [`docs/MOCK-MODE-USE-CASES.md`](docs/MOCK-MODE-USE-CASES.md).
 
+### Arquitetura (pastas)
 
-## Versão 0.5.7-consistent
+```txt
+src/app             Rotas, layouts e Route Handlers
+src/core            i18n e navegação localizada
+src/features        Domínios do produto
+src/shared          UI, layout, providers e utilitários compartilhados
+messages            Traduções (pt-BR, en, es)
+.mock-data          JSON local para demo/dev
+```
 
-Esta revisão transforma o template em um MVP mais consistente, mantendo a persistência mock em arquivo para desenvolvimento local.
+---
 
-### Principais ajustes
+## Comandos principais
 
-- Autenticação mock com senha hasheada via PBKDF2.
-- Usuários públicos não recebem `passwordHash` nas respostas das APIs.
-- Cadastro público limitado a `shipper` e `carrier`; `admin` foi removido da UI pública.
-- Rotas privadas protegidas por middleware baseado no cookie `hydrorivers_session`.
-- Painel admin com guarda server-side por role.
-- API de criação de cargas protegida por sessão, role e validação básica.
-- Tratamento de JSON inválido nas APIs principais.
-- Correção do rastreio para usar os status reais `done | current | pending`.
-- Perfil com campos controlados e sem fallback visual enganoso.
-- Internacionalização ampliada: componentes que tinham textos fixos foram migrados para `messages/pt-BR.json`, `messages/en.json` e `messages/es.json`.
-- Chaves de tradução alinhadas nos três idiomas.
-- Listagem de cargas mobile-first com bottom sheet de filtros, accordions, badges de filtros ativos e chips removíveis no topo.
-- `package.json` sem dependências em `latest` e com scripts `lint`/`typecheck`.
+| Comando | Função |
+|---------|--------|
+| `npm run dev` | Servidor de desenvolvimento Next.js |
+| `npm run check:onboarding` | Valida artefatos e scripts esperados no onboarding do repositório |
+| `npm run lint` | ESLint |
+| `npm run typecheck` | TypeScript (`tsc --noEmit`) |
+| `npm run check:i18n` | Paridade de chaves entre `pt-BR`, `en`, `es` |
+| `npm run test` | Vitest (suíte padrão do projeto) |
 
-### Acesso demo
+Outros scripts úteis (vide `package.json`): `npm run test:unit`, `npm run test:integration`, `npm run build`, `npm start`.
 
-Os usuários seed usam a senha:
+---
+
+## E2E (Playwright)
+
+O projeto inclui **`@playwright/test`** e o script **`npm run test:e2e`**.
+
+- **Quando usar:** fluxos que o usuário percorre na UI (login, rotas privadas, i18n, papéis, etc.). Estratégia e checklist em [`docs/E2E-PLAYWRIGHT.md`](docs/E2E-PLAYWRIGHT.md).  
+- **Ambiente típico:** com o app acessível na URL esperada pela configuração do Playwright; na primeira vez ou em CI, pode ser necessário instalar browsers do Playwright (ex.: `npx playwright install`), conforme a [documentação oficial](https://playwright.dev/docs/intro) — o workflow atual de CI em [`docs/CI-QUALITY-GATES.md`](docs/CI-QUALITY-GATES.md) **não** inclui E2E ainda (próximo passo opcional documentado lá).
+
+Antes de commitar mudanças que tocam fluxos críticos de UI, o próprio [`docs/E2E-PLAYWRIGHT.md`](docs/E2E-PLAYWRIGHT.md) recomenda rodar também `npm run lint`, `typecheck`, `check:i18n`, `test` e `npm run test:e2e`.
+
+---
+
+## Mapa da documentação
+
+| Documento | Conteúdo |
+|-----------|----------|
+| [`docs/ENTERPRISE-ROADMAP.md`](docs/ENTERPRISE-ROADMAP.md) | Visão consolidada: implementado, em evolução, fases futuras e critérios para produção |
+| [`docs/DEVELOPER-AI-ONBOARDING.md`](docs/DEVELOPER-AI-ONBOARDING.md) | Onboarding de devs, domínios, uso de IA/agentes dentro das regras do repo |
+| [`docs/PORTFOLIO-CASE.md`](docs/PORTFOLIO-CASE.md) | Case de portfólio para recrutadores e avaliadores (pitch, problema, honestidade MVP vs enterprise) |
+| [`docs/API-SECURITY-AUDIT.md`](docs/API-SECURITY-AUDIT.md) | Matriz estática das APIs: sessão, riscos e recomendações |
+| [`docs/SECURITY-PRODUCT-DECISIONS.md`](docs/SECURITY-PRODUCT-DECISIONS.md) | Decisões explícitas (ex.: `approved`, admin em negociações, `ownerId`) |
+| [`docs/CI-QUALITY-GATES.md`](docs/CI-QUALITY-GATES.md) | Workflow GitHub Actions e como reproduzir checks localmente |
+| [`docs/E2E-PLAYWRIGHT.md`](docs/E2E-PLAYWRIGHT.md) | Quando criar E2E, relação com integração e boas práticas |
+
+Complementares citados neste README: **`AGENTS.md`** (política de contribuição e IA), **`docs/MOCK-MODE-USE-CASES.md`**, **`docs/REPOSITORY-BOUNDARY.md`**, **`docs/DATABASE-PLANNING.md`**, **`docs/TRACKING-TIMELINE.md`**.
+
+---
+
+## Como contribuir
+
+1. Leia **`AGENTS.md`** (mudanças pequenas e focadas, validações antes do merge, política explícita: **sem IA em produto** antes de segurança, validação e testes consolidados).  
+2. Prefira PRs curtos com escopo único e descrição objetiva (objetivo, riscos, impacto em i18n e acessibilidade quando aplicável).  
+3. Antes de abrir ou atualizar um PR relevante, rode pelo menos os checks alinhados ao CI: **`npm run check:onboarding`**, **`lint`**, **`typecheck`**, **`check:i18n`**, **`test`**; para fluxos críticos ou E2E, siga **`AGENTS.md`** e [`docs/E2E-PLAYWRIGHT.md`](docs/E2E-PLAYWRIGHT.md).  
+4. Commits seguindo **Conventional Commits** quando o time assim convencionar (orientação também em `.cursor/rules` onde existir).
+
+---
+
+## Convenção de branches
+
+- Use prefixos por tipo de trabalho: `feature/`, `fix/`, `docs/`, `chore/`, `ci/`, `test/`, `refactor/`, `security/`, `tooling/`, etc.  
+- Para **várias rodadas no mesmo tema**, o histórico do repositório costuma usar sufixos **`v2`, `v3`, `v4`** em branches paralelas (`docs/algo`, `docs/algo-v2`, …): trata-se de **iteração nomeada**, não automação de semver. Orientação sobre limpeza de branches antigas merged: [`docs/REPO-CLEANUP.md`](docs/REPO-CLEANUP.md).  
+- Mantenha a branch atualizada com a linha principal acordada pelo time (`main` e/ou `dev`) antes do merge.
+
+---
+
+## Qualidade e CI
+
+- **Workflow:** [`.github/workflows/quality-gates.yml`](.github/workflows/quality-gates.yml), descrito em [`docs/CI-QUALITY-GATES.md`](docs/CI-QUALITY-GATES.md).  
+- **Em cada push e pull request:** `npm ci`, `check:onboarding`, `lint`, `typecheck`, `check:i18n`, `test`.  
+- **Fora do CI por ora (opcional no futuro):** `npm run test:e2e`, `npm run build`, jobs dedicados de integração — ver seção “Próximos passos” em [`docs/CI-QUALITY-GATES.md`](docs/CI-QUALITY-GATES.md).
+
+---
+
+## Status atual do projeto
+
+- **MVP web demonstrável** com persistência **mock** em arquivo, **auth mock** e **limitações conscientes** para ambiente real (GETs amplos, ausência de DB transacional, etc.) — ver [`docs/API-SECURITY-AUDIT.md`](docs/API-SECURITY-AUDIT.md).  
+- **Documentação de segurança e produto** e **roadmap enterprise** são parte intencional do trabalho, não “só UI”.  
+- O produto **não substitui** sistemas oficiais de fiscalização, documentos fiscais ou compliance; campos de impacto e narrativas são **demonstrativos** até haver fontes auditáveis.
+
+---
+
+## Nota para portfólio e avaliação técnica
+
+Para **recrutadores, mentores e revisores de código**, o material principal é [`docs/PORTFOLIO-CASE.md`](docs/PORTFOLIO-CASE.md): resume pitch, problema, o que está **implementado** vs **em evolução** vs **visão futura**, e aponta para auditoria e decisões sem inflar o escopo do código. Use este README para **rodar e navegar**; use o case + [`docs/ENTERPRISE-ROADMAP.md`](docs/ENTERPRISE-ROADMAP.md) para **julgar maturidade de engenharia e honestidade de produto**.
+
+---
+
+## Acesso demo (contas seed)
+
+Senha padrão das contas de demonstração:
 
 ```txt
 hydro123
 ```
 
-Contas disponíveis:
+Contas (exemplos):
 
 ```txt
 tiala@hydrorivers.com      shipper
@@ -128,148 +239,8 @@ joao@naveganorte.com       carrier
 admin@hydrorivers.com      admin
 ```
 
-### Limites intencionais
+---
 
-Esta versão ainda é um MVP. A persistência em `.mock-data` não deve ser usada em produção ou serverless. Para produção, substitua por Auth real, banco Postgres/Supabase/Neon, validação com schema formal, migrations, auditoria e testes automatizados.
+## Observação sobre `mockServiceWorker.js` (404)
 
-
-## Versão 0.5.8-i18n-avatar
-
-Esta revisão foca em internacionalização e identidade do usuário.
-
-### Ajustes de i18n
-
-- `LocaleLayout` agora carrega explicitamente `messages` com `getMessages()` e repassa para `NextIntlClientProvider`.
-- `LocaleSwitcher` usa a navegação localizada de `next-intl`, preservando path e query string ao trocar idioma.
-- Textos que ainda estavam hardcoded em layout, breadcrumb, tema e páginas de detalhe foram movidos para `messages`.
-- As chaves de `pt-BR`, `en` e `es` foram novamente alinhadas.
-
-### Avatar do usuário
-
-- A tela de perfil permite carregar uma foto local via input `image/*`.
-- A imagem carregada é convertida para data URL e salva no mock do usuário.
-- O header exibe a foto do usuário logado.
-- Quando não há foto, o header exibe as iniciais do nome.
-- O usuário também pode remover a foto e voltar ao fallback de iniciais.
-
-
-## Versão 0.5.9-mobile-i18n-polish
-
-Esta revisão fecha os problemas reportados no mobile e endurece mais a internacionalização.
-
-### Ajustes entregues
-
-- Header mobile agora mantém o usuário visível: mostra foto do perfil quando existir e iniciais quando não existir.
-- Menu mobile redesenhado como bottom sheet mais compacto, com altura máxima, safe area, estado ativo e área de conta.
-- Bottom sheets usam bloqueio de scroll do `body` enquanto abertos.
-- `NextIntlClientProvider` agora recebe `locale` e `messages` explicitamente.
-- Metadata também foi internacionalizada por locale.
-- Avatar do perfil ganhou:
-  - validação de tipo de arquivo;
-  - limite de 1,5 MB;
-  - fallback automático para iniciais se a imagem quebrar;
-  - mensagem de erro traduzida;
-  - remoção da foto.
-- Chaves de tradução revalidadas em `pt-BR`, `en` e `es`.
-
-### Próximas melhorias maiores
-
-Ainda ficam como próximos passos de produto real:
-
-- Upload real de imagem em storage persistente, como Vercel Blob ou Supabase Storage.
-- Banco real no lugar de `.mock-data`.
-- Validação formal com Zod ou biblioteca equivalente.
-- Testes automatizados de i18n, autenticação, filtros e guards.
-- Tradução dos dados mockados de domínio, como títulos de cargas, nomes de eventos e etapas de negociação.
-
-
-## Correção v0.6.0
-
-Esta revisão corrige dois pontos observados ao rodar localmente com Next.js 16:
-
-- adiciona `src/app/layout.tsx` e `src/app/page.tsx` para que a rota raiz `/` redirecione explicitamente para `/pt-BR`;
-- move `typedRoutes` de `experimental.typedRoutes` para `typedRoutes` no `next.config.ts`, eliminando o aviso do terminal.
-
-Observação: se aparecer `GET /mockServiceWorker.js 404`, não há referência a MSW no projeto. Esse request costuma vir de cache do navegador, extensão/dev tooling ou service worker antigo registrado localmente. Ele não bloqueia o app.
-
-
-## v0.6.1
-
-- Corrige chaves de tradução ausentes no rodapé (`footer.socialRoutes` e `footer.socialSupport`).
-- Mantém `/` redirecionando para `/pt-BR`.
-- `npm run check:i18n` validado com 303 chaves alinhadas em `pt-BR`, `en` e `es`.
-
-
-## v0.6.2 — correções de i18n, filtros mobile e avatar
-
-- Troca de idioma agora usa redirecionamento direto do path atual (`/pt-BR`, `/en`, `/es`), preservando query string e hash.
-- Filtros mobile da lista de cargas foram reescritos com botões selecionáveis no bottom sheet para evitar problemas de `select` no mobile.
-- Chips de filtros ativos continuam no topo da lista e removem o filtro imediatamente.
-- Tipos de carga conhecidos agora aparecem traduzidos nos cards e nos filtros.
-- Avatar do usuário agora pode ser trocado por botão explícito de upload, com salvamento imediato no perfil mock.
-- Remoção do avatar também salva imediatamente e o header volta para as iniciais.
-
-## v0.6.3 — Mobile-first fixes
-
-- Corrigido fluxo de troca de idioma usando a navegação localizada do `next-intl`.
-- Layout localizado agora carrega mensagens explicitamente pelo locale ativo.
-- Filtros mobile agora têm uma ação fixa inferior, estilo app nativo, além do bottom sheet.
-- Bottom sheet de filtros fica sempre acima da UI, com altura `dvh` e safe-area.
-- Avatar aceita JPEG/JPG e otimiza a imagem no navegador antes de salvar no mock, sem bloquear por limite pequeno de arquivo.
-
-
-
-## v0.6.4 — Contexto Amazônico e valor governamental
-
-Esta versão reposiciona o HydroRivers como um **porto digital amazônico** para MVP transacional demonstrável, incorporando o contexto do documento enviado:
-
-- cargas com família produtiva: sociobiodiversidade, alimentos regionais, abastecimento territorial e cabotagem industrial;
-- rotas com corredor, rio principal, tipo de serviço, previsibilidade e conectividade;
-- cards de carga com ETA por faixa de confiança, risco operacional e prontidão documental;
-- detalhe da carga com bloco de exigências: NF-e, CT-e, Romaneio, DOF, GTA/Documento sanitário quando aplicável;
-- catálogo de embarcações com compatibilidade operacional: calado, corredor, documentação e operação offline;
-- página `/governo` com painel de valor público para demonstrar uso por governo, fiscalização, cooperativas e operadores;
-- filtros mobile-first com busca nativa, chips, quick filters por família produtiva e bottom sheet de documentos/rotas;
-- troca de idioma forçada por navegação real entre `/pt-BR`, `/en` e `/es` para evitar estado preso no locale anterior.
-
-A camada ainda é mockada e não substitui sistemas oficiais de regulação, fiscalização, documentos fiscais ou bancos transacionais. O objetivo é demonstrar valor de negócio e política pública antes da integração com Auth real, banco, storage e serviços governamentais.
-
-
-## v0.6.5 — mobile-first operacional e polimento de produto
-
-Esta versão aplica uma rodada focada nos insights de produto:
-
-- Header com blur mais forte, composição mais leve, rota ativa em formato pill e barra contextual nas subpáginas.
-- Menu mobile com conta do usuário, avatar/iniciais, idioma, tema e rotas sem duplicação visual.
-- Correção do fluxo de i18n no seletor de idioma com persistência em `localStorage` e cookie `NEXT_LOCALE`.
-- Prevenção de flicker de dark/light mode com script inline antes da hidratação.
-- Filtros mobile-first na página de cargas:
-  - busca fixa no topo;
-  - botão de filtros sempre visível;
-  - bottom sheet com accordions;
-  - filtros por corredor, origem, destino, família produtiva, tipo de carga e documento;
-  - chips removíveis;
-  - contagem de resultados no sheet.
-- Cards de carga com clique no card inteiro, ícone por família produtiva, rota visual origem/destino, ícones de volume/janela/alvo e status com faixa visual.
-- Detalhe da carga enriquecido com contexto de origem, propostas fake, mais campos de proposta e toast de sucesso.
-- Embarcações com mais informações operacionais: calado, documentação, checklist e baixa conectividade.
-- Negociações com ícone contextual por produto, progresso por etapa e faixa de risco.
-- Rastreio com ícone variável por evento.
-- Impacto com novos cards: confiança documental, baixa conectividade e valor governamental.
-- Footer com redes sociais fake clicáveis que disparam toast informativo.
-- Componentes novos: Toast e Tooltip.
-
-
-## v0.7.3
-
-- Corrige dropdown `Mais` no header em desktop, removendo clipping por `overflow` e elevando o `z-index` do painel.
-
-
-## Mock Mode por Use Cases
-
-A versão atualizada inclui cenários globais de mock para simular fluxos completos do produto: `empty-state`, `market-active`, `negotiation-flow`, `in-transit`, `completed` e `error-scenarios`.
-
-Use `GET /api/mock-mode` para listar cenários e `POST /api/mock-mode` com `{ "scenario": "in-transit" }` para trocar o estado dos dados em `.mock-data`.
-
-Detalhes em [`docs/MOCK-MODE-USE-CASES.md`](docs/MOCK-MODE-USE-CASES.md).
-# hydrorivers
+Se aparecer `GET /mockServiceWorker.js 404`, o projeto **não** usa MSW; o pedido costuma vir de cache do navegador, extensão ou service worker antigo. Não bloqueia o app.
