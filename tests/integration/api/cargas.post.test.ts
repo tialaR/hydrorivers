@@ -123,4 +123,37 @@ describe('POST /api/cargas', () => {
       cargoType: 'Refrigerada'
     });
   });
+
+  it('retorna 201 quando admin aprovado publica carga', async () => {
+    mockGetSessionUser.mockResolvedValue({
+      id: 'u-admin-1',
+      role: 'admin',
+      approved: true,
+      company: 'Órgão Piloto'
+    });
+
+    const response = await POST(new Request('http://localhost/api/cargas', {
+      method: 'POST',
+      body: JSON.stringify({
+        origin: 'Manaus, AM',
+        destination: 'Belém, PA',
+        cargoType: 'Geral',
+        title: 'Carga institucional demo'
+      })
+    }));
+    const body = await response.json();
+
+    expect(response.status).toBe(201);
+    expect(mockUpsertCargo).toHaveBeenCalledWith(expect.objectContaining({
+      origin: 'Manaus, AM',
+      destination: 'Belém, PA',
+      cargoType: 'Geral',
+      producer: 'Órgão Piloto'
+    }));
+    expect(body.data).toMatchObject({
+      origin: 'Manaus, AM',
+      destination: 'Belém, PA',
+      cargoType: 'Geral'
+    });
+  });
 });

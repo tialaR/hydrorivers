@@ -33,6 +33,7 @@ describe('PUT /api/auth/profile', () => {
 
     expect(response.status).toBe(401);
     await expect(response.json()).resolves.toMatchObject({ error: 'unauthenticated' });
+    expect(mockUpsertUser).not.toHaveBeenCalled();
   });
 
   it('retorna 400 para json inválido', async () => {

@@ -85,6 +85,26 @@ describe('PATCH /api/negociacoes', () => {
     await expect(response.json()).resolves.toMatchObject({ error: 'forbidden' });
   });
 
+  it('retorna 403 quando admin autenticado não é shipper nem carrier da negociação', async () => {
+    mockGetSessionUser.mockResolvedValue({ id: 'u-admin-1', role: 'admin', company: 'HydroRivers Admin' });
+    mockReadMock.mockImplementation((key: string) => {
+      if (key === 'negotiations') {
+        return [{ id: 'neg-1', shipperId: 'u-shipper-1', carrierId: 'u-carrier-1', stage: 'quote', cargoId: 'cargo-1', history: [] }];
+      }
+      return [];
+    });
+
+    const request = new Request('http://localhost/api/negociacoes', {
+      method: 'PATCH',
+      body: JSON.stringify({ id: 'neg-1', status: 'accepted' })
+    });
+    const response = await PATCH(request);
+
+    expect(response.status).toBe(403);
+    await expect(response.json()).resolves.toMatchObject({ error: 'forbidden' });
+    expect(mockWriteMock).not.toHaveBeenCalled();
+  });
+
   it('atualiza status para accepted e reserva a carga no sucesso', async () => {
     const negotiations = [
       {

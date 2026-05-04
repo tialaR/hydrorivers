@@ -63,6 +63,20 @@ describe('POST /api/mock-mode', () => {
     expect(mockResetMockScenario).not.toHaveBeenCalled();
   });
 
+  it('retorna 403 quando shipper autenticado tenta resetar mock-mode', async () => {
+    mockGetSessionUser.mockResolvedValue({ id: 'u-shipper-1', role: 'shipper' });
+
+    const request = new Request('http://localhost/api/mock-mode', {
+      method: 'POST',
+      body: JSON.stringify({ scenario: 'market-active' })
+    });
+    const response = await POST(request);
+
+    expect(response.status).toBe(403);
+    await expect(response.json()).resolves.toMatchObject({ error: 'forbidden' });
+    expect(mockResetMockScenario).not.toHaveBeenCalled();
+  });
+
   it('retorna 200 e contagens quando admin reseta cenário', async () => {
     mockGetSessionUser.mockResolvedValue({ id: 'u-admin-1', role: 'admin' });
     mockResetMockScenario.mockReturnValue({

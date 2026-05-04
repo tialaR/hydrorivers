@@ -93,6 +93,44 @@ describe('POST /api/negociacoes', () => {
     await expect(response.json()).resolves.toMatchObject({ error: 'vessel-not-found' });
   });
 
+  it('retorna 201 quando admin cria proposta no comportamento atual da API', async () => {
+    const cargoes = [{
+      id: 'cargo-1',
+      ownerId: 'u-shipper-1',
+      title: 'Polpa de açaí',
+      producer: 'Cooperativa Açaí Norte',
+      origin: 'Belém',
+      destination: 'Santarém',
+      corridor: 'Belém–Santarém',
+      negotiationIds: []
+    }];
+    const vessels = [{ id: 'vessel-1', name: 'Rio Norte' }];
+    const negotiations: unknown[] = [];
+
+    mockGetSessionUser.mockResolvedValue({ id: 'u-admin-1', role: 'admin', company: 'HydroRivers Admin' });
+    mockReadMock.mockImplementation((key: string) => {
+      if (key === 'cargoes') return cargoes;
+      if (key === 'vessels') return vessels;
+      if (key === 'negotiations') return negotiations;
+      return [];
+    });
+
+    const response = await POST(new Request('http://localhost/api/negociacoes', {
+      method: 'POST',
+      body: JSON.stringify({ cargoId: 'cargo-1', vesselId: 'vessel-1', amount: 'R$ 9.500' })
+    }));
+    const body = await response.json();
+
+    expect(response.status).toBe(201);
+    expect(body.data).toMatchObject({
+      cargoId: 'cargo-1',
+      vesselId: 'vessel-1',
+      carrierId: 'u-admin-1',
+      shipperId: 'u-shipper-1'
+    });
+    expect(mockWriteMock).toHaveBeenCalledTimes(2);
+  });
+
   it('retorna 201 e grava negociação + atualização da carga', async () => {
     const cargoes = [{
       id: 'cargo-1',
