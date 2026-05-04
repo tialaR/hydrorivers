@@ -1,196 +1,225 @@
 # HydroRivers — Case de portfólio (nível sênior)
 
-Este documento descreve o projeto **como produto de software** para uso em portfólio e redes profissionais. O conteúdo baseia-se **no que está implementado no repositório** e **no que está registrado como planejamento/roadmap em `docs/`** — sem atribuir como pronto o que ainda não existe em código.
+Documento para **portfólio e redes profissionais**. Todo o texto distingue explicitamente o que está **implementado no repositório**, o que está **em evolução ou apenas planejado em `docs/`** e o que é **visão futura** alinhada ao roadmap documentado — sem atribuir como pronto o que não existe em código.
+
+**Versão de referência:** `package.json` nome interno `hydrorivers-v056-template`, versão **0.8.6**; Next.js **16.2.4**.
 
 ---
 
-## Estado do projeto em três camadas
+## 1. Pitch de 30 segundos
 
-### 1. Implementado (hoje no código)
-
-- **Stack:** Next.js **16.2.4** (App Router), **React 19**, **TypeScript**, **next-intl**, **Sass Modules**, ESLint 9 (flat config).
-- **Produto:** fluxo demonstrável de marketplace hidroviário/cabotagem: landing, **cargas**, **embarcações**, **negociações**, **rastreio**, **impacto**, **governo**, **admin**, **perfil**.
-- **Persistência:** mock **server-side** em `.mock-data/*.json` via Route Handlers e utilitários (`readMock` / `writeMock`), com seeds e cenários (`mock-scenarios`) e reset administrativo (`POST /api/mock-mode` com sessão **admin**).
-- **Auth:** fluxo mock (login com OTP, cadastro shipper/carrier, sessão por cookie); endurecimento documentado para não expor OTP em produção sem flag de ambiente (`HYDRORIVERS_EXPOSE_OTP_CODE`).
-- **Rotas privadas:** middleware exige sessão em caminhos como `/dashboard`, `/perfil`, `/negociacoes`, `/rastreio`, `/admin`, `/cargas/nova` (lista atual em `middleware.ts`).
-- **APIs:** leitura/escrita mock para cargas, embarcações, negociações e rastreio; mutações sensíveis com regras de sessão/perfil conforme evolução do projeto (vide `docs/API-SECURITY-AUDIT.md`).
-- **UI:** tema claro/escuro, layout responsivo, componentes compartilhados (`src/shared`) e organização **feature-based** (`src/features`).
-- **Rastreio:** modelo de eventos com tipos operacionais auditáveis e compatibilidade com dados legados (`docs/TRACKING-TIMELINE.md` — etapa inicial descrita lá).
-- **Qualidade:** **Vitest** (unitário + integração de APIs), **Playwright** (E2E inicial), scripts `lint`, `typecheck`, `check:i18n`.
-- **Observabilidade leve:** Vercel Analytics (dependência declarada).
-
-### 2. Em evolução / planejado explicitamente (documentado, não como produto final)
-
-- **Segurança de APIs:** GET públicos de dados operacionais identificados como risco; recomendações de restrição e validação mais formal (`docs/API-SECURITY-AUDIT.md`).
-- **Persistência real:** modelo relacional-alvo, ordem de migração, convivência mock + banco (`docs/DATABASE-PLANNING.md`).
-- **Camada de dados:** boundary tipo repository entre handlers e persistência — previsto como fases no planejamento de banco (mesmo documento).
-- **Timeline operacional:** próximas etapas (API filtrada, escrita de eventos, documentos) descritas em `docs/TRACKING-TIMELINE.md`.
-- **Documentos:** modelo e permissões **planejados**, upload **fora de escopo** na doc atual (`docs/DOCUMENTS-MODULE.md`).
-- **Dashboard executivo:** KPIs por persona e ordem de implementação (`docs/EXECUTIVE-DASHBOARD.md`).
-- **Produto:** nível declarado como **MVP transacional demonstrável**, não produção enterprise (`docs/ARCHITECTURE.md`).
-
-### 3. Visão futura (alinhada ao roadmap explícito, não implementada)
-
-- Auth forte (provider/passkeys), **Postgres** (ou equivalente), migrations, validação de payload com schemas (ex.: Zod mencionado em arquitetura).
-- Autorização por **owner/participante** de ponta a ponta nas **leituras** sensíveis, não só em mutações.
-- Armazenamento real de avatar/documentos; mapas, ETA operacional e eventos **tempo real**.
-- Módulo de **documentos** com upload, storage e políticas de visibilidade (`docs/DOCUMENTS-MODULE.md`).
-- Indicadores executivos estáveis e séries temporais quando existirem timestamps confiáveis no domínio (`docs/EXECUTIVE-DASHBOARD.md`).
+O **HydroRivers** é um MVP web de marketplace para frete **hidroviário e cabotagem**, com foco em contexto amazônico: **cargas**, **embarcações**, **negociações**, **rastreio por eventos**, **impacto** e uma camada **governo/institucional**. Está construído em **Next.js (App Router)**, **React 19** e **TypeScript**, com **next-intl** em três idiomas e persistência **mock server-side** em JSON para desenvolvimento e demo. Há **middleware de rotas privadas**, **auth mock** endurecida em parte das APIs, **testes Vitest** (unitário + integração de Route Handlers), **E2E inicial com Playwright** e **auditoria de segurança interna documentada**. O salto enterprise está descrito em roadmap explícito: banco real, autorização ponta a ponta nas leituras, documentos com storage seguro e KPIs executivos — **sem IA em produto até segurança, validação e testes consolidados**, conforme política do repositório.
 
 ---
 
-## Problema
+## 2. Problema real
 
-Operações logísticas em **hidrovias e cabotagem** — especialmente em contextos amazônicos e territoriais — sofrem com:
+Operações logísticas em **hidrovias e cabotagem** — em especial onde há **pequenos produtores, cooperativas e corredores com conectividade irregular** — tendem a fragmentar:
 
-- **Fragmentação:** cotações, documentação, reservas e acompanhamento físico costumam estar dispersos.
-- **Assimetria de informação:** pequenos produtores e cooperativas disputam visibilidade e previsibilidade frente a capacidade flutuante e janelas portuárias.
-- **Confiança e compliance:** documentação, cadeia fria e provas operacionais precisam ser **rastreáveis**, sem tornar o fluxo inutilizável em **baixa conectividade**.
-- **Valor público:** corredores e políticas públicas precisam enxergar impacto socioambiental e gargalos — sem misturar narrativa institucional com dados não auditados.
+- **Cotação, documentação, reserva e acompanhamento físico** em canais diferentes.
+- **Assimetria de informação** entre quem precisa mover carga e quem tem capacidade flutuante.
+- **Confiança e compliance** que exigem **rastreabilidade** sem tornar o fluxo inviável em **baixa conectividade**.
+- **Valor público**: políticas e instituições precisam enxergar **impacto regional e gargalos** sem confundir narrativa com dados não auditados.
 
-O HydroRivers endereça isso como **plataforma web unificada** (fluxo ponta a ponta **demonstrável**), com foco em UX multilíngue e bases para segurança e testes antes de escalar para dados reais.
-
----
-
-## Solução
-
-Um **marketplace transacional orientado a rios/cabotagem** que, no estado atual:
-
-- Permite **cadastro e perfis** (embarcador, transportador, admin em fluxo mock).
-- Centraliza **cargas**, **embarcações** e **negociações** com estágios de negócio reconhecíveis.
-- Oferece **rastreio por eventos** com modelo pensado para evoluir para timeline auditável.
-- Apresenta **impacto** e **painel governo** como camadas de narrativa e indicadores derivados do mock.
-- Usa **admin + mock-mode** para cenários de QA e demonstrações controladas.
-
-A solução é conscientemente um **MVP evolutivo**: funcional para demo e para disciplina de engenharia (tipagem, i18n, testes), com documentação clara do salto para produção.
+O projeto posiciona-se como **uma única superfície web demonstrável** para esse problema — hoje em nível **MVP transacional mockado**, não produção enterprise (`docs/ARCHITECTURE.md`).
 
 ---
 
-## Arquitetura
+## 3. Público-alvo
+
+| Audiência | Relação com o produto |
+|-----------|------------------------|
+| **Embarcadores / cooperativas** | Publicam demandas, acompanham negociação e rastreio (fluxo shipper no código mock). |
+| **Transportadores / armadores** | Buscam cargas compatíveis e participam de negociações (fluxo carrier; **carrier novo bloqueado para certas mutações** até `approved`, vide decisão documentada). |
+| **Operações / compliance** | Persona de produto para checklist e exceções — **parcialmente refletida em telas**, sem produto enterprise completo. |
+| **Administração da plataforma** | Área **admin** com guarda server-side; cenários via **`POST /api/mock-mode`** (sessão admin). |
+| **Governo / instituições** | Página **`/[locale]/governo`** com indicadores derivados do mock — **audiência institucional**, não equivalente a um `role` técnico isolado como shipper/carrier/admin em todos os pontos. |
+
+---
+
+## 4. Solução proposta
+
+Uma **plataforma Next.js unificada** que:
+
+- **Implementado:** centraliza experiências de **marketplace** (listagens, filtros, fluxos de negociação simulados), **rastreio com timeline de eventos**, **impacto** narrativo/indicadores mock e **painel governo**, com **sessão mock**, **rotas privadas** e **APIs Route Handlers** sobre `.mock-data/*.json`.
+- **Em evolução (documentado):** endurecer **GETs públicos amplos** de dados operacionais, timestamps para KPIs temporais, agregações executivas (`docs/EXECUTIVE-DASHBOARD.md`), boundary de repositório e migração de dados (`docs/DATABASE-PLANNING.md`, `docs/REPOSITORY-BOUNDARY.md`).
+- **Visão futura (documentada):** auth forte, Postgres/migrations, validação por schema (ex.: Zod citado na arquitetura), storage real de avatar/documentos, mapas e **eventos em tempo real** (`docs/ARCHITECTURE.md`).
+
+---
+
+## 5. Funcionalidades implementadas
+
+*Escopo estrito ao que existe no código e no README/`docs` como já entregue.*
+
+| Área | O que há hoje |
+|------|----------------|
+| **Stack** | Next.js **16.2.4** App Router, React **19**, TypeScript, Sass Modules, **next-intl**, ESLint 9, Vercel Analytics (`package.json`, `README.md`). |
+| **i18n** | Locales **`pt-BR`**, **`en`**, **`es`**; script **`npm run check:i18n`** para paridade de chaves. |
+| **Persistência mock** | Leitura/escrita server-side em **`.mock-data/*.json`** via utilitários tipo `readMock`/`writeMock`; seeds em código + merge com arquivo (`README.md`, `mock-db`). |
+| **Cenários / QA** | **`POST /api/mock-mode`** para reset com cenários administráveis — **restrição admin** documentada na auditoria de APIs. |
+| **Auth mock** | Login (fluxo com **OTP opcional** conforme handlers auditados), cadastro (**shipper/carrier**; admin não via registro público na política descrita no README), logout, perfil; senha com **PBKDF2** no README; cookie **`hydrorivers_session`**; respostas sem **`passwordHash`** ao cliente. |
+| **Rotas privadas** | **Middleware** (`middleware.ts`): exige cookie de sessão para **`/dashboard`**, **`/cargas/nova`**, **`/perfil`**, **`/negociacoes`** (e subcaminhos), **`/rastreio`**, **`/admin`** (e subcaminhos); redireciona para login com `next`. |
+| **Produto — cargas** | Rotas **`/cargas`**, **`/cargas/nova`**, **`/cargas/[id]`**; API **`/api/cargas`**. |
+| **Produto — embarcações** | **`/embarcacoes`**, **`/embarcacoes/[id]`**; API **`/api/embarcacoes`**. |
+| **Produto — negociações** | **`/negociacoes`**, **`/negociacoes/[id]`**; API **`/api/negociacoes`** (GET/POST/PATCH conforme projeto). |
+| **Rastreio** | Página **`/rastreio`** com timeline; modelo **`OperationalTrackingEventKind`**, inferência quando `kind` ausente, seed com cobertura dos tipos operacionais; API **`GET /api/rastreio`** (`docs/TRACKING-TIMELINE.md`). |
+| **Impacto** | **`/impacto`**, **`/impacto/[id]`**. |
+| **Governo** | **`/[locale]/governo`** (`src/app/[locale]/governo/page.tsx`). |
+| **Admin** | **`/admin`** com guarda server-side por papel (`README.md`). |
+| **Dashboard / perfil** | **`/dashboard`**, **`/perfil`**; landing e fluxos login/cadastro conforme README. |
+| **UI/UX** | Tema **claro/escuro** próprio; layout responsivo; ícones SVG internos + **lucide-react** em formulários (`README.md`). |
+| **Qualidade** | **Vitest**: testes unitários e de integração em **`tests/integration/api/*`**; **Playwright** para E2E inicial (`docs/E2E-PLAYWRIGHT.md`); política em **`AGENTS.md`**. |
+
+**Não listado aqui como implementado:** banco relacional transacional, uploads de documentos com storage seguro, IA em produto, cobertura completa de autorização nas **leituras** GET de marketplace (hoje explicitamente um **gap** na auditoria).
+
+---
+
+## 6. Decisões técnicas
+
+| Decisão | Motivação |
+|---------|-----------|
+| **App Router + Route Handlers** | APIs colocalizadas ao app; bom encaixe com SSR, i18n e sessão mock server-side. |
+| **next-intl** | Produto regional/global desde o MVP; rotas por `[locale]`. |
+| **Sass Modules** | Estilos encapsulados por componente; design system incremental. |
+| **Mock em arquivo (`server-only`)** | Iteração rápida sem infraestrutura paga; caminho de migração descrito em **`docs/DATABASE-PLANNING.md`**. |
+| **Cookie de sessão mock** | Adequado ao estágio atual; substituível por sessão/JWT com backend real. |
+| **Organização feature-based** | Domínios (`auth`, marketplace, tracking, governo, dashboard, …) em `src/features` sem premature microservicing. |
+| **Vitest + Playwright** | Pirâmide: domínio/API rápidos; E2E para fluxos que o usuário vê (`docs/E2E-PLAYWRIGHT.md`). |
+
+---
+
+## 7. Arquitetura
 
 ```txt
 src/app              App Router: páginas, layouts, Route Handlers (/api/*)
-src/core             i18n (routing), configuração de locales
-src/features         Domínios: auth, cargas, negociações, tracking, governo, dashboard, etc.
-src/shared           UI, layout, providers, servidor compartilhado (mock-db, auth helpers)
-messages             pt-BR, en, es — chaves alinhadas por script de verificação
+src/core             i18n e routing por locale
+src/features         Domínios do produto (auth, cargas, negociações, tracking, governo, …)
+src/shared           UI, layout, providers, servidor compartilhado (mock-db, helpers de API/auth)
+messages             Traduções pt-BR, en, es
 .mock-data           Persistência JSON local (desenvolvimento / demo)
-docs/                Planejamento: banco, documentos, segurança API, timeline, dashboard executivo
+docs/                Planejamento: segurança, banco, documentos, timeline, dashboard executivo, IA roadmap, decisões de produto
 ```
 
-- **.Renderização:** páginas server components onde faz sentido; trechos interativos em client components.
-- **Dados:** leitura/escrita centralizada no servidor mock; evolução planejada para repositório/banco sem quebrar contratos de domínio de forma abrupta (`docs/DATABASE-PLANNING.md`).
+- **Renderização:** Server Components onde faz sentido; **Client Components** para interatividade (ex.: timeline de rastreio).
+- **Dados:** hoje concentrados em **`readMock`** / escritas nos handlers; evolução planejada para **repositório + banco** sem romper domínio de uma só vez (`docs/DATABASE-PLANNING.md`, `docs/REPOSITORY-BOUNDARY.md`).
 
 ---
 
-## Decisões técnicas
+## 8. Segurança e autorização
 
-| Decisão | Motivo (resumo) |
-|---------|------------------|
-| **App Router + Route Handlers** | API colocalizada ao app, bom encaixe com sessão mock e SSR/i18n. |
-| **next-intl** | Produto regional/global desde o MVP; navegação e cópias por locale. |
-| **Sass Modules** | Estilo encapsulado por componente, alinhado ao design system incremental. |
-| **Mock em arquivo (`server-only`)** | Iteração rápida sem custo de infra; troca gradual por DB documentada. |
-| **Vitest + Playwright** | Pirâmide de testes: domínio/API rápidas em CI local; E2E para fluxos críticos (doc `docs/E2E-PLAYWRIGHT.md`). |
-| **Cookie de sessão mock** | Adequado ao estágio atual; substituível por JWT/sessão servidor com DB. |
-| **Feature folders** | Escalabilidade por domínio (cargas vs negociações vs tracking) sem microsserviços prematuros. |
+### Implementado (com ressalvas honestas)
 
----
+- **Middleware** em rotas privadas do app.
+- **Sessão mock** via cookie; **`toPublicUser`** e política de não expor hash de senha nas respostas (README + auditoria).
+- **OTP:** código só exposto se **`HYDRORIVERS_EXPOSE_OTP_CODE=true`** (adequado a demo/E2E, não padrão de produção).
+- **Mutações** parcialmente endurecidas: exemplos documentados incluem **`POST /api/cargas`** (carrier não publica; usuário não aprovado bloqueado), **`PATCH /api/negociacoes`** (participante), **`POST /api/mock-mode`** (**admin**).
+- **Auditoria estática** das rotas em **`docs/API-SECURITY-AUDIT.md`**.
+- **Decisões de produto/registro** registradas em **`docs/SECURITY-PRODUCT-DECISIONS.md`** (ex.: **`approved`** shipper vs carrier; intenção de restringir **`POST /api/negociacoes`** a carrier em produção; **`ownerId`** obrigatório em cargas criadas — decisão documentada; implementação pode estar pendente conforme mesma doc).
 
-## Regras de negócio (como modeladas hoje)
+### Em evolução / gap documentado (não vendido como “pronto”)
 
-Derivadas dos tipos e fluxos mock (detalhes nos domínios em `src/features/**/domain` e dados em `marketplace.mock` / auth mock):
+- **GET sem sessão** em **`/api/cargas`**, **`/api/negociacoes`**, **`/api/embarcacoes`**, **`/api/rastreio`** listando coleções completas — **risco alto** para dados operacionais reais; recomendações na auditoria.
+- Rate limiting, máquina de estados formal para negociação, CSRF em logout/mock-mode — pontos **«a confirmar»** ou recomendados na auditoria.
+- **`GET /api/mock-mode`** sem sessão expõe metadados de cenário — risco menor mas anotado.
 
-- **Cargas:** estados como `open`, `bidding`, `contracting`, `reserved`, `boarded`, `delivered`; metadados de corredor, conectividade, documentação sugerida.
-- **Embarcações:** disponibilidade, rota, capacidade, status operacional simplificado.
-- **Negociações:** estágios tipo cotação → contrato → embarque → entrega (`DealStage`), partes (`shipper`/`carrier`), valores e histórico resumido em mock.
-- **Rastreio:** eventos com status de timeline (`done` / `current` / `pending`) e **tipos operacionais** opcionais para evolução auditável (`docs/TRACKING-TIMELINE.md`).
-- **Perfis:** `shipper`, `carrier`, `admin` no modelo de usuário; cadastro público restrito a shipper/carrier (admin não via registro espontâneo — conforme política atual do projeto).
+### Visão futura
 
-*Interpretação dos números no dashboard/governo:* parte das tendências é **ilustrativa** no mock; o roadmap executivo alerta para não confundir demo com série temporal real (`docs/EXECUTIVE-DASHBOARD.md`).
+- Autorização por **owner/participante** também nas **leituras**; auth com provider/passkeys; políticas alinhadas a LGPD/GDPR quando houver backend real (`docs/ARCHITECTURE.md`, `docs/API-SECURITY-AUDIT.md`, `docs/DATABASE-PLANNING.md`).
 
 ---
 
-## Segurança
+## 9. Testes e qualidade
 
-Estado **honesto** conforme auditoria interna:
+| Camada | Implementação |
+|--------|----------------|
+| **Lint / tipos** | `npm run lint`, `npm run typecheck` |
+| **i18n** | `npm run check:i18n` — paridade de chaves entre locales |
+| **Unitário** | Vitest — helpers de domínio, auth mock, inferência de rastreio, etc. |
+| **Integração** | Vitest — Route Handlers (`tests/integration/api/*`): auth, cargas, negociações, mock-mode, rastreio, etc. |
+| **E2E** | Playwright — fluxos críticos iniciais; quando criar/atualizar, seguir **`docs/E2E-PLAYWRIGHT.md`** |
 
-- **Pontos fortes:** endurecimento em rotas que alteram dados sensíveis ou cenários (`mock-mode` admin; participação em negociações nas mutações cobertas por testes); padronização parcial de erros (`401`/`403`/`400`) onde aplicável; OTP não exposto por padrão.
-- **Pontos em aberto:** GET amplos em dados operacionais sem sessão; validação de payload ainda não centralizada em schema; ausência de rate limit/brute-force mitigation em auth mock (recomendações em `docs/API-SECURITY-AUDIT.md`).
-- **Política de produto:** não promover IA generativa antes de **segurança, validação e testes** consolidados (`AGENTS.md`).
-
-Para portfólio: destacar **mentalidade de threat modeling documentado** e **evolução incremental**, não “caixa preta segura”.
-
----
-
-## Testes
-
-| Camada | Ferramenta / escopo |
-|--------|----------------------|
-| Estático | ESLint (`eslint.config.mjs`), TypeScript (`tsc --noEmit`) |
-| Contrato i18n | `npm run check:i18n` — paridade `pt-BR` / `en` / `es` |
-| Unitário | Vitest — helpers de servidor, domínio, auth mock, inferência de tracking, etc. |
-| Integração | Vitest — Route Handlers (`tests/integration/api/*`) incluindo auth, cargas, negociações, mock-mode, rastreio |
-| E2E | Playwright — fluxos críticos iniciais (login demo, locale, rotas privadas); ambiente documentado em `docs/E2E-PLAYWRIGHT.md` |
-
-Política do repositório: mudanças que tocam fluxo ou APIs devem incluir validações correspondentes (`AGENTS.md`).
+**Política do repositório:** mudanças em fluxos/APIs devem acompanhar validações pertinentes (`AGENTS.md`).  
+**Em evolução:** expandir testes conforme endurecimento da matriz da auditoria (GETs escopados, novos códigos de erro).
 
 ---
 
-## i18n
+## 10. Internacionalização
 
-- Locales: **`pt-BR`**, **`en`**, **`es`**.
-- Mensagens em `messages/*.json`; conteúdo de demo/marketplace traduzível via helpers de mock onde aplicável (`translateMock`).
-- Navegação e shells de página respeitam o routing por locale (`src/core/i18n`).
+- **Locales:** `pt-BR`, `en`, `es`.
+- **Mensagens:** arquivos em `messages/*.json`; verificação automatizada de alinhamento de chaves.
+- **Conteúdo mock:** helpers tipo **`translateMock`** para títulos/descrições de demo onde aplicável.
+- **Rotas:** prefixo **`/[locale]/...`** (`src/core`).
 
 ---
 
-## Roadmap (síntese documentada)
+## 11. Roadmap enterprise
+
+Síntese do que já está **documentado** como direção enterprise (ordem pode ser ajustada por squad):
 
 | Fase | Foco |
 |------|------|
-| Curto prazo | Endurecer leituras sensíveis; consolidar agregações para dashboards; timestamps normalizados onde precisarem virar KPI.reais (`EXECUTIVE-DASHBOARD`, `DATABASE-PLANNING`). |
-| Médio prazo | Boundary repository + primeira migração Postgres; auth real; schemas de validação. |
-| Longo prazo | Documentos com storage seguro; tracking tempo real e integrações oficiais; indicadores institucionais auditáveis (`ARCHITECTURE`, `DOCUMENTS-MODULE`, `TRACKING-TIMELINE`). |
+| **Curto** | Endurecer **leituras** sensíveis nas APIs; definir **`ownerId`/escopo** consistente nas cargas; timestamps normalizados para KPIs reais (`docs/SECURITY-PRODUCT-DECISIONS.md`, `docs/API-SECURITY-AUDIT.md`, `docs/EXECUTIVE-DASHBOARD.md`). |
+| **Médio** | **Postgres** (ou equivalente) + migrations; boundary tipo **repository**; schemas de validação (ex.: Zod); auth real (`docs/DATABASE-PLANNING.md`, `docs/REPOSITORY-BOUNDARY.md`, `docs/ARCHITECTURE.md`). |
+| **Produto dados** | **Dashboard executivo** por persona (`docs/EXECUTIVE-DASHBOARD.md`); timeline de rastreio com filtros/autorização (`docs/TRACKING-TIMELINE.md`). |
+| **Documentos** | Módulo com upload, storage e visibilidade (`docs/DOCUMENTS-MODULE.md`) — **planejado**, não confundir com MVP atual. |
+| **Agentes assistivos (opcional)** | Roadmap separado **`docs/AGENTS-ROADMAP.md`** — dependente de governança **`docs/AI-ROADMAP.md`** e de segurança/testes consolidados. |
 
 ---
 
-## Visão de IA (alinhada à governança do projeto)
+## 12. Visão de IA
 
-**Hoje:** não há IA de produto integrada; as regras do repositório explicícitas são **não adicionar IA antes de segurança, validação e testes** (`AGENTS.md`).
+### Implementado
 
-**Futuro responsável (visão compatível com o tipo de problema):**
+- **Nenhuma** capacidade de IA generativa integrada ao produto em runtime — por política explícita do repositório (**não adicionar IA antes de segurança, validação e testes**, `AGENTS.md`).
 
-- Assistência para **resumo estruturado de negociação** e **checagem de checklist documental**, sempre com **trilha de auditoria humana** e sem substituir decisões regulatórias.
-- Uso apenas sobre dados **já autorizados** ao usuário e com **políticas de retenção** coerentes com documentos e LGPD/GDPR quando houver backend real.
+### Planejado (documentação apenas)
 
-Ou seja: IA como **acelerador de leitura e consistência**, não como motor oculto de contratos ou fretes.
+- **`docs/AI-ROADMAP.md`:** IA **assistiva** apenas — não decide sozinha; não altera dados críticos sem confirmação humana; entradas/saídas **estruturadas**; **fallback determinístico** obrigatório; **auditoria** por invocação; API/server-side único (sem keys no browser).
+- **`docs/AGENTS-ROADMAP.md`:** agentes de produto exemplares (ex.: sugestão documental, consolidação de risco) com limites claros de dados e ações — todos **posteriors** ao módulo de documentos e regras regulatórias.
 
----
+### Visão futura
 
-## Pitch de 30 segundos
-
-*"O HydroRivers é um MVP web que une marketplace hidroviário, negociação e rastreio por eventos — pensado para Amazônia e cabotagem, com foco em cooperativas e compliance sem abandonar baixa conectividade. Está em Next.js e React 19, multilíngue desde o primeiro dia, com mocks server-side e uma pirâmide de testes que já cobre APIs críticas. O próximo passo documentado é levar isso a banco real e políticas de autorização de ponta a ponta, mantendo o que já funciona como produto demonstrável."*
+- IA como **acelerador de leitura e consistência** (resumos, checklists sugeridos), nunca como substituto de decisão regulatória ou contrato sem trilha humana.
 
 ---
 
-## Descrição para LinkedIn (parágrafo único — pode colar em “Projeto” ou post)
+## 13. Aprendizados
 
-**HydroRivers** — plataforma Next.js 16 (App Router) e React 19 para operações logísticas em hidrovias e cabotagem: cargas, embarcações, negociações, rastreio orientado a eventos, impacto socioambiental e visão institucional/governo. Stack TypeScript, Sass Modules e **next-intl** (`pt-BR`, `en`, `es`); persistência **mock server-side** com cenários administráveis; **middleware** para rotas privadas e APIs com endurecimento progressivo documentado em auditoria interna. Qualidade com **Vitest** (unitário + integração de Route Handlers), **Playwright** (E2E inicial), ESLint 9 e verificação automática de paridade i18n. Roadmap explícito para Postgres, repository boundary, documentos com storage seguro e KPIs executivos por persona — mantendo incrementos pequenos e segurança antes de camadas de IA.
+- **Mock server-side primeiro** permite demo e testes de API sem infraestrutura — desde que o portfólio **declare honestamente** os limites (GETs amplos, ausência de DB).
+- **Documentar segurança antes de “fechar” o MVP** (`API-SECURITY-AUDIT.md`, `SECURITY-PRODUCT-DECISIONS.md`) mostra maturidade sênior: risco nomeado, decisão de produto separada de bug técnico, testes como contrato futuro.
+- **i18n e check automatizado desde cedo** reduzem débito em produtos LATAM-first com ambição global.
+- **Separation of concerns por feature** escala melhor que um único diretório genérico quando o domínio (carga × negociação × rastreio) diverge.
+- **Roadmaps explicitamente “planejamento apenas”** evitam que stakeholders confundam Markdown com código em produção — útil também em entrevistas (“sei separar discovery de delivery”).
+
+---
+
+## 14. Descrição curta para GitHub
+
+**HydroRivers** — MVP Next.js 16 (App Router) + React 19 + TypeScript: marketplace hidroviário/cabotagem com cargas, embarcações, negociações, rastreio por eventos, impacto e página governo. **next-intl** (`pt-BR`, `en`, `es`), Sass Modules, persistência **mock em `.mock-data`**, auth mock com cookie + middleware em rotas privadas. Testes: **Vitest** (unit + integração de APIs), **Playwright** (E2E inicial). Documentação de segurança, decisões de produto e roadmap enterprise/IA em **`docs/`**. *Demonstrativo — não é stack de produção completa.*
+
+---
+
+## 15. Descrição para LinkedIn
+
+**HydroRivers** é um MVP web para operações logísticas em **hidrovias e cabotagem**, pensado para cenários amazônicos e cooperativas: **marketplace de cargas**, **frota**, **negociações**, **rastreio com timeline operacional**, camadas de **impacto** e **visão institucional/governo**. A stack é **Next.js 16 (App Router)**, **React 19** e **TypeScript**, com **next-intl** em três idiomas e **Sass Modules**. Os dados são **mock server-side** em JSON para desenvolvimento e demo; há **middleware de rotas privadas**, **auth mock** com políticas documentadas e APIs cobertas por **testes de integração**. A qualidade inclui **Vitest**, **Playwright** (E2E inicial), ESLint e verificação automática de **paridade i18n**. O repositório mantém **auditoria de segurança das APIs**, **decisões explícitas de produto/segurança** e **roadmaps** para banco real, dashboard executivo, módulo de documentos e **IA apenas assistiva** após endurecimento de segurança e testes — alinhado a uma postura disciplinada de evolução incremental.
 
 ---
 
 ## Referências rápidas no repositório
 
-- Visão de produto e próximo salto: `docs/ARCHITECTURE.md`
-- Banco e migração: `docs/DATABASE-PLANNING.md`
-- Segurança de APIs: `docs/API-SECURITY-AUDIT.md`
-- Timeline de rastreio: `docs/TRACKING-TIMELINE.md`
-- Documentos (planejado): `docs/DOCUMENTS-MODULE.md`
-- Dashboard executivo (planejado): `docs/EXECUTIVE-DASHBOARD.md`
-- Política de agentes/testes (inclui regra sobre IA): `AGENTS.md`
-- Execução local e rotas: `README.md`
+| Documento | Uso |
+|-----------|-----|
+| `README.md` | Rotas, stack, persistência mock, notas de versão |
+| `AGENTS.md` | Política de testes e proibição de IA prematura |
+| `docs/ARCHITECTURE.md` | Nível MVP e próximo salto |
+| `docs/API-SECURITY-AUDIT.md` | Matriz de rotas e riscos |
+| `docs/SECURITY-PRODUCT-DECISIONS.md` | Decisões shipper/carrier/admin/ownerId |
+| `docs/DATABASE-PLANNING.md` | Persistência futura |
+| `docs/TRACKING-TIMELINE.md` | Modelo de eventos de rastreio |
+| `docs/EXECUTIVE-DASHBOARD.md` | KPIs por persona |
+| `docs/E2E-PLAYWRIGHT.md` | Estratégia E2E |
+| `docs/AI-ROADMAP.md` / `docs/AGENTS-ROADMAP.md` | IA assistiva futura |
 
 ---
 
-*Última atualização conceitual alinhada à versão package `0.8.6` e stack declarada em `package.json`. Para números exatos de cobertura ou linhas de código, gere métricas locais (`npm test`, relatórios de CI) no momento da candidatura.*
+*Para métricas exatas de cobertura ou contagens de testes no momento de uma candidatura, gerar evidências locais (`npm test`, CI). Este arquivo não substitui leitura do código.*
