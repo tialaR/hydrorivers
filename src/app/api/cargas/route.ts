@@ -1,6 +1,7 @@
 import { getSessionUser, isNonEmptyText } from '@/shared/server/auth';
 import { forbidden, invalidPayload, unauthenticated } from '@/shared/server/api-errors';
-import { readMock, upsertCargo } from '@/shared/server/mock-db';
+import { upsertCargo } from '@/shared/server/mock-db';
+import { getRepositories } from '@/shared/server/repositories';
 import type { Cargo, CargoStatus } from '@/features/marketplace/domain/marketplace.types';
 
 export const runtime = 'nodejs';
@@ -9,7 +10,7 @@ export const dynamic = 'force-dynamic';
 const allowedStatuses: CargoStatus[] = ['open', 'bidding', 'contracting', 'reserved', 'boarded', 'delivered'];
 
 export function GET() {
-  return Response.json({ data: readMock('cargoes') });
+  return Response.json({ data: getRepositories().cargoes.list() });
 }
 
 export async function POST(request: Request) {
