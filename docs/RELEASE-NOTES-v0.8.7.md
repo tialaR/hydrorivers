@@ -23,7 +23,8 @@
 ## Engineering
 
 - Melhor centralização de mensagens de toast.
-- Menos strings hardcoded dão técnica mais alinhada ao estado real do código.
+- Menos strings hardcoded de rota.
+- Documentação técnica mais alinhada ao estado real do código.
 - Cobertura de testes ampliada.
 - E2E de publicação alinhado ao fluxo atual sem depender de `POST /api/cargas`.
 
