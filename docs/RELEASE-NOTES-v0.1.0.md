@@ -27,10 +27,12 @@ Lista **estrita** ao repositório executável — detalhes adicionais em [`READM
 | Área | Entrega nesta baseline |
 |------|-------------------------|
 | **Produto MVP** | Marketplace: cargas, embarcações, negociações; rastreio com timeline e API `GET /api/rastreio`; impacto; dashboard; admin; página institucional `governo`; rotas localizadas. |
+| **Publicação de carga (React 19)** | Formulário com **`useActionState`** chama **Server Action** (`publishCargoAction`) que delega persistência/revalidação para **`commitPublishCargo`** (também usada por `POST /api/cargas`). |
 | **Auth** | Fluxo mock: login, registro público (**shipper** / **carrier**), logout, perfil; sessão **`hydrorivers_session`**; hashing de senhas com **PBKDF2** no servidor; respostas sem **`passwordHash`** ao cliente (`docs/API-SECURITY-AUDIT.md`). |
 | **Proteção de UI** | **Middleware** em rotas privadas conforme projeto (vide `README.md`). |
 | **Dados** | Leitura/escrita mock em arquivo JSON sob `.mock-data/`; cenários **`/api/mock-mode`** (uso restrito a **admin** no POST conforme auditoria). |
 | **i18n** | `next-intl`; mensagens em `messages/*`; **`npm run check:i18n`** para paridade de chaves entre os três idiomas. |
+| **Contratos de plataforma** | Routing (`app-routes`, `api-routes`, `route-search-params`), cache/revalidation por tags/paths e constants de domínio/HTTP/cookies/env já compõem a base técnica do MVP. |
 | **Produto técnico** | Vercel Analytics (dependência declarada em `package.json`). |
 
 ---
