@@ -65,7 +65,7 @@ export function AppHeader() {
   const desktopNavigation = useMemo(
     () =>
       mainNavigation
-        .filter((item) => item.href !== '/admin')
+        .filter((item) => item.href !== intlAppPaths.admin.home)
         .filter(
           (item) =>
             item.href !== intlAppPaths.cargos.myCargos ||
@@ -290,9 +290,9 @@ export function AppHeader() {
             <ThemeToggle />
           </div>
           <nav className={styles.sheetNav}>
-            {mainNavigation.filter((item) => item.href !== '/admin' || user?.role === 'admin').map((item) => (
+            {mainNavigation.filter((item) => item.href !== intlAppPaths.admin.home || user?.role === 'admin').map((item) => (
               <Link onClick={() => requestCloseSheet()} key={item.href} href={item.href} className={item.href === activeHref ? styles.sheetActive : undefined}>
-                <span>{t(item.labelKey)}</span><HydroIcon name={item.href === '/cargas' ? 'cargo' : item.href === '/embarcacoes' ? 'ship' : item.href === '/rastreio' ? 'map' : 'route'} size={16} />
+                <span>{t(item.labelKey)}</span><HydroIcon name={item.href === intlAppPaths.cargos.marketplace ? 'cargo' : item.href === intlAppPaths.vessels.marketplace ? 'ship' : item.href === intlAppPaths.tracking.home ? 'map' : 'route'} size={16} />
               </Link>
             ))}
           </nav>
@@ -300,7 +300,7 @@ export function AppHeader() {
 
         <div className={styles.sheetActions}>
           <Link href={intlAppPaths.cargos.publishCargo} onClick={() => requestCloseSheet()} className={styles.sheetCta}>{t('cta')}</Link>
-          <Link href={user ? '/perfil' : '/cadastro'} onClick={() => requestCloseSheet()} className={styles.sheetGhost}>{user ? t('profile') : t('signup')}</Link>
+          <Link href={user ? intlAppPaths.auth.profile : intlAppPaths.auth.register} onClick={() => requestCloseSheet()} className={styles.sheetGhost}>{user ? t('profile') : t('signup')}</Link>
         </div>
       </aside>
     </div>

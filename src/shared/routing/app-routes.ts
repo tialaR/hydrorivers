@@ -59,7 +59,8 @@ export const intlAppPaths = {
     home: intlSegments.rastreio
   },
   vessels: {
-    marketplace: intlSegments.embarcacoes
+    marketplace: intlSegments.embarcacoes,
+    vesselDetail: (vesselId: string) => `${intlSegments.embarcacoes}/${vesselId}`
   },
   impact: {
     home: intlSegments.impacto

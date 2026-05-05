@@ -1,4 +1,5 @@
 import { demoPassword } from '@/features/auth/domain/auth-constants';
+import { intlAppPaths } from '@/shared/routing/app-routes';
 
 export type MockQaPersonaId = 'tiala' | 'joao' | 'carlos' | 'ana' | 'admin';
 
@@ -30,7 +31,7 @@ export const MOCK_QA_PERSONAS: readonly MockQaPersona[] = [
     role: 'shipper',
     approved: true,
     companyDisplay: 'Cooperativa Açaí Norte',
-    directLoginRedirectPath: '/cargas',
+    directLoginRedirectPath: intlAppPaths.cargos.marketplace,
     suggestedActions: ['openDashboard', 'openCargas', 'tryCargoAssistant']
   },
   {
@@ -41,7 +42,7 @@ export const MOCK_QA_PERSONAS: readonly MockQaPersona[] = [
     role: 'carrier',
     approved: true,
     companyDisplay: 'Navega Norte',
-    directLoginRedirectPath: '/cargas',
+    directLoginRedirectPath: intlAppPaths.cargos.marketplace,
     suggestedActions: ['openDashboard', 'openCargas', 'tryCargoAssistant', 'tryAccessBlock']
   },
   {
@@ -52,7 +53,7 @@ export const MOCK_QA_PERSONAS: readonly MockQaPersona[] = [
     role: 'carrier',
     approved: true,
     companyDisplay: 'Hidrovias Madeira',
-    directLoginRedirectPath: '/cargas',
+    directLoginRedirectPath: intlAppPaths.cargos.marketplace,
     suggestedActions: ['openDashboard', 'openCargas', 'tryCargoAssistant', 'tryAccessBlock']
   },
   {
@@ -63,7 +64,7 @@ export const MOCK_QA_PERSONAS: readonly MockQaPersona[] = [
     role: 'carrier',
     approved: false,
     companyDisplay: 'RiosLog Amazônia',
-    directLoginRedirectPath: '/perfil',
+    directLoginRedirectPath: intlAppPaths.auth.profile,
     suggestedActions: ['openDashboard', 'openCargas', 'tryAccessBlock']
   },
   {
@@ -74,7 +75,7 @@ export const MOCK_QA_PERSONAS: readonly MockQaPersona[] = [
     role: 'admin',
     approved: true,
     companyDisplay: 'HydroRivers',
-    directLoginRedirectPath: '/admin',
+    directLoginRedirectPath: intlAppPaths.admin.home,
     suggestedActions: ['openDashboard', 'openCargas', 'openAdminMockMode']
   }
 ] as const;

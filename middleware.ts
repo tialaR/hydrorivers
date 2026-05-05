@@ -2,7 +2,7 @@ import createMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
 import { routing } from './src/core/i18n/routing';
 import { cookieNames } from './src/shared/http/cookie-names';
-import { middlewarePrivateIntlPaths } from './src/shared/routing/app-routes';
+import { intlAppPaths, middlewarePrivateIntlPaths } from './src/shared/routing/app-routes';
 import { routeSearchParams } from './src/shared/routing/route-search-params';
 
 const intlMiddleware = createMiddleware(routing);
@@ -22,7 +22,7 @@ export default function middleware(request: NextRequest) {
 
   if (isPrivate && !request.cookies.get(cookieNames.session)?.value) {
     const url = request.nextUrl.clone();
-    url.pathname = `/${locale}/login`;
+    url.pathname = `/${locale}${intlAppPaths.auth.login}`;
     url.searchParams.set(routeSearchParams.next, pathname);
     return NextResponse.redirect(url);
   }
