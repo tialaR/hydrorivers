@@ -196,35 +196,39 @@
     "otpSubmit": "Validar OTP",
     "otpInvalid": "Codigo OTP invalido. Revisa e intentalo de nuevo."
   },
-  "home": {
-    "eyebrow": "Frete fluvial y cabotaje",
-    "title": "El marketplace que transforma ríos en corredores digitales de carga.",
-    "description": "HydroRivers conecta productores, operadores y embarcaciones para reducir costos logísticos, emisiones y burocracia en Amazonía y cabotaje brasileño.",
-    "primary": "Explorar cargas",
-    "secondary": "Ver impacto",
-    "pillars": {
-      "cost": {
-        "title": "Costo y sostenibilidad",
-        "description": "Menos camiones en largas distancias y más uso de rutas naturales con menor emisión."
+  "pages": {
+    "home": {
+      "hero": {
+        "eyebrow": "FLETE FLUVIAL Y CABOTAJE",
+        "title": "El marketplace que convierte los ríos en corredores digitales de carga.",
+        "description": "HydroRivers conecta a pequeños productores, operadores y embarcaciones para reducir costos logísticos, emisiones y burocracia en la Amazonía y el cabotaje en Brasil.",
+        "primary": "Explorar cargas",
+        "secondary": "Ver impacto"
       },
-      "region": {
-        "title": "Necesidad regional",
-        "description": "Donde el río es carretera, organizar capacidad fluvial reduce el costo de vida y amplía mercados."
+      "visualCards": {
+        "aria": "Resumen visual de la operación HydroRivers",
+        "routeTitle": "Belém → Santarém",
+        "routeDescription": "Capacidad regional encontrada para carga refrigerada en ruta fluvial.",
+        "cargoTitle": "Açaí em paletes",
+        "cargoMeta": "18 t · Ventana 08-12 mayo",
+        "impactValue": "-64% CO₂",
+        "impactDescription": "Potencial de emisiones evitadas al sustituir un largo trayecto por carretera por hidrovía."
       },
-      "automation": {
-        "title": "Desburocratización",
-        "description": "Cotización, contraoferta y documentos en un flujo digital preparado para automatización."
+      "benefits": {
+        "cost": {
+          "title": "Costo y sostenibilidad",
+          "description": "Menos camiones en largas distancias y más uso de rutas naturales con menor emisión."
+        },
+        "region": {
+          "title": "Necesidad regional",
+          "description": "Donde el río es carretera, organizar capacidad fluvial reduce el costo de vida y amplía mercados."
+        },
+        "automation": {
+          "title": "Desburocratización",
+          "description": "Cotización, contraoferta y documentos en un flujo digital preparado para automatización."
+        }
       }
     },
-    "visualAria": "Resumen visual de la operación HydroRivers",
-    "visualRouteTitle": "Belém → Santarém",
-    "visualRouteDescription": "Capacidad regional encontrada para carga refrigerada en ruta fluvial.",
-    "visualCargoTitle": "Açaí en pallets",
-    "visualCargoMeta": "18 t · Ventana 08-12 mayo",
-    "visualImpactValue": "-64% CO₂",
-    "visualImpactDescription": "Potencial de emisiones evitadas al cambiar una ruta carretera larga por hidrovía."
-  },
-  "pages": {
     "dashboard": {
       "eyebrow": "Operación",
       "title": "Panel HydroRivers",
@@ -746,13 +750,14 @@
       "description": "Indicadores de corredor, abastecimiento, bioeconomía y riesgo apoyan decisiones públicas."
     }
   },
-  "footer": {
-    "description": "Marketplace de carga fluvial y cabotaje para reducir costos, ampliar la previsibilidad y hacer la logística regional más sostenible.",
-    "copyright": "Todos los derechos reservados.",
-    "social": "Canales de HydroRivers",
-    "product": {
-      "title": "Producto"
-    },
+  "layout": {
+    "footer": {
+      "description": "Marketplace de carga fluvial y cabotaje para reducir costos, ampliar la previsibilidad y hacer la logística regional más sostenible.",
+      "copyrightLine": "© 2026 HydroRivers. Todos los derechos reservados.",
+      "social": "Canales de HydroRivers",
+      "product": {
+        "title": "Producto"
+      },
     "platform": {
       "title": "Plataforma"
     },
@@ -782,6 +787,7 @@
         "label": "Soporte demo",
         "message": "Soporte falso: en producción abriría chat o mesa de ayuda."
       }
+    }
     }
   },
   "errors": {

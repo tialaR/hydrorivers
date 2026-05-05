@@ -6,33 +6,34 @@ import { intlAppPaths } from '@/shared/routing/app-routes';
 import styles from './hydro-hero.module.scss';
 
 export async function HydroHero() {
-  const t = await getTranslations('home');
+  const tHero = await getTranslations('pages.home.hero');
+  const tVisual = await getTranslations('pages.home.visualCards');
   return (
     <section className={styles.hero}>
       <div className={styles.copy}>
-        <p>{t('eyebrow')}</p>
-        <h1>{t('title')}</h1>
-        <span>{t('description')}</span>
+        <p>{tHero('eyebrow')}</p>
+        <h1>{tHero('title')}</h1>
+        <span>{tHero('description')}</span>
         <div className={styles.actions}>
-          <Link href={intlAppPaths.cargos.marketplace}><Button><HydroIcon name="ship" size={18} /> {t('primary')}</Button></Link>
-          <Link href={intlAppPaths.impact.home}><Button variant="secondary"><HydroIcon name="leaf" size={18} /> {t('secondary')}</Button></Link>
+          <Link href={intlAppPaths.cargos.marketplace}><Button><HydroIcon name="ship" size={18} /> {tHero('primary')}</Button></Link>
+          <Link href={intlAppPaths.impact.home}><Button variant="secondary"><HydroIcon name="leaf" size={18} /> {tHero('secondary')}</Button></Link>
         </div>
       </div>
-      <aside className={styles.visual} aria-label={t('visualAria')}>
+      <aside className={styles.visual} aria-label={tVisual('aria')}>
         <div className={styles.riverLine} />
         <div className={styles.routeCard}>
           <span className={styles.iconBubble}><HydroIcon name="river" /></span>
-          <h2>{t('visualRouteTitle')}</h2>
-          <p>{t('visualRouteDescription')}</p>
+          <h2>{tVisual('routeTitle')}</h2>
+          <p>{tVisual('routeDescription')}</p>
         </div>
         <div className={styles.cargoCard}>
           <span className={styles.iconBubble}><HydroIcon name="cargo" /></span>
-          <h3>{t('visualCargoTitle')}</h3>
-          <p>{t('visualCargoMeta')}</p>
+          <h3>{tVisual('cargoTitle')}</h3>
+          <p>{tVisual('cargoMeta')}</p>
         </div>
         <div className={styles.impactCard}>
-          <strong>{t('visualImpactValue')}</strong>
-          <small>{t('visualImpactDescription')}</small>
+          <strong>{tVisual('impactValue')}</strong>
+          <small>{tVisual('impactDescription')}</small>
         </div>
       </aside>
     </section>

@@ -37,7 +37,7 @@ const columns = [
 ] as const;
 
 export async function AppFooter() {
-  const t = await getTranslations('footer');
+  const t = await getTranslations('layout.footer');
   const nav = await getTranslations('nav');
   const impact = await getTranslations('impactCards');
   const impactLabels = ['brdomar', 'sustainability', 'regional', 'automation'] as const;
@@ -61,7 +61,7 @@ export async function AppFooter() {
         ))}
       </div>
       <div className={styles.bottom}>
-        <span>© 2026 HydroRivers. {t('copyright')}</span>
+        <span>{t('copyrightLine')}</span>
         <FooterSocials />
       </div>
     </footer>

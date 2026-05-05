@@ -196,35 +196,39 @@
     "otpSubmit": "Validar OTP",
     "otpInvalid": "Codigo OTP invalido. Confira e tente novamente."
   },
-  "home": {
-    "eyebrow": "Frete fluvial e cabotagem",
-    "title": "O marketplace que transforma rios em corredores digitais de carga.",
-    "description": "HydroRivers conecta pequenos produtores, operadores e embarcações para reduzir custo logístico, emissões e burocracia na Amazônia e na cabotagem brasileira.",
-    "primary": "Explorar cargas",
-    "secondary": "Ver impacto",
-    "pillars": {
-      "cost": {
-        "title": "Custo e sustentabilidade",
-        "description": "Menos caminhões em longas distâncias e mais uso de rotas naturais com menor emissão."
+  "pages": {
+    "home": {
+      "hero": {
+        "eyebrow": "FRETE FLUVIAL E CABOTAGEM",
+        "title": "O marketplace que transforma rios em corredores digitais de carga.",
+        "description": "HydroRivers conecta pequenos produtores, operadores e embarcações para reduzir custo logístico, emissões e burocracia na Amazônia e na cabotagem brasileira.",
+        "primary": "Explorar cargas",
+        "secondary": "Ver impacto"
       },
-      "region": {
-        "title": "Necessidade regional",
-        "description": "Onde o rio é estrada, organizar capacidade fluvial reduz custo de vida e amplia mercado."
+      "visualCards": {
+        "aria": "Resumo visual da operação HydroRivers",
+        "routeTitle": "Belém → Santarém",
+        "routeDescription": "Capacidade regional encontrada para carga refrigerada em rota fluvial.",
+        "cargoTitle": "Açaí em paletes",
+        "cargoMeta": "18 t · Janela 08-12 maio",
+        "impactValue": "-64% CO₂",
+        "impactDescription": "Potencial de emissão evitada ao trocar rodovia longa por hidrovia."
       },
-      "automation": {
-        "title": "Desburocratização",
-        "description": "Cotação, contraproposta e documentos em fluxo digital preparado para automação."
+      "benefits": {
+        "cost": {
+          "title": "Custo e sustentabilidade",
+          "description": "Menos caminhões em longas distâncias e mais uso de rotas naturais com menor emissão."
+        },
+        "region": {
+          "title": "Necessidade regional",
+          "description": "Onde o rio é estrada, organizar capacidade fluvial reduz custo de vida e amplia mercado."
+        },
+        "automation": {
+          "title": "Desburocratização",
+          "description": "Cotação, contraproposta e documentos em fluxo digital preparado para automação."
+        }
       }
     },
-    "visualAria": "Resumo visual da operação HydroRivers",
-    "visualRouteTitle": "Belém → Santarém",
-    "visualRouteDescription": "Capacidade regional encontrada para carga refrigerada em rota fluvial.",
-    "visualCargoTitle": "Açaí em paletes",
-    "visualCargoMeta": "18 t · Janela 08-12 maio",
-    "visualImpactValue": "-64% CO₂",
-    "visualImpactDescription": "Potencial de emissão evitada ao trocar rodovia longa por hidrovia."
-  },
-  "pages": {
     "dashboard": {
       "eyebrow": "Operação",
       "title": "Painel HydroRivers",
@@ -746,11 +750,12 @@
       "description": "Indicadores de corredor, abastecimento, bioeconomia e risco ajudam decisões públicas."
     }
   },
-  "footer": {
-    "description": "Marketplace de frete fluvial e cabotagem para reduzir custo, ampliar previsibilidade e tornar a logística regional mais sustentável.",
-    "copyright": "Todos os direitos reservados.",
-    "social": "Redes e canais do HydroRivers",
-    "product": {
+  "layout": {
+    "footer": {
+      "description": "Marketplace de frete fluvial e cabotagem para reduzir custo, ampliar previsibilidade e tornar a logística regional mais sustentável.",
+      "copyrightLine": "© 2026 HydroRivers. Todos os direitos reservados.",
+      "social": "Redes e canais do HydroRivers",
+      "product": {
       "title": "Produto"
     },
     "platform": {
@@ -782,6 +787,7 @@
         "label": "Suporte demo",
         "message": "Suporte fake: em produção abriria chat ou central de atendimento."
       }
+    }
     }
   },
   "errors": {
