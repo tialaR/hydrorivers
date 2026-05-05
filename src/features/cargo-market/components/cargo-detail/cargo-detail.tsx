@@ -7,7 +7,8 @@ import { Button } from '@/shared/ui/button/button';
 import { Badge } from '@/shared/ui/badge/badge';
 import { HydroIcon } from '@/shared/ui/hydro-icon/hydro-icon';
 import { Tooltip } from '@/shared/ui/tooltip/tooltip';
-import { useToast } from '@/shared/ui/toast/toast-provider';
+import { httpStatus } from '@/shared/http/http-status';
+import { useHumanizedHttpToast } from '@/shared/ui/toast/use-humanized-http-toast';
 import type { Cargo } from '@/features/marketplace/domain/marketplace.types';
 import type { CargoViewer } from '@/features/cargo-market/utils/cargo-proposal-visibility';
 import { getCargoProposalVisibility } from '@/features/cargo-market/utils/cargo-proposal-visibility';
@@ -49,7 +50,7 @@ export function CargoDetail({ cargo, viewer }: { cargo: Cargo; viewer?: CargoVie
   const page = useTranslations('pages.cargoDetail');
   const common = useTranslations('common');
   const locale = useLocale();
-  const { showToast } = useToast();
+  const { showForHttpStatus } = useHumanizedHttpToast();
   const [proposalCount, setProposalCount] = useState(2);
 
   const cargoType = translateCargoType(common, cargo.cargoType);
@@ -57,10 +58,8 @@ export function CargoDetail({ cargo, viewer }: { cargo: Cargo; viewer?: CargoVie
 
   function simulateProposal() {
     setProposalCount((value) => value + 1);
-    showToast({
-      tone: 'success',
-      title: page('proposalToastTitle'),
-      description: page('proposalToastDescription', { title: translateMock(locale, cargo.title) })
+    showForHttpStatus(httpStatus.created, 'cargo.proposal', {
+      title: translateMock(locale, cargo.title)
     });
   }
 

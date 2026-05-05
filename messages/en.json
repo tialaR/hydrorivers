@@ -476,8 +476,6 @@
       "documentReady": "Documents checked",
       "documentPending": "Document will be regularized",
       "riskNote": "Risk and operation note",
-      "proposalToastTitle": "Simulated proposal sent",
-      "proposalToastDescription": "The cargo “{title}” received a new mock proposal.",
       "documentDescription": "Requirements by cargo type, route and operational phase.",
       "operationPlan": "Operational plan",
       "operationPlanPlaceholder": "Example: two-batch loading with dock-side verification.",
@@ -798,6 +796,66 @@
       "description": "The URL may be wrong or this resource no longer exists in this mock environment.",
       "linkHome": "Go to home",
       "linkCargoes": "Browse cargoes marketplace"
+    }
+  },
+  "toasts": {
+    "http": {
+      "buckets": {
+        "success": {
+          "title": "All set",
+          "description": "The operation completed successfully."
+        },
+        "badRequest": {
+          "title": "Invalid data",
+          "description": "Review the fields you sent and try again."
+        },
+        "unauthorized": {
+          "title": "Sign-in required",
+          "description": "Log in to continue."
+        },
+        "forbidden": {
+          "title": "Permission denied",
+          "description": "You do not have access to this action."
+        },
+        "notFound": {
+          "title": "Not found",
+          "description": "The resource is not available or does not exist in this environment."
+        },
+        "conflict": {
+          "title": "Conflict",
+          "description": "This conflicts with the current state. Refresh and try again."
+        },
+        "unprocessableEntity": {
+          "title": "Business rules",
+          "description": "The data did not pass domain validation."
+        },
+        "serverError": {
+          "title": "Unexpected error",
+          "description": "Try again in a moment. If it persists, contact support."
+        }
+      },
+      "cargoPublish": {
+        "success": {
+          "title": "Cargo published",
+          "description": "Your cargo is now on the mock marketplace."
+        }
+      },
+      "cargoProposal": {
+        "success": {
+          "title": "Simulated proposal sent",
+          "description": "The cargo “{title}” received a new mock proposal."
+        }
+      },
+      "authLogin": {
+        "unauthorized": {
+          "title": "Login required",
+          "description": "Your session expired or you are not signed in."
+        },
+        "forbidden": {
+          "title": "Access denied",
+          "description": "This account cannot complete sign-in in this context."
+        }
+      }
     }
   },
   "metadata": {
