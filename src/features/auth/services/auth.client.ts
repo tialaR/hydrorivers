@@ -1,6 +1,7 @@
 
 import type { HydroUser, LoginPayload, LoginResult, PublicHydroUser, RegisterPayload } from '../domain/auth.types';
 import { apiRoutes } from '@/shared/routing/api-routes';
+import { httpStatus } from '@/shared/http/http-status';
 
 async function parseResponse<T>(response: Response): Promise<T> {
   const payload = await response.json().catch(() => ({}));
@@ -10,7 +11,7 @@ async function parseResponse<T>(response: Response): Promise<T> {
 
 export async function getCurrentUser(): Promise<HydroUser | null> {
   const response = await fetch(apiRoutes.auth.me, { cache: 'no-store', credentials: 'include' });
-  if (response.status === 401) return null;
+  if (response.status === httpStatus.unauthorized) return null;
   const payload = await parseResponse<{ user: HydroUser | null }>(response);
   return payload.user;
 }

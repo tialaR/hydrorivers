@@ -1,4 +1,4 @@
-import { DEMO_PASSWORD } from '@/features/auth/data/auth.mock';
+import { demoPassword } from '@/features/auth/domain/auth-constants';
 
 export type MockQaPersonaId = 'tiala' | 'joao' | 'carlos' | 'ana' | 'admin';
 
@@ -26,7 +26,7 @@ export const MOCK_QA_PERSONAS: readonly MockQaPersona[] = [
     id: 'tiala',
     mockUserId: 'u-shipper-1',
     email: 'tiala@hydrorivers.com',
-    password: DEMO_PASSWORD,
+    password: demoPassword,
     role: 'shipper',
     approved: true,
     companyDisplay: 'Cooperativa Açaí Norte',
@@ -37,7 +37,7 @@ export const MOCK_QA_PERSONAS: readonly MockQaPersona[] = [
     id: 'joao',
     mockUserId: 'u-carrier-1',
     email: 'joao@naveganorte.com',
-    password: DEMO_PASSWORD,
+    password: demoPassword,
     role: 'carrier',
     approved: true,
     companyDisplay: 'Navega Norte',
@@ -48,7 +48,7 @@ export const MOCK_QA_PERSONAS: readonly MockQaPersona[] = [
     id: 'carlos',
     mockUserId: 'u-carrier-2',
     email: 'carlos@hidroviasmadeira.com',
-    password: DEMO_PASSWORD,
+    password: demoPassword,
     role: 'carrier',
     approved: true,
     companyDisplay: 'Hidrovias Madeira',
@@ -59,7 +59,7 @@ export const MOCK_QA_PERSONAS: readonly MockQaPersona[] = [
     id: 'ana',
     mockUserId: 'u-carrier-3',
     email: 'ana@rioslog.com',
-    password: DEMO_PASSWORD,
+    password: demoPassword,
     role: 'carrier',
     approved: false,
     companyDisplay: 'RiosLog Amazônia',
@@ -70,7 +70,7 @@ export const MOCK_QA_PERSONAS: readonly MockQaPersona[] = [
     id: 'admin',
     mockUserId: 'u-admin-1',
     email: 'admin@hydrorivers.com',
-    password: DEMO_PASSWORD,
+    password: demoPassword,
     role: 'admin',
     approved: true,
     companyDisplay: 'HydroRivers',

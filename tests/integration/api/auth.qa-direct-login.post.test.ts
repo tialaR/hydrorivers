@@ -19,6 +19,7 @@ vi.mock('@/shared/server/auth', () => ({
 
 import type { HydroUser } from '@/features/auth/domain/auth.types';
 import { POST } from '@/app/api/auth/qa-direct-login/route';
+import { cookieNames } from '@/shared/http/cookie-names';
 
 const shipper: HydroUser = {
   id: 'u-shipper-1',
@@ -58,7 +59,7 @@ describe('POST /api/auth/qa-direct-login', () => {
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toMatchObject({ user: { id: 'u-shipper-1' } });
     expect(cookieStore.set).toHaveBeenCalledWith(
-      'hydrorivers_session',
+      cookieNames.session,
       'u-shipper-1',
       expect.objectContaining({ httpOnly: true })
     );

@@ -7,6 +7,7 @@ import type { AiAssistResponse } from '@/features/ai-assist/domain/types';
 import { Card } from '@/shared/ui/card/card';
 import { Button } from '@/shared/ui/button/button';
 import { apiRoutes } from '@/shared/routing/api-routes';
+import { httpStatus } from '@/shared/http/http-status';
 import styles from './cargo-status-assistant-card.module.scss';
 
 type Props = {
@@ -31,11 +32,11 @@ export function CargoStatusAssistantCard({ cargoId }: Props) {
         credentials: 'same-origin',
         body: JSON.stringify({ cargoId, locale })
       });
-      if (response.status === 401) {
+      if (response.status === httpStatus.unauthorized) {
         setState('guest');
         return;
       }
-      if (response.status === 403) {
+      if (response.status === httpStatus.forbidden) {
         setState('forbidden');
         return;
       }

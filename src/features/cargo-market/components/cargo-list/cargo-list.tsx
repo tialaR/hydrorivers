@@ -5,11 +5,12 @@ import { createPortal } from 'react-dom';
 import { useTranslations } from 'next-intl';
 import type { Cargo } from '@/features/marketplace/domain/marketplace.types';
 import { readCargoes } from '@/features/marketplace/services/marketplace.client';
+import { cargoConstants } from '@/features/cargos/domain/cargo-constants';
 import { HydroIcon } from '@/shared/ui/hydro-icon/hydro-icon';
 import { CargoCard } from '../cargo-card/cargo-card';
 import styles from './cargo-list.module.scss';
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = cargoConstants.defaultPageSize;
 const SHEET_CLOSE_MS = 220;
 const SHEET_CLOSE_THRESHOLD = 120;
 const SHEET_FULL_THRESHOLD = 72;
@@ -40,7 +41,7 @@ export function CargoList({ cargoes }: { cargoes: Cargo[] }) {
   const f = useTranslations('forms');
   const [items, setItems] = useState(cargoes);
   const [filters, setFilters] = useState<FilterState>(emptyFilters);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState<number>(cargoConstants.defaultPage);
   const [sheetState, setSheetState] = useState<SheetState>('closed');
   const [sheetSnap, setSheetSnap] = useState<SheetSnap>('half');
   const [dragOffset, setDragOffset] = useState(0);

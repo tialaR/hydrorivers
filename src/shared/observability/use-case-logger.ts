@@ -3,6 +3,9 @@
  * Emite apenas quando HYDRORIVERS_USE_CASE_LOGS === "true".
  */
 
+import { isUseCaseLogsEnabled } from '@/shared/config/env';
+import { cookieNames } from '@/shared/http/cookie-names';
+
 export const USE_CASE_IDS = [
   'AI_CARGO_STATUS_ASSISTANT',
   'MOCK_MODE_RESET',
@@ -39,6 +42,10 @@ export type LogUseCaseEventParams = {
 const USE_CASE_ID_SET = new Set<string>(USE_CASE_IDS);
 const USE_CASE_STATUS_SET = new Set<string>(USE_CASE_STATUSES);
 
+function normalizeKey(key: string): string {
+  return key.replace(/[\s_-]/g, '').toLowerCase();
+}
+
 /** Chaves cujo valor nunca deve aparecer literal no log. */
 const SENSITIVE_KEY_NORMALIZED = new Set([
   'token',
@@ -52,7 +59,7 @@ const SENSITIVE_KEY_NORMALIZED = new Set([
   'cookies',
   'set-cookie',
   'setcookie',
-  'hydrorivers_session',
+  normalizeKey(cookieNames.session),
   'sessionid',
   'apikey',
   'api_key',
@@ -68,10 +75,6 @@ const OMIT_VALUE_KEY_NORMALIZED = new Set(['payload', 'body', 'rawbody', 'raw_bo
 
 const MAX_DEPTH = 8;
 const MAX_ERROR_MESSAGE_LEN = 480;
-
-function normalizeKey(key: string): string {
-  return key.replace(/[\s_-]/g, '').toLowerCase();
-}
 
 function isSensitiveKey(key: string): boolean {
   const n = normalizeKey(key);
@@ -131,10 +134,6 @@ function sanitizeError(error: UseCaseError): Record<string, unknown> {
   return raw;
 }
 
-function shouldEmitUseCaseLogs(): boolean {
-  return process.env.HYDRORIVERS_USE_CASE_LOGS === 'true';
-}
-
 function isValidUseCaseId(value: string): value is UseCaseId {
   return USE_CASE_ID_SET.has(value);
 }
@@ -168,7 +167,7 @@ function formatLines(params: LogUseCaseEventParams): string {
  * Nunca inclui token, cookie, senha, authorization ou payload bruto — ver sanitização.
  */
 export function logUseCaseEvent(params: LogUseCaseEventParams): void {
-  if (!shouldEmitUseCaseLogs()) {
+  if (!isUseCaseLogsEnabled()) {
     return;
   }
   if (!isValidUseCaseId(params.useCase) || !isValidStatus(params.status)) {
