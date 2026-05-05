@@ -15,3 +15,10 @@ export function invalidPayload(reason?: string) {
     { status: 400 }
   );
 }
+
+export function notFound(reason?: string) {
+  return Response.json(
+    reason ? { error: 'not-found', reason } : { error: 'not-found' },
+    { status: 404 }
+  );
+}

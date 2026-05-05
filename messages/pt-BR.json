@@ -28,6 +28,126 @@
     "currentRoute": "Rota atual",
     "subpageContext": "contexto operacional ativo"
   },
+  "cargoStatusAi": {
+    "cardTitle": "Assistente de status da carga",
+    "cardHint": "Texto gerado por simulação interna (sem provedor externo). Não substitui decisão operacional, contrato nem liberação documental.",
+    "disclaimerShort": "Sugestão e resumo automáticos (mock).",
+    "summaryLabel": "Resumo",
+    "nextStepsLabel": "Próximos passos sugeridos",
+    "blockersLabel": "Bloqueadores",
+    "risksLabel": "Riscos e alertas",
+    "confidenceLabel": "Confiança da análise",
+    "sourceLabel": "Origem da resposta",
+    "confidence": {
+      "low": "Baixa",
+      "medium": "Média",
+      "high": "Alta"
+    },
+    "source": {
+      "mockAi": "Simulação interna (mock-ai)",
+      "fallbackRule": "Regra determinística (fallback-rule)"
+    },
+    "notAuthenticatedHint": "Entre na sua conta para carregar o assistente de status desta carga.",
+    "forbiddenHint": "Sua sessão não tem permissão para esta assistência nesta carga.",
+    "loadError": "Não foi possível carregar a assistência agora.",
+    "retry": "Atualizar assistência",
+    "loading": "Gerando resumo…",
+    "emptyList": "Nenhum item.",
+    "extra": {
+      "lowDocumentReadiness": "Prontidão documental baixa ({value}%) — pode atrasar reserva e checagens."
+    },
+    "fallback": {
+      "summary": "Estado da carga não mapeado nesta versão do assistente. Revise manualmente a ficha, documentos e negociações.",
+      "nextSteps": [
+        "Valide o status com o time operacional.",
+        "Confira documentação e próximos marcos no painel da carga."
+      ],
+      "blockers": [],
+      "risks": [
+        "Interpretação automática limitada — confirme em fonte oficial."
+      ]
+    },
+    "status": {
+      "open": {
+        "summary": "Carga publicada no marketplace; aguardando propostas alinhadas a rota, tipo e restrições declaradas.",
+        "nextSteps": [
+          "Conferir pacote documental sugerido e lacunas antes da primeira reserva.",
+          "Monitorar janela operacional e sinalização de interesse no corredor.",
+          "Registrar esclarecimentos na ficha se a operação exigir condições adicionais."
+        ],
+        "blockers": [],
+        "risks": [
+          "Propostas incompatíveis com calado, temperatura ou prazo podem atrasar o encaixe logístico.",
+          "Baixa conectividade na origem pode postergar atualização de status percebido pelo mercado."
+        ]
+      },
+      "bidding": {
+        "summary": "Há cotações ou contrapropostas em análise; a decisão segue com o embarcador e as partes envolvidas.",
+        "nextSteps": [
+          "Comparar termos, valores e compromissos documentais de cada proposta.",
+          "Pedir ajustes formais quando faltar evidência ou cláusula operacional.",
+          "Definir prazo interno para aceite ou recusa para não perder janela."
+        ],
+        "blockers": [],
+        "risks": [
+          "Estagnação na fase de lances pode expirar a janela de embarque planejada.",
+          "Ambiguidade em documentação fiscal ou sanitária pode reabrir negociação."
+        ]
+      },
+      "contracting": {
+        "summary": "Negociação avançou para contratação; foco em formalização, documentos e reserva de capacidade.",
+        "nextSteps": [
+          "Validar minutas, garantias e responsabilidades antes do aceite final.",
+          "Sincronizar embarque com disponibilidade real de cais e calado.",
+          "Planejar checklist de embarque e evidências exigidas pela rota."
+        ],
+        "blockers": [],
+        "risks": [
+          "Retrocesso contratual se exigências regulatórias não forem atendidas a tempo.",
+          "Dependência de terceiros (terminal, fiscalização) pode alongar prazos."
+        ]
+      },
+      "reserved": {
+        "summary": "Capacidade ou condição de reserva acordada; preparar embarque e conformidade final.",
+        "nextSteps": [
+          "Confirmar lacres, temperatura e lotes com o transportador.",
+          "Fechar pendências documentais ainda listadas como obrigatórias.",
+          "Agendar janela de atracação e conferência no cais."
+        ],
+        "blockers": [],
+        "risks": [
+          "Última milha documental ainda pode bloquear liberação física da carga.",
+          "Condições fluviais ou portuárias podem exigir replanejamento fino."
+        ]
+      },
+      "boarded": {
+        "summary": "Carga embarcada ou em trânsito fluvial; monitorar eventos, sincronização e provas operacionais.",
+        "nextSteps": [
+          "Acompanhar rastreio e registros de ocorrência ao longo do corredor.",
+          "Garantir canal de contingência para atrasos ou desvios de rota.",
+          "Preparar validação de POD e encerramento fiscal."
+        ],
+        "blockers": [],
+        "risks": [
+          "Trechos com sinal limitado podem atrasar visibilidade em tempo quase real.",
+          "Variações sazonais podem impactar ETA e conexões cabotadas."
+        ]
+      },
+      "delivered": {
+        "summary": "Fluxo principal concluído do ponto de vista operacional simulado; foco em comprovações e encerramento.",
+        "nextSteps": [
+          "Arquivar comprovantes, POD e comunicações relevantes.",
+          "Registrar lições aprendidas e indicadores para próximos ciclos.",
+          "Validar baixa documental e faturamento conforme contrato."
+        ],
+        "blockers": [],
+        "risks": [
+          "Pendências pós-entrega (divergência de volume, avaria) podem surgir após o desembarque.",
+          "Retenção de documentos incompletos pode afetar auditoria futura."
+        ]
+      }
+    }
+  },
   "auth": {
     "login": "Entrar",
     "signup": "Criar conta",

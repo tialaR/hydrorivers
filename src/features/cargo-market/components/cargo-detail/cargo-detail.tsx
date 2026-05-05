@@ -9,6 +9,7 @@ import { HydroIcon } from '@/shared/ui/hydro-icon/hydro-icon';
 import { Tooltip } from '@/shared/ui/tooltip/tooltip';
 import { useToast } from '@/shared/ui/toast/toast-provider';
 import type { Cargo } from '@/features/marketplace/domain/marketplace.types';
+import { CargoStatusAssistantCard } from '@/features/ai-assist/components/CargoStatusAssistantCard';
 import { translateMock } from '@/shared/i18n/mock-content';
 import styles from './cargo-detail.module.scss';
 
@@ -114,6 +115,10 @@ export function CargoDetail({ cargo }: { cargo: Cargo }) {
           <div><small>{page('proposalCount')}</small><strong>{proposalCount} {page('proposalUnit')}</strong></div>
         </div>
       </Card>
+
+      <div className={styles.assistantRow}>
+        <CargoStatusAssistantCard cargoId={cargo.id} />
+      </div>
 
       <Card className={styles.docCard}>
         <div className={styles.docHeader}>
