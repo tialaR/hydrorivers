@@ -378,6 +378,7 @@ npm run test:e2e
 | `docs/EXECUTIVE-DASHBOARD.md` | KPIs executivos planejados |
 | `docs/PORTFOLIO-CASE.md` | Narrativa externa semântica do projeto |
 | `docs/AI-ROADMAP.md` | IA assistiva futura e limites |
+| `docs/AI-CARGO-STATUS-ASSISTANT.md` | Assistente de status de carga (mock determinístico, `POST /api/ai/cargo-status`) |
 
 ---
 
