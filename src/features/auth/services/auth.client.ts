@@ -1,5 +1,6 @@
 
 import type { HydroUser, LoginPayload, LoginResult, PublicHydroUser, RegisterPayload } from '../domain/auth.types';
+import { apiRoutes } from '@/shared/routing/api-routes';
 
 async function parseResponse<T>(response: Response): Promise<T> {
   const payload = await response.json().catch(() => ({}));
@@ -8,14 +9,14 @@ async function parseResponse<T>(response: Response): Promise<T> {
 }
 
 export async function getCurrentUser(): Promise<HydroUser | null> {
-  const response = await fetch('/api/auth/me', { cache: 'no-store', credentials: 'include' });
+  const response = await fetch(apiRoutes.auth.me, { cache: 'no-store', credentials: 'include' });
   if (response.status === 401) return null;
   const payload = await parseResponse<{ user: HydroUser | null }>(response);
   return payload.user;
 }
 
 /**
- * Login direto só para QA em ambiente não production (`/api/auth/qa-direct-login`).
+ * Login direto só para QA em ambiente não production (`apiRoutes.auth.qaDirectLogin`).
  * Não usar em fluxos de produção.
  */
 export type MockModeLoginAsResult = {
@@ -23,9 +24,9 @@ export type MockModeLoginAsResult = {
   redirectTo: string;
 };
 
-/** Login direto por userId (`POST /api/mock-mode/login-as`) — só dev/mock no servidor. */
+/** Login direto por userId (`POST apiRoutes.mockMode.loginAs`) — só dev/mock no servidor. */
 export async function mockModeLoginAs(userId: string): Promise<MockModeLoginAsResult> {
-  const response = await fetch('/api/mock-mode/login-as', {
+  const response = await fetch(apiRoutes.mockMode.loginAs, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ userId }),
@@ -41,7 +42,7 @@ export async function mockModeLoginAs(userId: string): Promise<MockModeLoginAsRe
 }
 
 export async function qaDirectLogin(email: string): Promise<HydroUser> {
-  const response = await fetch('/api/auth/qa-direct-login', {
+  const response = await fetch(apiRoutes.auth.qaDirectLogin, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ email }),
@@ -57,7 +58,7 @@ export async function qaDirectLogin(email: string): Promise<HydroUser> {
 }
 
 export async function login(payload: LoginPayload): Promise<LoginResult> {
-  const response = await fetch('/api/auth/login', {
+  const response = await fetch(apiRoutes.auth.login, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(payload),
@@ -69,7 +70,7 @@ export async function login(payload: LoginPayload): Promise<LoginResult> {
 }
 
 export async function register(payload: RegisterPayload): Promise<HydroUser> {
-  const response = await fetch('/api/auth/register', {
+  const response = await fetch(apiRoutes.auth.register, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(payload),
@@ -81,7 +82,7 @@ export async function register(payload: RegisterPayload): Promise<HydroUser> {
 }
 
 export async function updateProfile(nextUser: HydroUser & { avatarUrl?: string }): Promise<HydroUser & { avatarUrl?: string }> {
-  const response = await fetch('/api/auth/profile', {
+  const response = await fetch(apiRoutes.auth.profile, {
     method: 'PUT',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(nextUser),
@@ -93,6 +94,6 @@ export async function updateProfile(nextUser: HydroUser & { avatarUrl?: string }
 }
 
 export async function logout(): Promise<void> {
-  await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+  await fetch(apiRoutes.auth.logout, { method: 'POST', credentials: 'include' });
   window.dispatchEvent(new CustomEvent('hydrorivers:auth-changed'));
 }

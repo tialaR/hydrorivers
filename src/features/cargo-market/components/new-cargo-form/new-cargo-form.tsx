@@ -8,6 +8,8 @@ import { Button } from '@/shared/ui/button/button';
 import { Card } from '@/shared/ui/card/card';
 import { persistCargo } from '@/features/marketplace/services/marketplace.client';
 import type { Cargo } from '@/features/marketplace/domain/marketplace.types';
+import { appendRouteSearchParams, routeSearchParams } from '@/shared/routing/route-search-params';
+import { intlAppPaths } from '@/shared/routing/app-routes';
 import styles from './new-cargo-form.module.scss';
 
 export function NewCargoForm() {
@@ -47,7 +49,11 @@ export function NewCargoForm() {
     };
     try {
       const saved = await persistCargo(cargo);
-      router.push(`/minhas-cargas?created=${encodeURIComponent(saved.id)}`);
+      router.push(
+        appendRouteSearchParams(intlAppPaths.cargos.myCargos, {
+          [routeSearchParams.created]: saved.id
+        })
+      );
     } catch (error) {
       const message = error instanceof Error ? error.message : '';
       setFormError(message === 'forbidden' ? t('carrierCannotPublish') : t('publishFailed'));

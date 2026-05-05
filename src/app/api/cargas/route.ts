@@ -5,6 +5,7 @@ import { upsertCargo } from '@/shared/server/mock-db';
 import { getRepositories } from '@/shared/server/repositories';
 import type { Cargo, CargoStatus } from '@/features/marketplace/domain/marketplace.types';
 import { routing } from '@/core/i18n/routing';
+import { appRoutes } from '@/shared/routing/app-routes';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -66,9 +67,9 @@ export async function POST(request: Request) {
   upsertCargo(cargo);
 
   for (const locale of routing.locales) {
-    revalidatePath(`/${locale}/cargas`);
-    revalidatePath(`/${locale}/minhas-cargas`);
-    revalidatePath(`/${locale}/dashboard`);
+    revalidatePath(appRoutes.cargos.marketplace(locale));
+    revalidatePath(appRoutes.cargos.myCargos(locale));
+    revalidatePath(appRoutes.dashboard.home(locale));
   }
 
   return Response.json({ data: cargo }, { status: 201 });

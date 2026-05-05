@@ -23,6 +23,9 @@ vi.mock('@/shared/server/auth', () => ({
 
 import type { HydroUser } from '@/features/auth/domain/auth.types';
 import { POST } from '@/app/api/mock-mode/login-as/route';
+import { apiRoutes } from '@/shared/routing/api-routes';
+
+const loginAsPostUrl = `http://localhost${apiRoutes.mockMode.loginAs}`;
 
 const shipper: HydroUser = {
   id: 'u-shipper-1',
@@ -66,7 +69,7 @@ const carrierPending: HydroUser = {
 
 function post(body: unknown) {
   return POST(
-    new Request('http://localhost/api/mock-mode/login-as', {
+    new Request(loginAsPostUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)

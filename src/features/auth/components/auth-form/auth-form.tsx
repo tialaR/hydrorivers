@@ -8,23 +8,26 @@ import { useSearchParams } from 'next/navigation';
 import { useRouter } from '@/core/i18n/navigation';
 import { Button } from '@/shared/ui/button/button';
 import { QA_LOGIN_PREFILL_STORAGE_KEY } from '@/shared/qa/login-prefill';
+import { routeSearchParams } from '@/shared/routing/route-search-params';
+import { intlAppPaths } from '@/shared/routing/app-routes';
 import { login, register } from '../../services/auth.client';
 import type { PublicUserRole } from '../../domain/auth.types';
 import styles from './auth-form.module.scss';
 
 function resolvePostLoginHref(nextParam: string | null, locale: string): string {
-  if (!nextParam) return '/dashboard';
+  const fallback = intlAppPaths.dashboard.home;
+  if (!nextParam) return fallback;
   let decoded = nextParam;
   try {
     decoded = decodeURIComponent(nextParam);
   } catch {
-    return '/dashboard';
+    return fallback;
   }
-  if (!decoded.startsWith('/') || decoded.startsWith('//')) return '/dashboard';
+  if (!decoded.startsWith('/') || decoded.startsWith('//')) return fallback;
   const prefix = `/${locale}`;
-  if (decoded !== prefix && !decoded.startsWith(`${prefix}/`)) return '/dashboard';
-  if (decoded === prefix) return '/';
-  return decoded.slice(prefix.length) || '/dashboard';
+  if (decoded !== prefix && !decoded.startsWith(`${prefix}/`)) return fallback;
+  if (decoded === prefix) return intlAppPaths.home;
+  return decoded.slice(prefix.length) || fallback;
 }
 
 type Mode = 'login' | 'register';
@@ -115,11 +118,11 @@ export function AuthForm({ mode }: { mode: Mode }) {
             setPending(false);
             return;
           }
-          if (result.user) router.push(resolvePostLoginHref(searchParams.get('next'), locale));
+          if (result.user) router.push(resolvePostLoginHref(searchParams.get(routeSearchParams.next), locale));
         } else {
           const result = await login({ email, password, otp, challenge });
           if (!result.user) throw new Error('invalid-otp');
-          router.push(resolvePostLoginHref(searchParams.get('next'), locale));
+          router.push(resolvePostLoginHref(searchParams.get(routeSearchParams.next), locale));
         }
       } else {
         await register({
@@ -129,7 +132,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
           email: String(form.get('email')),
           password: String(form.get('password'))
         });
-        router.push('/dashboard');
+        router.push(intlAppPaths.dashboard.home);
       }
     } catch (nextError) {
       const code = nextError instanceof Error ? nextError.message : 'request-failed';

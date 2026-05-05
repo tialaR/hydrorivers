@@ -15,6 +15,9 @@ vi.mock('@/shared/server/mock-db', () => ({
 
 import { POST } from '@/app/api/ai/cargo-status/route';
 import type { Cargo } from '@/features/marketplace/domain/marketplace.types';
+import { apiRoutes } from '@/shared/routing/api-routes';
+
+const cargoStatusPostUrl = `http://localhost${apiRoutes.ai.cargoStatus}`;
 
 const baseCargo: Cargo = {
   id: 'cargo-test-1',
@@ -31,7 +34,7 @@ const baseCargo: Cargo = {
 };
 
 function post(body: unknown) {
-  return POST(new Request('http://localhost/api/ai/cargo-status', {
+  return POST(new Request(cargoStatusPostUrl, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body)
