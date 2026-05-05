@@ -35,8 +35,16 @@ test('com sessão ativa troca idioma no dashboard e permanece autenticado', asyn
   await loginWithOtp(page);
   await expect(page).toHaveURL(/\/pt-BR\/dashboard/);
 
-  const localeSelect = page.getByRole('combobox', { name: /idioma|language/i }).first();
-  await localeSelect.selectOption('en');
+  const localeTrigger = page.getByRole('button', { name: /idioma|language/i }).first();
+  await expect(localeTrigger).toBeVisible();
+  await localeTrigger.click();
+
+  const englishMenuItem = page.getByRole('menuitem', { name: /en-US|english|en\b/i }).first();
+  if (await englishMenuItem.count()) {
+    await englishMenuItem.click();
+  } else {
+    await page.getByRole('link', { name: /en-US|english|en\b/i }).first().click();
+  }
 
   await expect(page).toHaveURL(/\/en\/dashboard(\/)?$/);
   await expect(page.getByRole('button', { name: /log out/i })).toBeVisible();
