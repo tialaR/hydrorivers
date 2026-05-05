@@ -123,7 +123,7 @@ Origens **✓ já utilizadas ou disponíveis** no projeto para montar protótipo
 
 | Necessidade | Fonte típica | Observações |
 |-------------|--------------|-------------|
-| Cargas | `readMock('cargoes')`, `listCargoes()`, `GET /api/cargas` | Campos: `status`, `ownerId` (**«a confirmar»** preenchimento em todos os fluxos — `docs/SECURITY-PRODUCT-DECISIONS.md`), corredor, `co2Saving`, etc. |
+| Cargas | `readMock('cargoes')`, `listCargoes()`, `GET /api/cargas` | Campos: `status`, `ownerId`, `shipperId` — **publicação via API/Server Action** preenche ambos (`commitPublishCargo`); itens puramente de **seed** podem omitir; corredor, `co2Saving`, etc. |
 | Negociações | `readMock('negotiations')`, `listNegotiations()`, `GET /api/negociacoes` | `stage`, `status`, `shipperId`, `carrierId`, `cargoId`; timestamps podem ser limitados. |
 | Embarcações | `readMock('vessels')`, `listVessels()`, `GET /api/embarcacoes` | `status`, `ownerId`. |
 | Rastreio | `readMock('trackingEvents')`, `listTrackingEvents()`, `GET /api/rastreio` | `kind` opcional + inferência (`docs/TRACKING-TIMELINE.md`). |

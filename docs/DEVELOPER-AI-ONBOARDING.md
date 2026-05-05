@@ -58,7 +58,7 @@ Pense em **domínio** como um “assunto” que o código agrupa: cada um tem te
 
 **O que é:** demandas no marketplace (origem, destino, tipo de produto, status da carga, documentação sugerida, risco operacional narrativo no mock).
 
-**Termo importante:** **`ownerId`** — na decisão de produto, é quem “publicou” a carga; hoje o handler pode não preencher em todos os caminhos — veja §3 e `docs/SECURITY-PRODUCT-DECISIONS.md`.
+**Termo importante:** **`ownerId`** / **`shipperId`** — quem publicou a carga no modelo atual; **`commitPublishCargo`** preenche ambos no fluxo API + Server Action; seeds antigos podem omitir — veja §3 e `docs/SECURITY-PRODUCT-DECISIONS.md`.
 
 ### Embarcações
 
@@ -113,10 +113,11 @@ Pense em **domínio** como um “assunto” que o código agrupa: cada um tem te
 - No **cadastro**: **shipper** tende a nascer **aprovado**; **carrier** tende a nascer **não aprovado** — política documentada em `docs/SECURITY-PRODUCT-DECISIONS.md`.
 - **Efeito:** usuário não aprovado pode receber **`403`** ao tentar certas mutações (ex.: criar carga).
 
-### `ownerId` em cargas
+### `ownerId` e `shipperId` em cargas
 
-**Decisão:** toda carga criada pela API autenticada deve carregar **`ownerId = user.id`** do criador — para filtros futuros e consistência com banco planejado.  
-**Gap possível:** handler antigo pode não setar — tratar como dívida técnica até PR alinhado (`docs/SECURITY-PRODUCT-DECISIONS.md`).
+**Decisão:** cargas criadas pelos fluxos autenticados de publicação devem carregar **`ownerId`** e **`shipperId`** iguais ao **`user.id`** do criador (ver `docs/SECURITY-PRODUCT-DECISIONS.md`).  
+**Implementação:** centralizada em **`commitPublishCargo`** — usada por **`POST /api/cargas`** e pela **Server Action** acionada pelo formulário em **`/cargas/nova`** (React 19 **`useActionState`**).  
+**Legado:** entradas só de seed/cenário podem ainda não ter os campos; não confundir com publicação pela API/UI.
 
 ### Participante em negociação
 
@@ -158,7 +159,7 @@ Matriz detalhada por rota: **`docs/API-SECURITY-AUDIT.md`**.
 |---------|--------|-----------------|-------------------|-----------|
 | Shipper nasce `approved`, carrier não | Liberar núcleo do embarcador; moderar carrier antes de fretes | `403` em mutações para não aprovados | Integração em auth/cargas deve cobrir carrier bloqueado | `SECURITY-PRODUCT-DECISIONS.md` |
 | Admin não deve criar negociação em prod | Auditoria e separação papéis | Mudança futura em `POST /api/negociacoes` | Novos casos `403` para admin | Idem |
-| `ownerId` obrigatório em cargas criadas via API | Ownership e modelo relacional futuro | Ajuste em `POST /api/cargas` + dados mock | Atualizar fixtures e asserts | Idem |
+| `ownerId`/`shipperId` em cargas novas via API/Server Action | Ownership e modelo relacional futuro | **`commitPublishCargo`** (`src/features/cargos/server/commit-publish-cargo.ts`) | Integração POST cargas / E2E publicação | `SECURITY-PRODUCT-DECISIONS.md` |
 | JSON inválido em mock-mode → `400`, sem reset | Evitar reset acidental/disguised | Guard clause antes de `resetMockScenario` | Teste integração obrigatório ao implementar | Idem |
 | GET públicos amplos são risco | Vazamento de dados operacionais | Endurecer escopo futuro | Novos testes `401/403` em listagens | `API-SECURITY-AUDIT.md` |
 | Repository boundary para persistência | Trocar mock por DB sem espalhar `readMock` | `GET /api/cargas` via `getRepositories()` (piloto) | Integração `cargas.get` mantém contrato | `REPOSITORY-BOUNDARY.md` |
@@ -398,7 +399,7 @@ npm run test:e2e
 Consolidado a partir dos docs — **não** assume que está no código até você verificar:
 
 - **Segurança de leitura:** restringir `GET` amplos de cargas, negociações, embarcações e rastreio conforme sessão e escopo (`API-SECURITY-AUDIT.md`).
-- **Alinhar handlers às decisões:** `ownerId` em `POST /api/cargas`; bloquear admin em `POST /api/negociacoes`; **`400` sem reset** em `mock-mode` com JSON inválido (`SECURITY-PRODUCT-DECISIONS.md`).
+- **Alinhar handlers às decisões:** bloquear admin em `POST /api/negociacoes`; **`400` sem reset** em `mock-mode` com JSON inválido (`SECURITY-PRODUCT-DECISIONS.md`).
 - **Repository boundary:** estender repositórios e migrar mais handlers (`REPOSITORY-BOUNDARY.md`).
 - **Persistência real:** Postgres (ou equivalente), migrations (`DATABASE-PLANNING.md`).
 - **Timeline / rastreio:** filtros autorizados, escrita auditável de eventos (`TRACKING-TIMELINE.md`).

@@ -59,7 +59,7 @@ Combina **entrega executável** (Next.js, i18n, testes, CI) com **documentação
 
 ### Domínios principais
 
-**Cargas** — unidades de demanda (origem, destino, tipo, status, narrativa de risco/documentação sugerida). **Decisão:** carga criada pelo usuário autenticado deveria ter **`ownerId = user.id`** — verificar convergência no handler (`API-SECURITY-AUDIT.md` marca pontos «a confirmar»).
+**Cargas** — unidades de demanda (origem, destino, tipo, status, narrativa de risco/documentação sugerida). **Publicação autenticada:** **`commitPublishCargo`** persiste **`ownerId` e `shipperId`** (`user.id`) em **`POST /api/cargas`** e na Server Action do formulário (`useActionState`). Dados só de seed podem divergir.
 
 **Embarcações** — frota compatível com rotas/calado; ligadas às negociações quando uma proposta referencia uma embarcação.
 
@@ -576,7 +576,7 @@ Pirâmide: Vitest em integração para contratos; Playwright para fluxo humano; 
 2. **Rodar:** `npm run dev` → `http://localhost:3000/pt-BR`.  
 3. **Testes:** `npm run test` → depois explore `test:unit` / `test:integration`.  
 4. **Ler em ordem:** `README.md` → `DEVELOPER-AI-ONBOARDING.md` → `ENTERPRISE-ROADMAP.md` → `API-SECURITY-AUDIT.md`.  
-5. **Primeira issue:** bom candidato é alinhar **um handler** à decisão de `ownerId` **ou** um teste de integração faltando na matriz.  
+5. **Primeira issue:** bom candidato é fechar **decisão vs código** em `POST /api/mock-mode` (JSON inválido) **ou** ampliar teste de integração na matriz da auditoria.  
 6. **Branch:** `git checkout -b fix/algo-ou-docs/algo`.  
 7. **Prompt:** respeitar `AGENTS.md` e regras do Cursor.  
 8. **Validar:** lint, typecheck, check:i18n, test; se tocar fluxo UI, considerar E2E.  
