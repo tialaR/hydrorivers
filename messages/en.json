@@ -799,6 +799,7 @@
     }
   },
   "toasts": {
+    "close": "Close",
     "http": {
       "buckets": {
         "success": {
