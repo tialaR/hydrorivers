@@ -17,7 +17,7 @@ Garantir consistencia de idiomas e evitar regressao de internacionalizacao.
 # Nomes dos locales no seletor
 
 - Rotas e locale tecnico permanecem `pt-BR`, `en`, `es` (ver `src/core/i18n/routing.ts`).
-- Rótulos exibidos no `LocaleSwitcher`: chaves `nav.localeOption.{pt-BR|en|es}` em `messages/*.json` (texto depende do idioma da UI).
+- O `LocaleSwitcher` exibe codigos curtos e bandeiras (`pt-BR`, `en-US`, `es`) definidos no componente; o rotulo acessivel do controle continua em `nav.language`.
 
 # Orientacoes
 
