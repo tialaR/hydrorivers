@@ -13,7 +13,7 @@ const socials = [
 ] as const;
 
 export function FooterSocials() {
-  const t = useTranslations('footer');
+  const t = useTranslations('layout.footer');
   const { showToast } = useToast();
 
   return (
