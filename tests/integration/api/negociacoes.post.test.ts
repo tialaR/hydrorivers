@@ -145,7 +145,15 @@ describe('POST /api/negociacoes', () => {
 
     const response = await POST(new Request('http://localhost/api/negociacoes', {
       method: 'POST',
-      body: JSON.stringify({ cargoId: 'cargo-1', vesselId: 'vessel-1', amount: 'R$ 8.000' })
+      body: JSON.stringify({
+        cargoId: 'cargo-1',
+        vesselId: 'vessel-1',
+        amount: 'R$ 8.000',
+        estimatedTime: '3 dias',
+        vesselCompatibility: 'Comboio refrigerado',
+        contactChannel: 'WhatsApp',
+        proposalMessage: 'Operação com janela noturna.'
+      })
     }));
     const body = await response.json();
 
@@ -155,7 +163,11 @@ describe('POST /api/negociacoes', () => {
       vesselId: 'vessel-1',
       carrierId: 'u-carrier-1',
       shipperId: 'u-shipper-1',
-      status: 'pending'
+      status: 'pending',
+      estimatedTime: '3 dias',
+      vesselCompatibility: 'Comboio refrigerado',
+      contactChannel: 'WhatsApp',
+      proposalMessage: 'Operação com janela noturna.'
     });
     expect(mockWriteMock).toHaveBeenCalledTimes(2);
     expect(mockWriteMock).toHaveBeenNthCalledWith(1, 'negotiations', expect.any(Array));

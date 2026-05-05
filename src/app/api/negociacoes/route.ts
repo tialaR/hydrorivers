@@ -35,6 +35,18 @@ export async function POST(request: Request) {
   }
   if (!vessel) return Response.json({ error: 'vessel-not-found' }, { status: httpStatus.notFound });
   if (vessel.ownerId && vessel.ownerId !== user.id) return forbidden('vessel-not-owned');
+  const estimatedTime = typeof payload.estimatedTime === 'string' && payload.estimatedTime.trim()
+    ? payload.estimatedTime.trim()
+    : undefined;
+  const vesselCompatibility = typeof payload.vesselCompatibility === 'string' && payload.vesselCompatibility.trim()
+    ? payload.vesselCompatibility.trim()
+    : undefined;
+  const contactChannel = typeof payload.contactChannel === 'string' && payload.contactChannel.trim()
+    ? payload.contactChannel.trim()
+    : undefined;
+  const proposalMessage = typeof payload.proposalMessage === 'string' && payload.proposalMessage.trim()
+    ? payload.proposalMessage.trim()
+    : undefined;
 
   const negotiation: Negotiation = {
     id: payload.id ?? `neg-${Date.now()}`,
@@ -53,12 +65,18 @@ export async function POST(request: Request) {
     paymentTerms: payload.paymentTerms ?? 'A combinar',
     insurance: payload.insurance ?? 'A validar',
     documents: payload.documents ?? ['Proposta comercial'],
+    estimatedTime,
+    vesselCompatibility,
+    contactChannel,
+    proposalMessage,
     nextStep: 'Aguardar aceite do embarcador',
     riskLevel: payload.riskLevel ?? 'low',
     history: [
       {
         title: 'Proposta criada',
-        description: `Proposta enviada por ${user.company}.`,
+        description: proposalMessage
+          ? `Proposta enviada por ${user.company}: ${proposalMessage}.`
+          : `Proposta enviada por ${user.company}.`,
         date: new Date().toISOString()
       }
     ]

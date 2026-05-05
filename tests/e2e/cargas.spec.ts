@@ -97,17 +97,36 @@ test.describe('Detalhe da carga — visibilidade da proposta por perfil', () => 
     await expect(page.getByTestId('cargo-proposal-form')).toContainText(/Enviar proposta|Simular proposta/i);
 
     await page.getByTestId('cargo-proposal-form').locator('input[name="amount"]').fill('R$ 7.500 e2e');
+    await page.getByTestId('cargo-proposal-form').locator('input[name="estimatedTime"]').fill('3 dias e2e');
+    await page.getByTestId('cargo-proposal-form').locator('input[name="vesselCompatibility"]').fill('Comboio refrigerado e2e');
+    await page.getByTestId('cargo-proposal-form').locator('input[name="contactChannel"]').fill('WhatsApp e2e');
+    await page.getByTestId('cargo-proposal-form').locator('textarea[name="riskNote"]').fill('Mensagem operacional e2e');
     await page.getByTestId('cargo-proposal-form').locator('button[type="submit"]').click();
 
     const after = await page.request.get('/api/negociacoes');
     expect(after.status()).toBe(200);
-    const afterBody = (await after.json()) as { data?: Array<{ id: string; cargoId?: string; carrierId?: string; amount?: string }> };
+    const afterBody = (await after.json()) as {
+      data?: Array<{
+        id: string;
+        cargoId?: string;
+        carrierId?: string;
+        amount?: string;
+        estimatedTime?: string;
+        vesselCompatibility?: string;
+        contactChannel?: string;
+        proposalMessage?: string;
+      }>;
+    };
     const afterList = afterBody.data ?? [];
     expect(afterList.length).toBe(beforeCount + 1);
     expect(afterList[0]).toMatchObject({
       cargoId: 'cargo-001',
       carrierId: 'u-carrier-1',
-      amount: 'R$ 7.500 e2e'
+      amount: 'R$ 7.500 e2e',
+      estimatedTime: '3 dias e2e',
+      vesselCompatibility: 'Comboio refrigerado e2e',
+      contactChannel: 'WhatsApp e2e',
+      proposalMessage: 'Mensagem operacional e2e'
     });
   });
 
