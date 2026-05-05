@@ -7,7 +7,7 @@
     "volume": "60 m³",
     "window": "06-10 maio",
     "cargoType": "Refrigerada",
-    "status": "open",
+    "status": "reserved",
     "co2Saving": "-45% CO₂",
     "targetPrice": "R$ 6.200",
     "producer": "Coop. Açaí Pará",
@@ -54,7 +54,9 @@
       "Sinal intermitente entre terminais menores"
     ],
     "ownerId": "u-shipper-1",
-    "negotiationIds": []
+    "negotiationIds": [
+      "neg-1777978923057"
+    ]
   },
   {
     "id": "cargo-002",
