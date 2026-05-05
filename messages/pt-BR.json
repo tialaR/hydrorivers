@@ -799,6 +799,7 @@
     }
   },
   "toasts": {
+    "close": "Fechar",
     "http": {
       "buckets": {
         "success": {
