@@ -3,7 +3,7 @@
     "id": "neg-001",
     "cargoTitle": "Polpa de açaí congelada — cooperativa ribeirinha",
     "vesselName": "Frio Tapajós",
-    "stage": "contract",
+    "stage": "quote",
     "amount": "R$ 6.080",
     "lastUpdate": "Hoje, 10:40",
     "parties": [
@@ -26,7 +26,7 @@
         "date": "10:40"
       }
     ],
-    "status": "accepted",
+    "status": "pending",
     "cargoId": "cargo-001",
     "vesselId": "vessel-001",
     "shipperId": "u-shipper-1",
@@ -69,7 +69,7 @@
     "id": "neg-003",
     "cargoTitle": "Equipamentos solares para comunidades ribeirinhas",
     "vesselName": "Comboio Rio Negro",
-    "stage": "quote",
+    "stage": "contract",
     "amount": "R$ 19.450",
     "lastUpdate": "Hoje, 08:10",
     "parties": [
@@ -91,12 +91,7 @@
         "description": "Carga pronta para reserva operacional.",
         "date": "08:10"
       }
-    ],
-    "status": "pending",
-    "cargoId": "cargo-003",
-    "vesselId": "vessel-003",
-    "shipperId": "u-shipper-1",
-    "carrierId": "u-carrier-1"
+    ]
   },
   {
     "id": "neg-004",
@@ -124,12 +119,7 @@
         "description": "Transportador com prontidão para baixa conectividade.",
         "date": "11:15"
       }
-    ],
-    "status": "pending",
-    "cargoId": "cargo-004",
-    "vesselId": "vessel-004",
-    "shipperId": "u-shipper-1",
-    "carrierId": "u-carrier-1"
+    ]
   },
   {
     "id": "neg-005",

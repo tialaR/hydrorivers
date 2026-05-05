@@ -1,16 +1,1 @@
-[
-  {
-    "id": "track-000a",
-    "title": "Carga criada no marketplace",
-    "description": "Demanda registrada no corredor Belém–Santarém com janela operacional.",
-    "location": "Belém, PA",
-    "timestamp": "05 mai • 09:10",
-    "status": "done",
-    "kind": "cargo_created",
-    "actorRole": "shipper",
-    "occurredAt": "2026-05-05T12:10:00.000Z",
-    "recordedAt": "2026-05-05T12:11:00.000Z",
-    "cargoId": "cargo-001",
-    "negotiationId": "neg-001"
-  }
-]
+[]

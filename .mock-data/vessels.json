@@ -136,7 +136,8 @@
       "Manifesto digital"
     ],
     "sustainabilityScore": "A",
-    "lastInspection": "2026-04-19"
+    "lastInspection": "2026-04-19",
+    "ownerId": "u-carrier-1"
   },
   {
     "id": "vessel-007",
@@ -158,6 +159,7 @@
       "Rastreio"
     ],
     "sustainabilityScore": "A",
-    "lastInspection": "2026-04-16"
+    "lastInspection": "2026-04-16",
+    "ownerId": "u-carrier-1"
   }
 ]
