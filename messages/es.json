@@ -274,7 +274,8 @@
     "cargoes": {
       "eyebrow": "Marketplace",
       "title": "Cargas disponibles",
-      "description": "Cargas fluviales y de cabotaje listas para recibir propuestas."
+      "description": "Cargas fluviales y de cabotaje listas para recibir propuestas.",
+      "loadingList": "Cargando cargas disponibles…"
     },
     "newCargo": {
       "eyebrow": "Publicación",
@@ -784,6 +785,15 @@
         "label": "Soporte demo",
         "message": "Soporte falso: en producción abriría chat o mesa de ayuda."
       }
+    }
+  },
+  "errors": {
+    "notFound": {
+      "eyebrow": "404",
+      "title": "Página no encontrada",
+      "description": "La dirección puede ser incorrecta o el recurso ya no existe en este entorno mock.",
+      "linkHome": "Ir al inicio",
+      "linkCargoes": "Ver cargas en el marketplace"
     }
   },
   "metadata": {
