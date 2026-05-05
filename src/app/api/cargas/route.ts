@@ -1,9 +1,10 @@
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 import { getSessionUser, isNonEmptyText } from '@/shared/server/auth';
 import { forbidden, invalidPayload, unauthenticated } from '@/shared/server/api-errors';
 import { upsertCargo } from '@/shared/server/mock-db';
 import { getRepositories } from '@/shared/server/repositories';
 import type { Cargo, CargoStatus } from '@/features/marketplace/domain/marketplace.types';
+import { cargoCacheRevalidateProfile, cargoCacheTags } from '@/features/cargos/cache/cargo-cache-tags';
 import { routing } from '@/core/i18n/routing';
 import { appRoutes } from '@/shared/routing/app-routes';
 
@@ -65,6 +66,11 @@ export async function POST(request: Request) {
   };
 
   upsertCargo(cargo);
+
+  revalidateTag(cargoCacheTags.allCargos, cargoCacheRevalidateProfile);
+  revalidateTag(cargoCacheTags.cargoMarketplace, cargoCacheRevalidateProfile);
+  revalidateTag(cargoCacheTags.userCargos(user.id), cargoCacheRevalidateProfile);
+  revalidateTag(cargoCacheTags.cargoDetail(cargo.id), cargoCacheRevalidateProfile);
 
   for (const locale of routing.locales) {
     revalidatePath(appRoutes.cargos.marketplace(locale));

@@ -1,9 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const { mockGetSessionUser, mockUpsertCargo, mockRevalidatePath } = vi.hoisted(() => ({
+const { mockGetSessionUser, mockUpsertCargo, mockRevalidatePath, mockRevalidateTag } = vi.hoisted(() => ({
   mockGetSessionUser: vi.fn(),
   mockUpsertCargo: vi.fn(),
-  mockRevalidatePath: vi.fn()
+  mockRevalidatePath: vi.fn(),
+  mockRevalidateTag: vi.fn()
 }));
 
 vi.mock('@/shared/server/auth', () => ({
@@ -18,10 +19,12 @@ vi.mock('@/shared/server/mock-db', () => ({
 }));
 
 vi.mock('next/cache', () => ({
-  revalidatePath: mockRevalidatePath
+  revalidatePath: mockRevalidatePath,
+  revalidateTag: mockRevalidateTag
 }));
 
 import { POST } from '@/app/api/cargas/route';
+import { cargoCacheRevalidateProfile, cargoCacheTags } from '@/features/cargos/cache/cargo-cache-tags';
 import { apiRoutes } from '@/shared/routing/api-routes';
 import { appRoutes } from '@/shared/routing/app-routes';
 
@@ -135,6 +138,10 @@ describe('POST /api/cargas', () => {
       destination: 'Santarém, PA',
       cargoType: 'Refrigerada'
     });
+    expect(mockRevalidateTag).toHaveBeenCalledWith(cargoCacheTags.allCargos, cargoCacheRevalidateProfile);
+    expect(mockRevalidateTag).toHaveBeenCalledWith(cargoCacheTags.cargoMarketplace, cargoCacheRevalidateProfile);
+    expect(mockRevalidateTag).toHaveBeenCalledWith(cargoCacheTags.userCargos('u-shipper-1'), cargoCacheRevalidateProfile);
+    expect(mockRevalidateTag).toHaveBeenCalledWith(cargoCacheTags.cargoDetail(body.data.id), cargoCacheRevalidateProfile);
   });
 
   it('retorna 201 quando admin aprovado publica carga', async () => {
@@ -193,6 +200,7 @@ describe('POST /api/cargas', () => {
       })
     }));
 
+    expect(mockRevalidateTag).toHaveBeenCalledTimes(4);
     expect(mockRevalidatePath).toHaveBeenCalledTimes(9);
     expect(mockRevalidatePath.mock.calls.map((c) => c[0])).toEqual(
       expect.arrayContaining([
