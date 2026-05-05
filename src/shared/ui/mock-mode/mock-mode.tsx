@@ -19,7 +19,7 @@ const cases = [
   { id: 'impact', href: intlAppPaths.impact.home, icon: 'chart' },
   { id: 'profile', href: intlAppPaths.auth.profile, icon: 'user' },
   { id: 'lightMode', href: intlAppPaths.dashboard.home, icon: 'sun' },
-  { id: 'i18n', href: localizedAppPath('en', intlAppPaths.cargos.marketplace), icon: 'globe', external: true }
+  { id: 'i18n', href: localizedAppPath('en-US', intlAppPaths.cargos.marketplace), icon: 'globe', external: true }
 ] as const;
 
 export function MockMode() {
