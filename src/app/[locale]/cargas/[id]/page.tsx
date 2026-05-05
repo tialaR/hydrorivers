@@ -12,7 +12,7 @@ export default async function CargoDetailPage({ params }: { params: Promise<{ id
   if (!cargo) notFound();
 
   const user = await getSessionUser();
-  const viewer = user ? { id: user.id, role: user.role } : null;
+  const viewer = user ? { id: user.id, role: user.role, approved: user.approved } : null;
   const t = await getTranslations('pages.cargoDetail');
   const nav = await getTranslations('nav');
 

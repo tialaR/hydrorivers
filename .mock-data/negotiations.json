@@ -1,46 +1,9 @@
 [
   {
-    "id": "neg-1777939534090",
-    "cargoId": "cargo-001",
-    "vesselId": "vessel-001",
-    "shipperId": "u-shipper-1",
-    "carrierId": "u-carrier-1",
-    "cargoTitle": "Polpa de açaí congelada — cooperativa ribeirinha",
-    "vesselName": "Comboio Rio Negro",
-    "stage": "contract",
-    "status": "accepted",
-    "amount": "R$ 7.500 e2e",
-    "lastUpdate": "2026-05-05T00:05:34.884Z",
-    "parties": [
-      "Coop. Açaí Pará",
-      "Navega Norte"
-    ],
-    "route": "Belém–Santarém",
-    "paymentTerms": "A combinar",
-    "insurance": "A validar",
-    "documents": [
-      "Proposta comercial"
-    ],
-    "nextStep": "Aguardar aceite do embarcador",
-    "riskLevel": "low",
-    "history": [
-      {
-        "title": "Proposta criada",
-        "description": "Proposta enviada por Navega Norte.",
-        "date": "2026-05-05T00:05:34.090Z"
-      },
-      {
-        "title": "Status atualizado para accepted",
-        "description": "Alteração realizada por Cooperativa Açaí Norte.",
-        "date": "2026-05-05T00:05:34.884Z"
-      }
-    ]
-  },
-  {
     "id": "neg-001",
     "cargoTitle": "Polpa de açaí congelada — cooperativa ribeirinha",
     "vesselName": "Frio Tapajós",
-    "stage": "quote",
+    "stage": "contract",
     "amount": "R$ 6.080",
     "lastUpdate": "Hoje, 10:40",
     "parties": [
@@ -63,7 +26,7 @@
         "date": "10:40"
       }
     ],
-    "status": "pending",
+    "status": "accepted",
     "cargoId": "cargo-001",
     "vesselId": "vessel-001",
     "shipperId": "u-shipper-1",
@@ -106,7 +69,7 @@
     "id": "neg-003",
     "cargoTitle": "Equipamentos solares para comunidades ribeirinhas",
     "vesselName": "Comboio Rio Negro",
-    "stage": "contract",
+    "stage": "quote",
     "amount": "R$ 19.450",
     "lastUpdate": "Hoje, 08:10",
     "parties": [
@@ -128,7 +91,12 @@
         "description": "Carga pronta para reserva operacional.",
         "date": "08:10"
       }
-    ]
+    ],
+    "status": "pending",
+    "cargoId": "cargo-003",
+    "vesselId": "vessel-003",
+    "shipperId": "u-shipper-1",
+    "carrierId": "u-carrier-1"
   },
   {
     "id": "neg-004",
@@ -156,7 +124,12 @@
         "description": "Transportador com prontidão para baixa conectividade.",
         "date": "11:15"
       }
-    ]
+    ],
+    "status": "pending",
+    "cargoId": "cargo-004",
+    "vesselId": "vessel-004",
+    "shipperId": "u-shipper-1",
+    "carrierId": "u-carrier-1"
   },
   {
     "id": "neg-005",
