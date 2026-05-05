@@ -77,7 +77,11 @@ export function CargoDetail({ cargo, viewer }: { cargo: Cargo; viewer?: CargoVie
           cargoId: cargo.id,
           amount,
           // vesselId opcional: API resolve embarcação do carrier quando ausente.
+          estimatedTime: String(fd.get('estimatedTime') ?? '').trim() || undefined,
+          vesselCompatibility: String(fd.get('vesselCompatibility') ?? '').trim() || undefined,
+          contactChannel: String(fd.get('contactChannel') ?? '').trim() || undefined,
           paymentTerms: String(fd.get('operationPlan') ?? '').trim() || undefined,
+          proposalMessage: String(fd.get('riskNote') ?? '').trim() || undefined,
           insurance: String(fd.get('riskNote') ?? '').trim() || undefined,
           documents: [String(fd.get('documentCommitment') ?? '').trim()].filter(Boolean)
         })
