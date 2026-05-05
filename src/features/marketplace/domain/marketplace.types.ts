@@ -102,6 +102,10 @@ export type Negotiation = {
   vesselId?: string;
   shipperId?: string;
   carrierId?: string;
+  estimatedTime?: string;
+  vesselCompatibility?: string;
+  contactChannel?: string;
+  proposalMessage?: string;
   status?: 'pending' | 'accepted' | 'rejected' | 'cancelled';
 };
 
