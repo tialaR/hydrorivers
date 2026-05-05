@@ -17,11 +17,6 @@
     "closeMenu": "Close menu",
     "mobileMenu": "Navigation menu",
     "language": "Change language",
-    "localeOption": {
-      "pt-BR": "Brazilian Portuguese",
-      "en": "United States",
-      "es": "Spanish (generic)"
-    },
     "publish": "Publish cargo",
     "profile": "Profile",
     "primaryNavigation": "Primary navigation",
