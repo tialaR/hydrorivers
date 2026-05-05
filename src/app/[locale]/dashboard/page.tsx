@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/core/i18n/navigation';
+import { intlAppPaths } from '@/shared/routing/app-routes';
 import { PageShell } from '@/shared/ui/page-shell/page-shell';
 import { DashboardOverview } from '@/features/dashboard/components/dashboard-overview/dashboard-overview';
 import { NegotiationBoard } from '@/features/negotiations/components/negotiation-board/negotiation-board';
@@ -16,7 +17,7 @@ export default async function DashboardPage() {
     <PageShell eyebrow={t('eyebrow')} title={t('title')} description={t('description')}>
       {showMyCargoes ? (
         <p style={{ marginBottom: '1rem' }}>
-          <Link href="/minhas-cargas">{t('myCargoesCta')}</Link>
+          <Link href={intlAppPaths.cargos.myCargos}>{t('myCargoesCta')}</Link>
         </p>
       ) : null}
       <DashboardOverview />

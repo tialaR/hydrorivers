@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl';
 import { useAuthSession } from '@/features/auth/hooks/use-auth-session';
 import { Link, usePathname } from '@/core/i18n/navigation';
 import { mainNavigation } from '@/shared/config/navigation';
+import { intlAppPaths } from '@/shared/routing/app-routes';
 import { ThemeToggle } from '@/shared/ui/theme-toggle/theme-toggle';
 import { LocaleSwitcher } from '@/shared/ui/locale-switcher/locale-switcher';
 import { AuthActions } from '@/features/auth/components/auth-actions/auth-actions';
@@ -67,7 +68,7 @@ export function AppHeader() {
         .filter((item) => item.href !== '/admin')
         .filter(
           (item) =>
-            item.href !== '/minhas-cargas' ||
+            item.href !== intlAppPaths.cargos.myCargos ||
             Boolean(user && (user.role === 'shipper' || user.role === 'carrier'))
         ),
     [user]
@@ -277,7 +278,7 @@ export function AppHeader() {
         <div className={styles.sheetScroll}>
           <div className={styles.sheetAccount}>
             {user ? (
-              <Link href="/perfil" onClick={() => requestCloseSheet()} className={styles.accountCard}>
+              <Link href={intlAppPaths.auth.profile} onClick={() => requestCloseSheet()} className={styles.accountCard}>
                 <span className={styles.accountAvatar}>{user.avatarUrl ? <Image src={user.avatarUrl} alt="" width={40} height={40} unoptimized /> : initials(user.name)}</span>
                 <span><strong>{user.name}</strong><small>{user.company}</small></span>
               </Link>
@@ -298,7 +299,7 @@ export function AppHeader() {
         </div>
 
         <div className={styles.sheetActions}>
-          <Link href="/cargas/nova" onClick={() => requestCloseSheet()} className={styles.sheetCta}>{t('cta')}</Link>
+          <Link href={intlAppPaths.cargos.publishCargo} onClick={() => requestCloseSheet()} className={styles.sheetCta}>{t('cta')}</Link>
           <Link href={user ? '/perfil' : '/cadastro'} onClick={() => requestCloseSheet()} className={styles.sheetGhost}>{user ? t('profile') : t('signup')}</Link>
         </div>
       </aside>
@@ -308,7 +309,7 @@ export function AppHeader() {
   return (
     <header className={`${styles.headerShell} ${pathname !== '/' ? styles.subPage : ''}`}>
       <div className={styles.header}>
-        <Link href="/" className={styles.brand} aria-label="HydroRivers" onClick={closeMenus}>
+        <Link href={intlAppPaths.home} className={styles.brand} aria-label="HydroRivers" onClick={closeMenus}>
           <span className={styles.brandMark}><HydroIcon name="river" size={24} /></span>
           <span className={styles.brandText}>HydroRivers</span>
         </Link>
@@ -346,11 +347,11 @@ export function AppHeader() {
           <div className={styles.desktopTool}><ThemeToggle /></div>
           <div className={styles.headerSession}><AuthActions /></div>
           {user ? (
-            <Link href="/perfil" className={styles.mobileAvatar} aria-label={t('profile')}>
+            <Link href={intlAppPaths.auth.profile} className={styles.mobileAvatar} aria-label={t('profile')}>
               {user.avatarUrl ? <Image src={user.avatarUrl} alt="" width={40} height={40} unoptimized /> : <span>{initials(user.name)}</span>}
             </Link>
           ) : null}
-          <Link href="/cargas/nova" className={styles.cta}>{t('cta')}</Link>
+          <Link href={intlAppPaths.cargos.publishCargo} className={styles.cta}>{t('cta')}</Link>
           <button
             className={styles.menuButton}
             onClick={openSheet}

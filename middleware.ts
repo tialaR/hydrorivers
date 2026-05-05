@@ -1,17 +1,12 @@
 import createMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
 import { routing } from './src/core/i18n/routing';
+import { middlewarePrivateIntlPaths } from './src/shared/routing/app-routes';
+import { routeSearchParams } from './src/shared/routing/route-search-params';
 
 const intlMiddleware = createMiddleware(routing);
 
-const privateRoutes = [
-  '/dashboard',
-  '/cargas/nova',
-  '/perfil',
-  '/negociacoes',
-  '/rastreio',
-  '/admin'
-];
+const privateRoutes = middlewarePrivateIntlPaths;
 
 function getLocaleAndPath(pathname: string) {
   const match = pathname.match(/^\/(pt-BR|en|es)(\/.*)?$/);
@@ -27,7 +22,7 @@ export default function middleware(request: NextRequest) {
   if (isPrivate && !request.cookies.get('hydrorivers_session')?.value) {
     const url = request.nextUrl.clone();
     url.pathname = `/${locale}/login`;
-    url.searchParams.set('next', pathname);
+    url.searchParams.set(routeSearchParams.next, pathname);
     return NextResponse.redirect(url);
   }
 

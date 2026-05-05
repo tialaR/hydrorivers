@@ -22,6 +22,10 @@ vi.mock('next/cache', () => ({
 }));
 
 import { POST } from '@/app/api/cargas/route';
+import { apiRoutes } from '@/shared/routing/api-routes';
+import { appRoutes } from '@/shared/routing/app-routes';
+
+const cargoPostUrl = `http://localhost${apiRoutes.cargos.collection}`;
 
 describe('POST /api/cargas', () => {
   beforeEach(() => {
@@ -31,7 +35,7 @@ describe('POST /api/cargas', () => {
   it('retorna 401 quando não há sessão', async () => {
     mockGetSessionUser.mockResolvedValue(null);
 
-    const response = await POST(new Request('http://localhost/api/cargas', {
+    const response = await POST(new Request(cargoPostUrl, {
       method: 'POST',
       body: JSON.stringify({})
     }));
@@ -42,7 +46,7 @@ describe('POST /api/cargas', () => {
   it('retorna 403 quando role é carrier', async () => {
     mockGetSessionUser.mockResolvedValue({ id: 'u-carrier-1', role: 'carrier', approved: true });
 
-    const response = await POST(new Request('http://localhost/api/cargas', {
+    const response = await POST(new Request(cargoPostUrl, {
       method: 'POST',
       body: JSON.stringify({})
     }));
@@ -56,7 +60,7 @@ describe('POST /api/cargas', () => {
   it('retorna 403 quando usuário não está aprovado', async () => {
     mockGetSessionUser.mockResolvedValue({ id: 'u-shipper-1', role: 'shipper', approved: false });
 
-    const response = await POST(new Request('http://localhost/api/cargas', {
+    const response = await POST(new Request(cargoPostUrl, {
       method: 'POST',
       body: JSON.stringify({})
     }));
@@ -70,7 +74,7 @@ describe('POST /api/cargas', () => {
   it('retorna 400 para json inválido', async () => {
     mockGetSessionUser.mockResolvedValue({ id: 'u-shipper-1', role: 'shipper', approved: true, company: 'Cooperativa Açaí Norte' });
 
-    const response = await POST(new Request('http://localhost/api/cargas', {
+    const response = await POST(new Request(cargoPostUrl, {
       method: 'POST',
       body: '{'
     }));
@@ -84,7 +88,7 @@ describe('POST /api/cargas', () => {
   it('retorna 400 para campos obrigatórios ausentes', async () => {
     mockGetSessionUser.mockResolvedValue({ id: 'u-shipper-1', role: 'shipper', approved: true, company: 'Cooperativa Açaí Norte' });
 
-    const response = await POST(new Request('http://localhost/api/cargas', {
+    const response = await POST(new Request(cargoPostUrl, {
       method: 'POST',
       body: JSON.stringify({ origin: '', destination: '', cargoType: '' })
     }));
@@ -103,7 +107,7 @@ describe('POST /api/cargas', () => {
       company: 'Cooperativa Açaí Norte'
     });
 
-    const response = await POST(new Request('http://localhost/api/cargas', {
+    const response = await POST(new Request(cargoPostUrl, {
       method: 'POST',
       body: JSON.stringify({
         origin: 'Belém, PA',
@@ -141,7 +145,7 @@ describe('POST /api/cargas', () => {
       company: 'Órgão Piloto'
     });
 
-    const response = await POST(new Request('http://localhost/api/cargas', {
+    const response = await POST(new Request(cargoPostUrl, {
       method: 'POST',
       body: JSON.stringify({
         origin: 'Manaus, AM',
@@ -178,7 +182,7 @@ describe('POST /api/cargas', () => {
       company: 'Cooperativa Açaí Norte'
     });
 
-    await POST(new Request('http://localhost/api/cargas', {
+    await POST(new Request(cargoPostUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -191,7 +195,11 @@ describe('POST /api/cargas', () => {
 
     expect(mockRevalidatePath).toHaveBeenCalledTimes(9);
     expect(mockRevalidatePath.mock.calls.map((c) => c[0])).toEqual(
-      expect.arrayContaining(['/pt-BR/cargas', '/en/minhas-cargas', '/es/dashboard'])
+      expect.arrayContaining([
+        appRoutes.cargos.marketplace('pt-BR'),
+        appRoutes.cargos.myCargos('en'),
+        appRoutes.dashboard.home('es')
+      ])
     );
   });
 });

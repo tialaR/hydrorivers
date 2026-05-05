@@ -6,6 +6,7 @@ import type { AppLocale } from '@/core/i18n/routing';
 import type { AiAssistResponse } from '@/features/ai-assist/domain/types';
 import { Card } from '@/shared/ui/card/card';
 import { Button } from '@/shared/ui/button/button';
+import { apiRoutes } from '@/shared/routing/api-routes';
 import styles from './cargo-status-assistant-card.module.scss';
 
 type Props = {
@@ -24,7 +25,7 @@ export function CargoStatusAssistantCard({ cargoId }: Props) {
     setState('loading');
     setAssist(null);
     try {
-      const response = await fetch('/api/ai/cargo-status', {
+      const response = await fetch(apiRoutes.ai.cargoStatus, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'same-origin',

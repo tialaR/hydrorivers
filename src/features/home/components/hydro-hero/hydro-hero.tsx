@@ -2,6 +2,7 @@ import { getTranslations } from 'next-intl/server';
 import { Link } from '@/core/i18n/navigation';
 import { Button } from '@/shared/ui/button/button';
 import { HydroIcon } from '@/shared/ui/hydro-icon/hydro-icon';
+import { intlAppPaths } from '@/shared/routing/app-routes';
 import styles from './hydro-hero.module.scss';
 
 export async function HydroHero() {
@@ -13,8 +14,8 @@ export async function HydroHero() {
         <h1>{t('title')}</h1>
         <span>{t('description')}</span>
         <div className={styles.actions}>
-          <Link href="/cargas"><Button><HydroIcon name="ship" size={18} /> {t('primary')}</Button></Link>
-          <Link href="/impacto"><Button variant="secondary"><HydroIcon name="leaf" size={18} /> {t('secondary')}</Button></Link>
+          <Link href={intlAppPaths.cargos.marketplace}><Button><HydroIcon name="ship" size={18} /> {t('primary')}</Button></Link>
+          <Link href={intlAppPaths.impact.home}><Button variant="secondary"><HydroIcon name="leaf" size={18} /> {t('secondary')}</Button></Link>
         </div>
       </div>
       <aside className={styles.visual} aria-label={t('visualAria')}>

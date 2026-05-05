@@ -4,9 +4,11 @@ import { useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from '@/core/i18n/navigation';
 import { mockModeLoginAs } from '@/features/auth/services/auth.client';
+import type { AppLocale } from '@/shared/routing/route-types';
 import type { MockQaPersona } from '@/shared/qa/mock-qa-personas';
 import { MOCK_QA_PERSONAS } from '@/shared/qa/mock-qa-personas';
 import { QA_LOGIN_PREFILL_STORAGE_KEY } from '@/shared/qa/login-prefill';
+import { appRoutes } from '@/shared/routing/app-routes';
 import styles from './mock-mode.module.scss';
 
 type Feedback =
@@ -29,7 +31,7 @@ export function MockQaHubPersonas() {
         QA_LOGIN_PREFILL_STORAGE_KEY,
         JSON.stringify({ email: persona.email, password: persona.password })
       );
-      window.location.assign(`/${locale}/login`);
+      window.location.assign(appRoutes.auth.login(locale as AppLocale));
     } catch {
       setFeedback({ kind: 'error' });
     }

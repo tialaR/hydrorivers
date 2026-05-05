@@ -1,13 +1,38 @@
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/core/i18n/navigation';
+import { intlAppPaths } from '@/shared/routing/app-routes';
 import { HydroIcon } from '@/shared/ui/hydro-icon/hydro-icon';
 import { FooterSocials } from './footer-socials';
 import styles from './app-footer.module.scss';
 
 const columns = [
-  { key: 'product', links: [['/cargas', 'cargoes'], ['/embarcacoes', 'vessels'], ['/negociacoes', 'negotiations'], ['/rastreio', 'tracking']] },
-  { key: 'platform', links: [['/dashboard', 'dashboard'], ['/impacto', 'impact'], ['/admin', 'admin'], ['/cargas/nova', 'publish']] },
-  { key: 'support', links: [['/login', 'login'], ['/cadastro', 'signup'], ['/perfil', 'profile'], ['/rastreio', 'tracking']] },
+  {
+    key: 'product',
+    links: [
+      [intlAppPaths.cargos.marketplace, 'cargoes'],
+      [intlAppPaths.vessels.marketplace, 'vessels'],
+      [intlAppPaths.negotiations.home, 'negotiations'],
+      [intlAppPaths.tracking.home, 'tracking']
+    ]
+  },
+  {
+    key: 'platform',
+    links: [
+      [intlAppPaths.dashboard.home, 'dashboard'],
+      [intlAppPaths.impact.home, 'impact'],
+      [intlAppPaths.admin.home, 'admin'],
+      [intlAppPaths.cargos.publishCargo, 'publish']
+    ]
+  },
+  {
+    key: 'support',
+    links: [
+      [intlAppPaths.auth.login, 'login'],
+      [intlAppPaths.auth.register, 'signup'],
+      [intlAppPaths.auth.profile, 'profile'],
+      [intlAppPaths.tracking.home, 'tracking']
+    ]
+  },
   { key: 'company', links: [['/impacto/brdomar', 'brdomar'], ['/impacto/sustainability', 'sustainability'], ['/impacto/regional', 'regional'], ['/impacto/automation', 'automation']] }
 ] as const;
 
