@@ -14,6 +14,11 @@ Garantir consistencia de idiomas e evitar regressao de internacionalizacao.
 - rodar `npm run check:i18n`
 - revisar navegacao, forms, erros, empty states e dashboards
 
+# Nomes dos locales no seletor
+
+- Rotas e locale tecnico permanecem `pt-BR`, `en`, `es` (ver `src/core/i18n/routing.ts`).
+- Rótulos exibidos no `LocaleSwitcher`: chaves `nav.localeOption.{pt-BR|en|es}` em `messages/*.json` (texto depende do idioma da UI).
+
 # Orientacoes
 
 - Usar chaves de traducao em titulos, labels, botoes e mensagens.
