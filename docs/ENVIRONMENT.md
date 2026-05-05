@@ -116,6 +116,7 @@ cp .env.example .env.local
 |--------|------------------|
 | **Vitest** | `tests/integration/api/auth.login.post.test.ts` manipula `HYDRORIVERS_EXPOSE_OTP_CODE` quando necessário; `.env.local` não é carregado automaticamente (`vitest.config.ts` sem dotenv). |
 | **Vitest (`mock-mode`)** | `vi.stubEnv('HYDRORIVERS_ALLOW_MOCK_MODE_RESET', 'true')` no `beforeEach`; teste de gate usa `false`; `afterEach` chama `vi.unstubAllEnvs()`. |
+| **Vitest (`env` reset)** | `tests/unit/shared/config/env.mock-mode-reset.test.ts` documenta que só o literal `true` habilita o helper. |
 | **E2E** | Build/start pode passar OTP e gate mock via variáveis inline no `playwright.config.ts` — ver ficheiro. |
 
 Adicionar variáveis novas ao **`.env.example`** não deve quebrar testes **desde que o código não mude comportamento padrão** sem atualizar asserts — esta alteração ficou apenas em exemplo + doc.
