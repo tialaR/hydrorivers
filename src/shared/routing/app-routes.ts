@@ -1,7 +1,7 @@
 import type { AppLocale } from './route-types';
 import { routeSearchParams } from './route-search-params';
 
-/** Segmentos sem prefixo de locale (uso com next-intl Link / router + middleware). */
+/** Segmentos sem prefixo de locale (uso com next-intl Link / router + proxy). */
 const intlSegments = {
   login: '/login',
   /** Cadastro — rota `[locale]/cadastro`. */
@@ -31,7 +31,7 @@ export function localizedAppPath(locale: AppLocale, pathname: string): string {
 
 /**
  * Rotas relativas ao segmento `[locale]` (sem repetir `/${locale}`).
- * Use em `Link`, `router.push` e na lista de rotas privadas do middleware.
+ * Use em `Link`, `router.push` e na lista de rotas privadas do `proxy.ts`.
  */
 export const intlAppPaths = {
   home: '/',
@@ -70,7 +70,7 @@ export const intlAppPaths = {
   }
 } as const;
 
-/** Rotas que exigem cookie `hydrorivers_session` (mesma ordem semântica que `middleware.ts`). */
+/** Rotas que exigem cookie `hydrorivers_session` (mesma ordem semântica que `proxy.ts`). */
 export const middlewarePrivateIntlPaths: readonly string[] = [
   intlAppPaths.dashboard.home,
   intlAppPaths.cargos.publishCargo,

@@ -4,7 +4,7 @@ import type { AppLocale } from '@/core/i18n/routing';
 import type { Cargo } from '@/features/marketplace/domain/marketplace.types';
 import type { AiAssistConfidence, AiAssistResponse, AiAssistSource } from '@/features/ai-assist/domain/types';
 import { translateMock } from '@/shared/i18n/mock-content';
-import messagesEn from '../../../../messages/en.json';
+import messagesEn from '../../../../messages/en-US.json';
 import messagesEs from '../../../../messages/es.json';
 import messagesPt from '../../../../messages/pt-BR.json';
 
@@ -18,7 +18,7 @@ type StatusBundle = {
 
 const bundles: Record<AppLocale, Messages> = {
   'pt-BR': messagesPt,
-  en: messagesEn,
+  'en-US': messagesEn,
   es: messagesEs
 };
 

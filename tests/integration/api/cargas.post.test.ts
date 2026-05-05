@@ -205,7 +205,7 @@ describe('POST /api/cargas', () => {
     expect(mockRevalidatePath.mock.calls.map((c) => c[0])).toEqual(
       expect.arrayContaining([
         appRoutes.cargos.marketplace('pt-BR'),
-        appRoutes.cargos.myCargos('en'),
+        appRoutes.cargos.myCargos('en-US'),
         appRoutes.dashboard.home('es')
       ])
     );

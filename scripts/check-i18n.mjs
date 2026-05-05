@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 
-const locales = ['pt-BR', 'en', 'es'];
+const locales = ['pt-BR', 'en-US', 'es'];
 
 function flatten(value, prefix = '') {
   if (value && typeof value === 'object' && !Array.isArray(value)) {

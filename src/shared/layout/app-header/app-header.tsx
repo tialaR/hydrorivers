@@ -32,7 +32,7 @@ function initials(name?: string) {
 }
 
 function normalizeCurrentPath(pathname: string) {
-  const withoutLocale = pathname.replace(/^\/(pt-BR|en|es)(?=\/|$)/, '') || '/';
+  const withoutLocale = pathname.replace(/^\/(pt-BR|en-US|es)(?=\/|$)/, '') || '/';
   const normalized = withoutLocale.replace(/\/$/, '') || '/';
   return normalized;
 }
