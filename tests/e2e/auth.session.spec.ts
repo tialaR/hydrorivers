@@ -39,12 +39,12 @@ test('com sessão ativa troca idioma no dashboard e permanece autenticado', asyn
   await expect(localeTrigger).toBeVisible();
   await localeTrigger.click();
 
-  const englishMenuItem = page.getByRole('menuitem', { name: /en-US|english|en\b/i }).first();
-  if (await englishMenuItem.count()) {
-    await englishMenuItem.click();
-  } else {
-    await page.getByRole('link', { name: /en-US|english|en\b/i }).first().click();
-  }
+  const localeMenu = page.getByRole('menu', { name: /idioma|language/i });
+  await expect(localeMenu).toBeVisible();
+
+  const englishMenuItem = localeMenu.getByRole('menuitem', { name: /en-US|english|en\b/i }).first();
+  await expect(englishMenuItem).toBeVisible();
+  await englishMenuItem.click();
 
   await expect(page).toHaveURL(/\/en\/dashboard(\/)?$/);
   await expect(page.getByRole('button', { name: /log out/i })).toBeVisible();
