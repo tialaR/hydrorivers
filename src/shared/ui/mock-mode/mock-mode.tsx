@@ -5,15 +5,8 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/core/i18n/navigation';
 import { HydroIcon } from '@/shared/ui/hydro-icon/hydro-icon';
 import { MockScenarioControl } from './mock-scenario-control';
+import { MockQaHubPersonas } from './mock-qa-hub';
 import styles from './mock-mode.module.scss';
-
-const accounts = [
-  { id: 'shipper', email: 'tiala@hydrorivers.com', role: 'shipper', company: 'Cooperativa Açaí Norte' },
-  { id: 'carrier', email: 'joao@naveganorte.com', role: 'carrier', company: 'Navega Norte' },
-  { id: 'admin', email: 'admin@hydrorivers.com', role: 'admin', company: 'HydroRivers' },
-  { id: 'shipper2', email: 'mariana@bioamazonia.coop', role: 'shipper', company: 'BioAmazônia Cooperativa' },
-  { id: 'carrier2', email: 'carlos@hidroviasmadeira.com', role: 'carrier', company: 'Hidrovias Madeira' }
-] as const;
 
 const cases = [
   { id: 'cargoList', href: '/cargas', icon: 'cargo' },
@@ -31,7 +24,6 @@ const cases = [
 export function MockMode() {
   const t = useTranslations('mockMode');
   const [open, setOpen] = useState(false);
-  const password = 'hydro123';
   const qaCases = useMemo(() => cases, []);
 
   return (
@@ -53,18 +45,10 @@ export function MockMode() {
           <section className={styles.section}>
             <div className={styles.sectionTitle}>
               <HydroIcon name="users" size={16} />
-              <span>{t('accountsTitle')}</span>
+              <span>{t('qaHub.sectionTitle')}</span>
             </div>
-            <div className={styles.accountList}>
-              {accounts.map((account) => (
-                <article key={account.id} className={styles.accountCard}>
-                  <strong>{t(`roles.${account.role}`)}</strong>
-                  <span>{account.company}</span>
-                  <small>{account.email}</small>
-                  <code>{t('passwordLabel')}: {password}</code>
-                </article>
-              ))}
-            </div>
+            <p className={styles.qaHubLead}>{t('qaHub.sectionLead')}</p>
+            <MockQaHubPersonas />
           </section>
 
           <section className={styles.section}>

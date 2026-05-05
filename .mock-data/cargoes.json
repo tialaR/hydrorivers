@@ -1,5 +1,47 @@
 [
   {
+    "id": "mock-1777953258530",
+    "ownerId": "u-shipper-1",
+    "title": "Mandioca",
+    "origin": "Belém",
+    "destination": "Salvador",
+    "volume": "10t",
+    "window": "02/06/2026",
+    "cargoType": "Mandioca",
+    "status": "open",
+    "co2Saving": "-52% CO₂",
+    "targetPrice": "6000",
+    "description": "Carga com coleta nas margnes do rio Amazonas e entrega em Belém do Pará",
+    "producer": "Cooperativa Açaí Norte",
+    "documents": [
+      "Rascunho de publicação"
+    ],
+    "productFamily": "territorialSupply",
+    "corridor": "Belém–Salvador",
+    "mainRiver": "A definir",
+    "serviceType": "Navegação interior",
+    "predictability": "medium",
+    "connectivity": "delayedSync",
+    "documentReadiness": 40,
+    "requiredDocuments": [
+      {
+        "name": "NF-e",
+        "status": "required",
+        "note": "Documento fiscal da mercadoria."
+      },
+      {
+        "name": "CT-e",
+        "status": "nextPhase",
+        "note": "Emitir na contratação do transporte."
+      },
+      {
+        "name": "Romaneio",
+        "status": "required",
+        "note": "Lista de volumes por lote."
+      }
+    ]
+  },
+  {
     "id": "cargo-001",
     "title": "Polpa de açaí congelada — cooperativa ribeirinha",
     "origin": "Belém, PA",
@@ -7,7 +49,7 @@
     "volume": "60 m³",
     "window": "06-10 maio",
     "cargoType": "Refrigerada",
-    "status": "open",
+    "status": "reserved",
     "co2Saving": "-45% CO₂",
     "targetPrice": "R$ 6.200",
     "producer": "Coop. Açaí Pará",
@@ -19,7 +61,7 @@
     "predictability": "medium",
     "etaConfidence": "ETA 36–44h • confiança média",
     "connectivity": "delayedSync",
-    "documentReadiness": 12,
+    "documentReadiness": 72,
     "originContext": "Cooperativa com agregação de produtores e janela curta de embarque na safra.",
     "description": "Carga de bioeconomia amazônica com cadeia fria, origem cooperada e necessidade de sincronização de sinal em trechos de baixa conectividade.",
     "documents": [
@@ -51,11 +93,12 @@
     ],
     "operationalRisks": [
       "Janela curta de cadeia fria",
-      "Sinal intermitente entre terminais menores",
-      "Cenário mock com pendência operacional"
+      "Sinal intermitente entre terminais menores"
     ],
     "ownerId": "u-shipper-1",
-    "negotiationIds": []
+    "negotiationIds": [
+      "neg-1777939534090"
+    ]
   },
   {
     "id": "cargo-002",
@@ -102,8 +145,7 @@
     ],
     "operationalRisks": [
       "Consolidação de lotes",
-      "Variação de prazo por parada em comunidade",
-      "Cenário mock com pendência operacional"
+      "Variação de prazo por parada em comunidade"
     ],
     "ownerId": "u-shipper-1",
     "negotiationIds": []
@@ -159,8 +201,7 @@
     ],
     "operationalRisks": [
       "Trecho sujeito a vazante",
-      "Coleta de evidência offline",
-      "Cenário mock com pendência operacional"
+      "Coleta de evidência offline"
     ],
     "ownerId": "u-shipper-1",
     "negotiationIds": []
@@ -173,7 +214,7 @@
     "volume": "18 t",
     "window": "09-13 maio",
     "cargoType": "Refrigerada",
-    "status": "reserved",
+    "status": "open",
     "co2Saving": "-39% CO₂",
     "targetPrice": "R$ 10.310",
     "producer": "Frutos do Rio",
@@ -222,8 +263,7 @@
     ],
     "operationalRisks": [
       "Cadeia fria crítica",
-      "Fiscalização sanitária",
-      "Cenário mock com pendência operacional"
+      "Fiscalização sanitária"
     ],
     "ownerId": "u-shipper-1",
     "negotiationIds": []
@@ -236,7 +276,7 @@
     "volume": "36 t",
     "window": "10-14 maio",
     "cargoType": "Cabotagem",
-    "status": "open",
+    "status": "bidding",
     "co2Saving": "-57% CO₂",
     "targetPrice": "R$ 11.680",
     "producer": "Floresta Legal",
@@ -280,7 +320,9 @@
     "operationalRisks": [
       "Vazante no rio Madeira",
       "Documento ambiental obrigatório"
-    ]
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   },
   {
     "id": "cargo-006",
@@ -333,7 +375,9 @@
     ],
     "operationalRisks": [
       "Consolidação multi-produtor"
-    ]
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   },
   {
     "id": "cargo-007",
@@ -343,7 +387,7 @@
     "volume": "57 t",
     "window": "13-17 maio",
     "cargoType": "Refrigerada",
-    "status": "reserved",
+    "status": "open",
     "co2Saving": "-66% CO₂",
     "targetPrice": "R$ 15.790",
     "producer": "Saúde Ribeirinha",
@@ -389,7 +433,9 @@
       "Baixa conectividade",
       "Prioridade pública",
       "Temperatura controlada"
-    ]
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   },
   {
     "id": "cargo-008",
@@ -399,7 +445,7 @@
     "volume": "140 m³",
     "window": "16-20 maio",
     "cargoType": "Projeto",
-    "status": "contracting",
+    "status": "bidding",
     "co2Saving": "-75% CO₂",
     "targetPrice": "R$ 19.900",
     "producer": "Programa Energia Ribeirinha",
@@ -443,7 +489,9 @@
     "operationalRisks": [
       "Entrega multi-ponto",
       "Integridade de equipamento"
-    ]
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   },
   {
     "id": "cargo-009",
@@ -496,7 +544,9 @@
     ],
     "operationalRisks": [
       "Janela de terminal portuário"
-    ]
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   },
   {
     "id": "cargo-010",
@@ -552,7 +602,9 @@
       "Janela curta de cadeia fria",
       "Sinal intermitente entre terminais menores",
       "Janela de maré e atracação compartilhada"
-    ]
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   },
   {
     "id": "cargo-011",
@@ -601,7 +653,9 @@
       "Consolidação de lotes",
       "Variação de prazo por parada em comunidade",
       "Coleta documental com sincronização tardia"
-    ]
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   },
   {
     "id": "cargo-012",
@@ -656,7 +710,9 @@
       "Trecho sujeito a vazante",
       "Coleta de evidência offline",
       "Trecho com menor calado operacional"
-    ]
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   },
   {
     "id": "cargo-013",
@@ -666,7 +722,7 @@
     "volume": "18 t",
     "window": "07-10 maio",
     "cargoType": "Refrigerada",
-    "status": "reserved",
+    "status": "open",
     "co2Saving": "-39% CO₂",
     "targetPrice": "R$ 10.850",
     "producer": "Frutos do Rio",
@@ -717,7 +773,9 @@
       "Cadeia fria crítica",
       "Fiscalização sanitária",
       "Necessidade de prova fotográfica no embarque"
-    ]
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   },
   {
     "id": "cargo-014",
@@ -727,7 +785,7 @@
     "volume": "36 t",
     "window": "09-12 maio",
     "cargoType": "Cabotagem",
-    "status": "open",
+    "status": "bidding",
     "co2Saving": "-57% CO₂",
     "targetPrice": "R$ 12.355",
     "producer": "Floresta Legal",
@@ -772,7 +830,9 @@
       "Vazante no rio Madeira",
       "Documento ambiental obrigatório",
       "Janela de maré e atracação compartilhada"
-    ]
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   },
   {
     "id": "cargo-015",
@@ -826,7 +886,9 @@
     "operationalRisks": [
       "Consolidação multi-produtor",
       "Coleta documental com sincronização tardia"
-    ]
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   },
   {
     "id": "cargo-016",
@@ -836,7 +898,7 @@
     "volume": "57 t",
     "window": "13-16 maio",
     "cargoType": "Refrigerada",
-    "status": "contracting",
+    "status": "open",
     "co2Saving": "-66% CO₂",
     "targetPrice": "R$ 16.735",
     "producer": "Saúde Ribeirinha",
@@ -883,7 +945,9 @@
       "Prioridade pública",
       "Temperatura controlada",
       "Trecho com menor calado operacional"
-    ]
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   },
   {
     "id": "cargo-017",
@@ -893,7 +957,7 @@
     "volume": "140 m³",
     "window": "15-18 maio",
     "cargoType": "Projeto",
-    "status": "reserved",
+    "status": "bidding",
     "co2Saving": "-75% CO₂",
     "targetPrice": "R$ 20.980",
     "producer": "Programa Energia Ribeirinha",
@@ -938,7 +1002,9 @@
       "Entrega multi-ponto",
       "Integridade de equipamento",
       "Necessidade de prova fotográfica no embarque"
-    ]
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   },
   {
     "id": "cargo-018",
@@ -992,7 +1058,9 @@
     "operationalRisks": [
       "Janela de terminal portuário",
       "Janela de maré e atracação compartilhada"
-    ]
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   },
   {
     "id": "cargo-019",
@@ -1002,7 +1070,7 @@
     "volume": "60 m³",
     "window": "19-22 maio",
     "cargoType": "Refrigerada",
-    "status": "bidding",
+    "status": "open",
     "co2Saving": "-45% CO₂",
     "targetPrice": "R$ 7.550",
     "producer": "Coop. Açaí Pará",
@@ -1048,7 +1116,9 @@
       "Janela curta de cadeia fria",
       "Sinal intermitente entre terminais menores",
       "Coleta documental com sincronização tardia"
-    ]
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   },
   {
     "id": "cargo-020",
@@ -1058,7 +1128,7 @@
     "volume": "15 t",
     "window": "01-04 maio",
     "cargoType": "Seca",
-    "status": "contracting",
+    "status": "bidding",
     "co2Saving": "-48% CO₂",
     "targetPrice": "R$ 9.055",
     "producer": "Rede Casas de Farinha do Baixo Amazonas",
@@ -1097,7 +1167,9 @@
       "Consolidação de lotes",
       "Variação de prazo por parada em comunidade",
       "Trecho com menor calado operacional"
-    ]
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   },
   {
     "id": "cargo-021",
@@ -1152,7 +1224,9 @@
       "Trecho sujeito a vazante",
       "Coleta de evidência offline",
       "Necessidade de prova fotográfica no embarque"
-    ]
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   },
   {
     "id": "cargo-022",
@@ -1213,7 +1287,9 @@
       "Cadeia fria crítica",
       "Fiscalização sanitária",
       "Janela de maré e atracação compartilhada"
-    ]
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   },
   {
     "id": "cargo-023",
@@ -1268,7 +1344,9 @@
       "Vazante no rio Madeira",
       "Documento ambiental obrigatório",
       "Coleta documental com sincronização tardia"
-    ]
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   },
   {
     "id": "cargo-024",
@@ -1322,7 +1400,9 @@
     "operationalRisks": [
       "Consolidação multi-produtor",
       "Trecho com menor calado operacional"
-    ]
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   },
   {
     "id": "cargo-025",
@@ -1332,7 +1412,7 @@
     "volume": "57 t",
     "window": "11-14 maio",
     "cargoType": "Refrigerada",
-    "status": "reserved",
+    "status": "open",
     "co2Saving": "-66% CO₂",
     "targetPrice": "R$ 17.950",
     "producer": "Saúde Ribeirinha",
@@ -1379,7 +1459,9 @@
       "Prioridade pública",
       "Temperatura controlada",
       "Necessidade de prova fotográfica no embarque"
-    ]
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   },
   {
     "id": "cargo-026",
@@ -1389,7 +1471,7 @@
     "volume": "140 m³",
     "window": "13-16 maio",
     "cargoType": "Projeto",
-    "status": "open",
+    "status": "bidding",
     "co2Saving": "-75% CO₂",
     "targetPrice": "R$ 22.195",
     "producer": "Programa Energia Ribeirinha",
@@ -1434,7 +1516,9 @@
       "Entrega multi-ponto",
       "Integridade de equipamento",
       "Janela de maré e atracação compartilhada"
-    ]
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   },
   {
     "id": "cargo-027",
@@ -1488,7 +1572,9 @@
     "operationalRisks": [
       "Janela de terminal portuário",
       "Coleta documental com sincronização tardia"
-    ]
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   },
   {
     "id": "cargo-028",
@@ -1498,7 +1584,7 @@
     "volume": "60 m³",
     "window": "17-20 maio",
     "cargoType": "Refrigerada",
-    "status": "contracting",
+    "status": "open",
     "co2Saving": "-45% CO₂",
     "targetPrice": "R$ 8.765",
     "producer": "Coop. Açaí Pará",
@@ -1544,7 +1630,9 @@
       "Janela curta de cadeia fria",
       "Sinal intermitente entre terminais menores",
       "Trecho com menor calado operacional"
-    ]
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   },
   {
     "id": "cargo-029",
@@ -1554,7 +1642,7 @@
     "volume": "15 t",
     "window": "19-22 maio",
     "cargoType": "Seca",
-    "status": "reserved",
+    "status": "bidding",
     "co2Saving": "-48% CO₂",
     "targetPrice": "R$ 10.270",
     "producer": "Rede Casas de Farinha do Baixo Amazonas",
@@ -1593,7 +1681,9 @@
       "Consolidação de lotes",
       "Variação de prazo por parada em comunidade",
       "Necessidade de prova fotográfica no embarque"
-    ]
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   },
   {
     "id": "cargo-030",
@@ -1648,7 +1738,9 @@
       "Trecho sujeito a vazante",
       "Coleta de evidência offline",
       "Janela de maré e atracação compartilhada"
-    ]
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   },
   {
     "id": "cargo-031",
@@ -1658,7 +1750,7 @@
     "volume": "18 t",
     "window": "03-06 maio",
     "cargoType": "Refrigerada",
-    "status": "bidding",
+    "status": "open",
     "co2Saving": "-39% CO₂",
     "targetPrice": "R$ 13.280",
     "producer": "Frutos do Rio",
@@ -1709,7 +1801,9 @@
       "Cadeia fria crítica",
       "Fiscalização sanitária",
       "Coleta documental com sincronização tardia"
-    ]
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   },
   {
     "id": "cargo-032",
@@ -1719,7 +1813,7 @@
     "volume": "36 t",
     "window": "05-08 maio",
     "cargoType": "Cabotagem",
-    "status": "contracting",
+    "status": "bidding",
     "co2Saving": "-57% CO₂",
     "targetPrice": "R$ 14.785",
     "producer": "Floresta Legal",
@@ -1764,7 +1858,9 @@
       "Vazante no rio Madeira",
       "Documento ambiental obrigatório",
       "Trecho com menor calado operacional"
-    ]
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   },
   {
     "id": "cargo-033",
@@ -1818,6 +1914,8 @@
     "operationalRisks": [
       "Consolidação multi-produtor",
       "Necessidade de prova fotográfica no embarque"
-    ]
+    ],
+    "ownerId": "u-shipper-1",
+    "negotiationIds": []
   }
 ]

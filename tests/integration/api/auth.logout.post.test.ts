@@ -11,6 +11,7 @@ vi.mock('next/headers', () => ({
 }));
 
 import { POST } from '@/app/api/auth/logout/route';
+import { cookieNames } from '@/shared/http/cookie-names';
 
 describe('POST /api/auth/logout', () => {
   beforeEach(() => {
@@ -22,7 +23,7 @@ describe('POST /api/auth/logout', () => {
     const body = await response.json();
 
     expect(response.status).toBe(200);
-    expect(cookieStore.delete).toHaveBeenCalledWith('hydrorivers_session');
+    expect(cookieStore.delete).toHaveBeenCalledWith(cookieNames.session);
     expect(body).toEqual({ ok: true });
   });
 });

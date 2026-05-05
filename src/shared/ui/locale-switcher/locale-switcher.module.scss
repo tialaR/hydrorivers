@@ -1,6 +1,7 @@
 .switcher {
   height: 2.72rem;
-  min-width: 4.8rem;
+  min-width: 6.5rem;
+  max-width: min(14rem, 42vw);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -28,6 +29,13 @@
 .switcher option { color: #111; }
 @media (max-width: 560px) { .switcher { height: 2.65rem; min-width: 4.55rem; padding: 0 .5rem; } }
 
-.current { font-weight: 590; letter-spacing: .02em; }
+.current {
+  font-weight: 590;
+  letter-spacing: .02em;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .switcher { position: relative; }
 .switcher select { position: absolute; inset: 0; width: 100%; opacity: 0; }

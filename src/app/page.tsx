@@ -1,6 +1,8 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { routing } from '@/core/i18n/routing';
+import type { AppLocale } from '@/shared/routing/route-types';
+import { appRoutes } from '@/shared/routing/app-routes';
 
 export default async function RootPage() {
   const cookieStore = await cookies();
@@ -9,5 +11,5 @@ export default async function RootPage() {
     ? preferred
     : routing.defaultLocale;
 
-  redirect(`/${locale}`);
+  redirect(appRoutes.home(locale as AppLocale));
 }

@@ -2,13 +2,15 @@ import { getActiveMockScenario, resetMockScenario } from '@/shared/server/mock-d
 import { mockScenarioIds } from '@/shared/server/mock-scenarios';
 import { getSessionUser } from '@/shared/server/auth';
 import { forbidden, invalidPayload } from '@/shared/server/api-errors';
-
-function isMockModeResetAllowed() {
-  return process.env.HYDRORIVERS_ALLOW_MOCK_MODE_RESET === 'true';
-}
+import { httpStatus } from '@/shared/http/http-status';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
+
+/** Alinhado a `docs/ENVIRONMENT.md` / testes: só `=== 'true'` permite reset (omitir ou `false` → 403). */
+function isMockModeResetStrictlyEnabled(): boolean {
+  return process.env.HYDRORIVERS_ALLOW_MOCK_MODE_RESET === 'true';
+}
 
 export function GET() {
   return Response.json({
@@ -41,9 +43,9 @@ function parseMockModeBody(raw: string): { scenario?: string } | Response {
 
 export async function POST(request: Request) {
   const user = await getSessionUser();
-  if (!user) return Response.json({ error: 'unauthenticated' }, { status: 401 });
-  if (user.role !== 'admin') return Response.json({ error: 'forbidden' }, { status: 403 });
-  if (!isMockModeResetAllowed()) {
+  if (!user) return Response.json({ error: 'unauthenticated' }, { status: httpStatus.unauthorized });
+  if (user.role !== 'admin') return Response.json({ error: 'forbidden' }, { status: httpStatus.forbidden });
+  if (!isMockModeResetStrictlyEnabled()) {
     return forbidden('mock-mode-reset-disabled');
   }
 

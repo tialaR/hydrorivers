@@ -9,6 +9,7 @@ import { AppFooter } from '@/shared/layout/app-footer';
 import { ThemeProvider } from '@/shared/providers/theme-provider';
 import { ToastProvider } from '@/shared/ui/toast/toast-provider';
 import { MockMode } from '@/shared/ui/mock-mode/mock-mode';
+import { isMockQaUiEnabled } from '@/shared/qa/mock-qa-ui-env';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -41,7 +42,7 @@ export default async function LocaleLayout({
           <AppHeader />
           {children}
           <AppFooter />
-          <MockMode />
+          {isMockQaUiEnabled() ? <MockMode /> : null}
           <Analytics />
         </ToastProvider>
       </ThemeProvider>

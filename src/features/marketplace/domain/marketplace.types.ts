@@ -29,6 +29,10 @@ export type Cargo = {
   operationalRisks?: string[];
   originContext?: string;
   ownerId?: string;
+  /** Embarcador registrador da publicação (alinhado ao mock; pode coincidir com ownerId). */
+  shipperId?: string;
+  /** Transportador atualmente vinculado no modelo mock (opcional). */
+  carrierId?: string;
   negotiationIds?: string[];
 };
 

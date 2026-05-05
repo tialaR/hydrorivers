@@ -1,13 +1,12 @@
-import { getSessionUser, isNonEmptyText } from '@/shared/server/auth';
+import { getSessionUser } from '@/shared/server/auth';
 import { forbidden, invalidPayload, unauthenticated } from '@/shared/server/api-errors';
-import { upsertCargo } from '@/shared/server/mock-db';
 import { getRepositories } from '@/shared/server/repositories';
-import type { Cargo, CargoStatus } from '@/features/marketplace/domain/marketplace.types';
+import type { Cargo } from '@/features/marketplace/domain/marketplace.types';
+import { commitPublishCargo } from '@/features/cargos/server/commit-publish-cargo';
+import { httpStatus } from '@/shared/http/http-status';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
-
-const allowedStatuses: CargoStatus[] = ['open', 'bidding', 'contracting', 'reserved', 'boarded', 'delivered'];
 
 export function GET() {
   return Response.json({ data: getRepositories().cargoes.list() });
@@ -15,50 +14,18 @@ export function GET() {
 
 export async function POST(request: Request) {
   const user = await getSessionUser();
-  if (!user) return unauthenticated();
-  if (user.role === 'carrier') return forbidden('role-not-allowed');
-  if (!user.approved) return forbidden('user-not-approved');
+  const payload = (await request.json().catch(() => null)) as Partial<Cargo> | null;
+  if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
+    return invalidPayload('invalid-json');
+  }
 
-  const payload = await request.json().catch(() => null) as Partial<Cargo> | null;
-  if (!payload) return invalidPayload('invalid-json');
-
-  if (!isNonEmptyText(payload.origin) || !isNonEmptyText(payload.destination) || !isNonEmptyText(payload.cargoType)) {
+  const result = commitPublishCargo(user, payload);
+  if (!result.ok) {
+    if (result.reason === 'unauthenticated') return unauthenticated();
+    if (result.reason === 'forbidden-role') return forbidden('role-not-allowed');
+    if (result.reason === 'forbidden-unapproved') return forbidden('user-not-approved');
     return invalidPayload('missing-required-fields');
   }
 
-  const status = allowedStatuses.includes(payload.status as CargoStatus) ? payload.status as CargoStatus : 'open';
-
-  const cargo: Cargo = {
-    id: payload.id ?? `mock-${Date.now()}`,
-    title: isNonEmptyText(payload.title) ? String(payload.title).trim() : String(payload.cargoType).trim(),
-    origin: String(payload.origin).trim(),
-    destination: String(payload.destination).trim(),
-    volume: isNonEmptyText(payload.volume) ? String(payload.volume).trim() : 'A definir',
-    window: isNonEmptyText(payload.window) ? String(payload.window).trim() : 'A definir',
-    cargoType: String(payload.cargoType).trim(),
-    status,
-    co2Saving: isNonEmptyText(payload.co2Saving) ? String(payload.co2Saving).trim() : '-52% CO2',
-    targetPrice: isNonEmptyText(payload.targetPrice) ? String(payload.targetPrice).trim() : 'Sob consulta',
-    description: isNonEmptyText(payload.description, 800) ? String(payload.description).trim() : undefined,
-    producer: user.company,
-    temperature: isNonEmptyText(payload.temperature) ? String(payload.temperature).trim() : undefined,
-    documents: Array.isArray(payload.documents) && payload.documents.length
-      ? payload.documents.map(String).filter(Boolean).slice(0, 8)
-      : ['NF-e', 'Romaneio'],
-    productFamily: payload.productFamily ?? 'territorialSupply',
-    corridor: isNonEmptyText(payload.corridor) ? String(payload.corridor).trim() : `${String(payload.origin).trim()}–${String(payload.destination).trim()}`,
-    mainRiver: isNonEmptyText(payload.mainRiver) ? String(payload.mainRiver).trim() : 'A definir',
-    serviceType: isNonEmptyText(payload.serviceType) ? String(payload.serviceType).trim() : 'Navegação interior',
-    predictability: payload.predictability ?? 'medium',
-    connectivity: payload.connectivity ?? 'delayedSync',
-    documentReadiness: typeof payload.documentReadiness === 'number' ? payload.documentReadiness : 40,
-    requiredDocuments: Array.isArray(payload.requiredDocuments) ? payload.requiredDocuments : [
-      { name: 'NF-e', status: 'required', note: 'Documento fiscal da mercadoria.' },
-      { name: 'CT-e', status: 'nextPhase', note: 'Emitir na contratação do transporte.' },
-      { name: 'Romaneio', status: 'required', note: 'Lista de volumes por lote.' }
-    ]
-  };
-
-  upsertCargo(cargo);
-  return Response.json({ data: cargo }, { status: 201 });
+  return Response.json({ data: result.cargo }, { status: httpStatus.created });
 }

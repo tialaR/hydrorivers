@@ -1,5 +1,6 @@
 import { getSessionUser, isNonEmptyText } from '@/shared/server/auth';
 import { forbidden, invalidPayload, unauthenticated } from '@/shared/server/api-errors';
+import { httpStatus } from '@/shared/http/http-status';
 import { readMock, writeMock } from '@/shared/server/mock-db';
 import type { Negotiation } from '@/features/marketplace/domain/marketplace.types';
 
@@ -24,11 +25,11 @@ export async function POST(request: Request) {
 
   const cargoes = readMock('cargoes');
   const cargo = cargoes.find((item) => item.id === payload.cargoId);
-  if (!cargo) return Response.json({ error: 'cargo-not-found' }, { status: 404 });
+  if (!cargo) return Response.json({ error: 'cargo-not-found' }, { status: httpStatus.notFound });
 
   const vessels = readMock('vessels');
   const vessel = vessels.find((item) => item.id === payload.vesselId);
-  if (!vessel) return Response.json({ error: 'vessel-not-found' }, { status: 404 });
+  if (!vessel) return Response.json({ error: 'vessel-not-found' }, { status: httpStatus.notFound });
 
   const negotiation: Negotiation = {
     id: payload.id ?? `neg-${Date.now()}`,
@@ -66,7 +67,7 @@ export async function POST(request: Request) {
     : item
   ));
 
-  return Response.json({ data: negotiation }, { status: 201 });
+  return Response.json({ data: negotiation }, { status: httpStatus.created });
 }
 
 export async function PATCH(request: Request) {
@@ -80,7 +81,7 @@ export async function PATCH(request: Request) {
 
   const negotiations = readMock('negotiations');
   const target = negotiations.find((item) => item.id === payload.id);
-  if (!target) return Response.json({ error: 'negotiation-not-found' }, { status: 404 });
+  if (!target) return Response.json({ error: 'negotiation-not-found' }, { status: httpStatus.notFound });
   if (target.shipperId !== user.id && target.carrierId !== user.id) {
     return forbidden();
   }

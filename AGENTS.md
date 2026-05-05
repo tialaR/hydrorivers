@@ -67,6 +67,7 @@ npm run test:e2e
 npm run lint
 npm run typecheck
 npm run check:i18n
+npm run check:i18n:hardcoded
 npm test
 npm run test:unit
 npm run test:integration
