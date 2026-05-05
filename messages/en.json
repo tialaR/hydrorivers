@@ -274,7 +274,8 @@
     "cargoes": {
       "eyebrow": "Marketplace",
       "title": "Available cargoes",
-      "description": "Cargas fluviais e de cabotagem prontas para receber propostas."
+      "description": "River and coastal cargoes ready for proposals.",
+      "loadingList": "Loading available cargoes…"
     },
     "newCargo": {
       "eyebrow": "Publishing",
@@ -784,6 +785,15 @@
         "label": "Support demo",
         "message": "Fake support: in production it would open chat or help desk."
       }
+    }
+  },
+  "errors": {
+    "notFound": {
+      "eyebrow": "404",
+      "title": "Page not found",
+      "description": "The URL may be wrong or this resource no longer exists in this mock environment.",
+      "linkHome": "Go to home",
+      "linkCargoes": "Browse cargoes marketplace"
     }
   },
   "metadata": {
