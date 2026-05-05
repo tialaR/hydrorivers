@@ -62,13 +62,14 @@ test.describe('Negociações — API com sessão (cookie)', () => {
     expect(response.status()).toBe(403);
   });
 
-  test('comportamento atual: admin pode POST (ver docs gap de produto)', async ({ page }) => {
+  test('admin não pode criar negociação via POST', async ({ page }) => {
     await resetMockScenarioThenLogin(page, 'market-active', admin);
     const response = await page.request.post('/api/negociacoes', {
       data: { cargoId: 'cargo-001', vesselId: 'vessel-001', amount: 'R$ 99 e2e admin' },
       headers: { 'Content-Type': 'application/json' }
     });
-    expect(response.status()).toBe(201);
+    expect(response.status()).toBe(403);
+    await expect(response.json()).resolves.toMatchObject({ error: 'forbidden', reason: 'role-not-allowed' });
   });
 
   test('carrier cria proposta; shipper aceita e o detalhe mostra estágio Contrato', async ({ page }) => {

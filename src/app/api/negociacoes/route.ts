@@ -16,10 +16,11 @@ export function GET() {
 export async function POST(request: Request) {
   const user = await getSessionUser();
   if (!user) return unauthenticated();
-  if (user.role === 'shipper') return forbidden('role-not-allowed');
+  if (user.role !== 'carrier') return forbidden('role-not-allowed');
+  if (!user.approved) return forbidden('user-not-approved');
 
   const payload = await request.json().catch(() => null) as Partial<Negotiation> | null;
-  if (!payload || !isNonEmptyText(payload.cargoId) || !isNonEmptyText(payload.vesselId) || !isNonEmptyText(payload.amount)) {
+  if (!payload || !isNonEmptyText(payload.cargoId) || !isNonEmptyText(payload.amount)) {
     return invalidPayload('missing-required-fields');
   }
 
@@ -28,8 +29,12 @@ export async function POST(request: Request) {
   if (!cargo) return Response.json({ error: 'cargo-not-found' }, { status: httpStatus.notFound });
 
   const vessels = readMock('vessels');
-  const vessel = vessels.find((item) => item.id === payload.vesselId);
+  let vessel = isNonEmptyText(payload.vesselId) ? vessels.find((item) => item.id === payload.vesselId) : undefined;
+  if (!vessel) {
+    vessel = vessels.find((item) => item.ownerId === user.id) ?? vessels[0];
+  }
   if (!vessel) return Response.json({ error: 'vessel-not-found' }, { status: httpStatus.notFound });
+  if (vessel.ownerId && vessel.ownerId !== user.id) return forbidden('vessel-not-owned');
 
   const negotiation: Negotiation = {
     id: payload.id ?? `neg-${Date.now()}`,
