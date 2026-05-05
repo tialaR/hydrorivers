@@ -2,8 +2,9 @@
  * Políticas derivadas de variáveis de ambiente (mock, QA hub, logs).
  */
 
+/** Alinhado a `POST /api/mock-mode`: só `HYDRORIVERS_ALLOW_MOCK_MODE_RESET === 'true'` permite reset. */
 export function isMockModeResetAllowed(): boolean {
-  return process.env.HYDRORIVERS_ALLOW_MOCK_MODE_RESET !== 'false';
+  return process.env.HYDRORIVERS_ALLOW_MOCK_MODE_RESET === 'true';
 }
 
 export function isOtpCodeExposed(): boolean {

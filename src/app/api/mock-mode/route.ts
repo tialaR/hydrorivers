@@ -1,7 +1,8 @@
 import { getActiveMockScenario, resetMockScenario } from '@/shared/server/mock-db';
 import { mockScenarioIds } from '@/shared/server/mock-scenarios';
 import { getSessionUser } from '@/shared/server/auth';
-import { invalidPayload } from '@/shared/server/api-errors';
+import { forbidden, invalidPayload } from '@/shared/server/api-errors';
+import { isMockModeResetAllowed } from '@/shared/config/env';
 import { httpStatus } from '@/shared/http/http-status';
 
 export const runtime = 'nodejs';
@@ -40,6 +41,9 @@ export async function POST(request: Request) {
   const user = await getSessionUser();
   if (!user) return Response.json({ error: 'unauthenticated' }, { status: httpStatus.unauthorized });
   if (user.role !== 'admin') return Response.json({ error: 'forbidden' }, { status: httpStatus.forbidden });
+  if (!isMockModeResetAllowed()) {
+    return forbidden('mock-mode-reset-disabled');
+  }
 
   const rawBody = await request.text();
   const parsed = parseMockModeBody(rawBody);
