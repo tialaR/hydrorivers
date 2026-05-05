@@ -61,7 +61,7 @@ Legenda:
 | Rota | Método | Sessão | Role | Owner / participante | Status | Comportamento atual identificado | Risco | Recomendação | Testes que deveriam existir |
 |------|--------|--------|------|----------------------|--------|----------------------------------|-------|--------------|---------------------------|
 | `/api/cargas` | GET | **Não** | — | — | `200` | Lista **todas** as cargas em mock | Alto: dados operacionais expostos | Exigir sessão e escopo (owner/participante ou público limitado) em produto | `200` contrato; futuro `401`/`403` por escopo |
-| `/api/cargas` | POST | Sim | **Not carrier**; `approved` obrigatório | **Não** verifica explícito `ownerId` no código — define `producer` como `user.company`; **`ownerId` não é atribuído** no objeto `Cargo` criado **«a confirmar»** intencional | `401`; `403` carrier ou não aprovado; `400`; `201` | Monta `Cargo` com defaults; aceita `status` se whitelist | Carrier omitido OK; cargas órfãs de `ownerId` podem quebrar regras futuras | Definir `ownerId: user.id` em POST e política admin | Cobrir `401`, `403`, `400`, `201`; opcional integração owner |
+| `/api/cargas` | POST | Sim | **Not carrier**; `approved` obrigatório | Persistência via **`commitPublishCargo`**: define **`ownerId`** e **`shipperId`** como `user.id`, **`producer`** como `user.company` | `401`; `403` carrier ou não aprovado; `400`; `201` | Mesmo núcleo usado pela Server Action de publicar carga na UI (`useActionState`) | Carrier ainda bloqueado; **GET** continua sem escopo — ver R1 | Endurecer listagens GET conforme produto | Cobrir `401`, `403`, `400`, `201`; assert `ownerId`/`shipperId` na resposta |
 | `/api/negociacoes` | GET | **Não** | — | — | `200` | Lista **todas** as negociações | Alto | Restringir leitura por participante ou papel | Futuro `401` + lista filtrada |
 | `/api/negociacoes` | POST | Sim | **Not shipper** (implicitamente carrier/admin **«a confirmar»** se admin deve propor) | Não verifica se carrier «possui» embarcação **«a confirmar»** | `401`; `403` shipper; `400`; `404` cargo/embarcação; `201` | Cria negociação; atualiza carga para `bidding` | Admin poder criar proposta como qualquer «não shipper» | Restringir role `carrier` apenas ou validar vínculo vessel→user | `401`, `403`, `400`, `404`, `201` |
 | `/api/negociacoes` | PATCH | Sim | — | Sim: `shipperId` ou `carrierId` === `user.id` | `401`; `400` payload/id/status inválidos; `403` não participante; `404`; `200` | Atualiza `status`; `accepted` → estágio `contract` e carga `reserved` | Transições de estado sem máquina explícita **«a confirmar»** (ex.: rejected → accepted) | State machine documentada + validação | Já parcialmente coberto por testes existentes **«não alterar testes nesta fase»** — documentar lacunas |
@@ -87,7 +87,8 @@ Legenda:
 ### Cargas
 
 - **Regra de produto esperável:** embarcadores publicam; transportadores não publicam diretamente — **implementado** para POST (`carrier` bloqueado).
-- **Owner:** vínculo explícito `ownerId` **«a confirmar»** no POST atual (não setado no handler analisado).
+- **Owner / shipper na criação:** **`commitPublishCargo`** atribui **`ownerId` e `shipperId`** ao persistir (POST API e fluxo de formulário com Server Action). Cargas **só de seed** podem ainda não refletir isso — não confundir com o fluxo de publicação.
+- **UI detalhe carga:** visibilidade do formulário de proposta por **role** e **`approved`** (mock) — ver código em `cargo-proposal-visibility` / `CargoDetail`; não substitui autorização forte nas APIs.
 
 ### Negociações
 
@@ -112,7 +113,7 @@ Legenda:
 |----|--------|-----------------------------|
 | R1 | **GET** em cargas, negociações, embarcações, rastreio **sem sessão** expõe dados operacionais completos | Alta em produção |
 | R2 | Negociação **POST** não valida vínculo carrier ↔ vessel **«a confirmar»** | Média |
-| R3 | Carga **POST** pode não gravar **`ownerId`** | Média para autorização futura |
+| R3 | Cargas **criadas por POST/publicação** gravam **`ownerId`/`shipperId`**; **GET** ainda lista tudo — risco de vazamento em produto real permanece (R1) | Média em produção |
 | R4 | Auth mock sem rate limiting | Média |
 | R5 | OTP/challenge previsíveis em demo | Esperado em mock; crítico se transportados para prod |
 | R6 | Transições de `Negotiation.status` sem máquina de estados documentada no código | Baixa/média |
@@ -123,7 +124,7 @@ Legenda:
 ## 6. Recomendações prioritárias
 
 1. **P0 (produção real):** exigir autenticação e **filtro por escopo** em GET de negociações, rastreio e, conforme política, cargas/embarcações.
-2. **P1:** definir e persistir **`ownerId`** (ou equivalente) em **POST /api/cargas** alinhado a `DATABASE-PLANNING.md`.
+2. **P1:** endurecer **GETs** e listagens por escopo (R1); **P1 concluído para escrita:** `ownerId`/`shipperId` em mutação de publicação via `commitPublishCargo`.
 3. **P1:** validar **POST /api/negociacoes** com regra carrier ↔ vessel (ou documentar exceção admin).
 4. **P2:** padronizar corpo JSON de todos os erros (`401`/`403`/`400`) onde ainda divergir.
 5. **P2:** rate limiting e política de **logout**/login em ambientes públicos.
@@ -139,7 +140,7 @@ Legenda:
 |------|-----------|
 | Auth | Matriz completa de `400`/`401`/`403`/`409`/`201`; regressão OTP + flag |
 | Cargas GET | Testes futuros: usuário só vê subset — quando implementado |
-| Cargas POST | Afirmar `ownerId` quando regra existir |
+| Cargas POST | Resposta com `ownerId` / `shipperId` coerentes com sessão (fluxo `commitPublishCargo`) |
 | Negociações GET | Filtragem por participante — quando implementado |
 | Negociações POST | `403` shipper; vínculo vessel; opcional admin |
 | Negociações PATCH | Matriz `403` terceiros; edge cases de status |

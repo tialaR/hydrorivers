@@ -7,6 +7,8 @@ Este documento registra uma **auditoria leve** do App Router (Next.js 16) no Hyd
 | Item | Descrição |
 |------|-----------|
 | `[locale]/not-found.tsx` | UI 404 localizada (`errors.notFound` + `Link` do next-intl). |
+| Publicação de carga (UI) | Formulário em **`/cargas/nova`** com **`publishCargoAction`** + React 19 **`useActionState`** (`src/features/cargo-market/components/new-cargo-form/new-cargo-form.tsx`). |
+| **`[locale]/minhas-cargas`** | Lista “minhas cargas” (mock) com filtro por dono/shipper — ver rotas em `src/app`. |
 | `[locale]/cargas/loading.tsx` | Fallback de Suspense ao carregar marketplace de cargas (`pages.cargoes.loadingList`). |
 | `[locale]/cargas/[id]/page.tsx` | `notFound()` quando `getCargoById` não encontra recurso (alinhado a `negociacoes/[id]`). |
 
@@ -61,3 +63,5 @@ Este documento registra uma **auditoria leve** do App Router (Next.js 16) no Hyd
 - Para recurso ausente em SC: **`notFound()`** no servidor quando o utilizador espera 404 semântico.
 - Novas rotas com dados lentos: considerar **`loading.tsx`** no mesmo segmento.
 - Textos de boundary (`error`, `not-found`): sempre **next-intl**, chaves nos três locales.
+
+Para **React 19** (`useActionState`, Server Actions usadas na UI), ver **`docs/REACT19-CLEANUP.md`** (registro factual, não checklist de refatoração global).
