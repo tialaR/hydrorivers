@@ -5,6 +5,11 @@ import { applyMockScenario } from './support/mock-scenario';
 
 const shipper = { email: 'tiala@hydrorivers.com', password: 'hydro123' } as const;
 const carrier = { email: 'joao@naveganorte.com', password: 'hydro123' } as const;
+const pendingCarrier = { email: 'ana@rioslog.com', password: 'hydro123' } as const;
+const adminUser = { email: 'admin@hydrorivers.com', password: 'hydro123' } as const;
+
+/** Detalhe com `ownerId` implicitamente `u-shipper-1` em `market-active` (`withRelationships` + primeiro shipper no mock). */
+const cargoDetailPath = '/pt-BR/cargas/cargo-001';
 
 test.describe('Cargas (mock API)', () => {
   test.beforeEach(async ({ page }) => {
@@ -73,6 +78,45 @@ test.describe('Cargas (mock API)', () => {
     await page.getByTestId('cargo-list-search').fill('__no_hydrorivers_match_zz__');
     await expect(page.getByTestId('cargo-list-empty')).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Nenhuma carga encontrada' })).toBeVisible();
+  });
+});
+
+test.describe('Detalhe da carga — visibilidade da proposta por perfil', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.setViewportSize({ width: 1000, height: 800 });
+  });
+
+  test('embarcador dono: mensagem de publicação própria, sem formulário de proposta', async ({ page }) => {
+    await resetMockScenarioThenLogin(page, 'market-active', shipper);
+    await page.goto(cargoDetailPath);
+    await expect(page.getByTestId('cargo-owner-awaiting-card')).toBeVisible();
+    await expect(page.getByTestId('cargo-owner-awaiting-card')).toContainText(/publicada por você|Aguarde propostas/i);
+    await expect(page.getByTestId('cargo-proposal-form')).toHaveCount(0);
+  });
+
+  test('transportador aprovado em carga de terceiro: vê formulário de proposta', async ({ page }) => {
+    await resetMockScenarioThenLogin(page, 'market-active', carrier);
+    await page.goto(cargoDetailPath);
+    await expect(page.getByTestId('cargo-proposal-form')).toBeVisible();
+    await expect(page.getByTestId('cargo-proposal-form')).toContainText(/Enviar proposta|Simular proposta/i);
+  });
+
+  test('transportador não aprovado: mensagem de moderação, sem formulário', async ({ page }) => {
+    await resetMockScenarioThenLogin(page, 'market-active', pendingCarrier);
+    await page.goto(cargoDetailPath);
+    await expect(page.getByTestId('cargo-proposal-carrier-pending-card')).toBeVisible();
+    await expect(page.getByTestId('cargo-proposal-carrier-pending-card')).toContainText(/aprovação|moderação|transportador/i);
+    await expect(page.getByTestId('cargo-proposal-form')).toHaveCount(0);
+  });
+
+  test('admin: mensagem administrativa, sem formulário de proposta', async ({ page }) => {
+    await loginWithOtp(page, adminUser);
+    await page.goto('/pt-BR/dashboard');
+    await applyMockScenario(page, 'market-active');
+    await page.goto(cargoDetailPath);
+    await expect(page.getByTestId('cargo-proposal-admin-card')).toBeVisible();
+    await expect(page.getByTestId('cargo-proposal-admin-card')).toContainText(/administrativ|auditar|marketplace/i);
+    await expect(page.getByTestId('cargo-proposal-form')).toHaveCount(0);
   });
 });
 
