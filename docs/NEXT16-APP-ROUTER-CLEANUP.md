@@ -57,6 +57,11 @@ Este documento registra uma **auditoria leve** do App Router (Next.js 16) no Hyd
 
 - Onde houver fetch independentes, usar `<Suspense fallback={...}>` em volta de ilhas em vez de uma única página bloqueante.
 
+### 9. Formulários de mutação (React 19)
+
+- **Referência implementada:** publicação de carga — **`useActionState`** + Server Action que delega persistência a **`commitPublishCargo`** (ver **`docs/REACT19-CLEANUP.md`** para separação ação vs commit).
+- **Novos fluxos de escrita:** considerar o mesmo desenho quando reduzir estado duplicado ou alinhar com revalidate; **não** migrar formulários legados sem benefício claro (login, perfil, etc.).
+
 ## Checklist rápido em novos PRs
 
 - Preferir **`page.tsx` como Server Component**; `use client` só em folhas interativas.

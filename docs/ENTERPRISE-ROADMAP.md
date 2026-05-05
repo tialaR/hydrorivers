@@ -40,7 +40,7 @@ Resumo objetivo — detalhes em `README.md`, `docs/PORTFOLIO-CASE.md`, `docs/DEV
 | **Rotas / domínios** | Cargas, embarcações, negociações, rastreio, impacto, governo, dashboard, perfil, admin (vide `README.md`). |
 | **Rastreio** | Tipos operacionais (`OperationalTrackingEventKind`), inferência, timeline UI + `GET /api/rastreio` (**GET público** — gap de segurança para produção real). |
 | **Qualidade** | `npm run lint`, `typecheck`, `check:i18n`, `test` (Vitest); `test:e2e` (Playwright); `check:onboarding` (`docs/ONBOARDING-PROGRESS-CHECK.md`). |
-| **Documentação** | Auditoria de APIs, decisões de produto, planejamentos de dados/documentos/dashboard/IA/agentes. |
+| **Documentação** | Auditoria de APIs, decisões de produto, planejamentos de dados/documentos/dashboard/IA/agentes; padrão **React 19 / Server Actions** na publicação de carga (`docs/REACT19-CLEANUP.md`). |
 
 **Não implementado como produto final:** Postgres/transações enterprise; uploads de documentos com storage seguro (`docs/DOCUMENTS-MODULE.md`); dashboard executivo **completo** por persona (`docs/EXECUTIVE-DASHBOARD.md`); IA/agentes em runtime (`docs/AI-ROADMAP.md`, `docs/AGENTS-ROADMAP.md`).
 
