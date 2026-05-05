@@ -6,7 +6,6 @@ import { useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { usePathname, useRouter } from '@/core/i18n/navigation';
 import type { AppLocale } from '@/core/i18n/routing';
-import { HydroIcon } from '@/shared/ui/hydro-icon/hydro-icon';
 import styles from './locale-switcher.module.scss';
 
 const SUPPORTED_LOCALES: AppLocale[] = ['pt-BR', 'en', 'es'];
@@ -125,8 +124,6 @@ export function LocaleSwitcher() {
         <span className={styles.triggerFlag} aria-hidden>
           {visual.flag}
         </span>
-        <span className={styles.triggerCode}>{visual.code}</span>
-        <HydroIcon name="chevronDown" size={16} className={styles.triggerChevron} aria-hidden />
       </button>
       {open ? (
         <div
