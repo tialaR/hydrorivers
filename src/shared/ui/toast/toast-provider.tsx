@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { HydroIcon } from '@/shared/ui/hydro-icon/hydro-icon';
+import { toastConstants } from '@/shared/ui/toast/toast-constants';
 import styles from './toast.module.scss';
 
 export type ToastTone = 'success' | 'info' | 'error' | 'warning';
@@ -37,10 +38,10 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 
   const showToast = useCallback((toast: Omit<ToastMessage, 'id'>) => {
     const id = Date.now() + Math.random();
-    setItems((current) => [...current, { ...toast, id }].slice(-4));
+    setItems((current) => [...current, { ...toast, id }].slice(-toastConstants.maxVisibleToasts));
     window.setTimeout(() => {
       setItems((current) => current.filter((item) => item.id !== id));
-    }, toast.tone === 'error' ? 8000 : 5200);
+    }, toast.tone === 'error' ? toastConstants.autoDismissErrorMs : toastConstants.autoDismissMs);
   }, []);
 
   useEffect(() => {

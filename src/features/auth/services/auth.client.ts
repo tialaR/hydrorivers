@@ -1,5 +1,7 @@
 
-import type { HydroUser, LoginPayload, LoginResult, RegisterPayload } from '../domain/auth.types';
+import type { HydroUser, LoginPayload, LoginResult, PublicHydroUser, RegisterPayload } from '../domain/auth.types';
+import { apiRoutes } from '@/shared/routing/api-routes';
+import { httpStatus } from '@/shared/http/http-status';
 
 async function parseResponse<T>(response: Response): Promise<T> {
   const payload = await response.json().catch(() => ({}));
@@ -8,14 +10,56 @@ async function parseResponse<T>(response: Response): Promise<T> {
 }
 
 export async function getCurrentUser(): Promise<HydroUser | null> {
-  const response = await fetch('/api/auth/me', { cache: 'no-store', credentials: 'include' });
-  if (response.status === 401) return null;
+  const response = await fetch(apiRoutes.auth.me, { cache: 'no-store', credentials: 'include' });
+  if (response.status === httpStatus.unauthorized) return null;
   const payload = await parseResponse<{ user: HydroUser | null }>(response);
   return payload.user;
 }
 
+/**
+ * Login direto só para QA em ambiente não production (`apiRoutes.auth.qaDirectLogin`).
+ * Não usar em fluxos de produção.
+ */
+export type MockModeLoginAsResult = {
+  user: PublicHydroUser;
+  redirectTo: string;
+};
+
+/** Login direto por userId (`POST apiRoutes.mockMode.loginAs`) — só dev/mock no servidor. */
+export async function mockModeLoginAs(userId: string): Promise<MockModeLoginAsResult> {
+  const response = await fetch(apiRoutes.mockMode.loginAs, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ userId }),
+    credentials: 'include'
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error((payload as { reason?: string }).reason ?? 'mock-mode-login-as-failed');
+  }
+  const data = payload as MockModeLoginAsResult;
+  window.dispatchEvent(new CustomEvent('hydrorivers:auth-changed'));
+  return data;
+}
+
+export async function qaDirectLogin(email: string): Promise<HydroUser> {
+  const response = await fetch(apiRoutes.auth.qaDirectLogin, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ email }),
+    credentials: 'include'
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error((payload as { reason?: string }).reason ?? 'qa-direct-login-failed');
+  }
+  const data = payload as { user: HydroUser };
+  window.dispatchEvent(new CustomEvent('hydrorivers:auth-changed'));
+  return data.user;
+}
+
 export async function login(payload: LoginPayload): Promise<LoginResult> {
-  const response = await fetch('/api/auth/login', {
+  const response = await fetch(apiRoutes.auth.login, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(payload),
@@ -27,7 +71,7 @@ export async function login(payload: LoginPayload): Promise<LoginResult> {
 }
 
 export async function register(payload: RegisterPayload): Promise<HydroUser> {
-  const response = await fetch('/api/auth/register', {
+  const response = await fetch(apiRoutes.auth.register, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(payload),
@@ -39,7 +83,7 @@ export async function register(payload: RegisterPayload): Promise<HydroUser> {
 }
 
 export async function updateProfile(nextUser: HydroUser & { avatarUrl?: string }): Promise<HydroUser & { avatarUrl?: string }> {
-  const response = await fetch('/api/auth/profile', {
+  const response = await fetch(apiRoutes.auth.profile, {
     method: 'PUT',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(nextUser),
@@ -51,6 +95,6 @@ export async function updateProfile(nextUser: HydroUser & { avatarUrl?: string }
 }
 
 export async function logout(): Promise<void> {
-  await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+  await fetch(apiRoutes.auth.logout, { method: 'POST', credentials: 'include' });
   window.dispatchEvent(new CustomEvent('hydrorivers:auth-changed'));
 }

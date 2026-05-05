@@ -150,6 +150,110 @@
   font-size: .76rem;
 }
 
+.qaHubLead {
+  margin: 0;
+  font-size: .82rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.qaFeedback {
+  margin: 0;
+  padding: .55rem .65rem;
+  border-radius: 12px;
+  font-size: .84rem;
+  line-height: 1.45;
+}
+
+.qaFeedbackSuccess {
+  border: 1px solid color-mix(in srgb, var(--river) 35%, var(--line));
+  background: color-mix(in srgb, var(--river) 10%, var(--surface-strong));
+}
+
+.qaFeedbackError {
+  border: 1px solid color-mix(in srgb, var(--danger, #c41e3a) 45%, var(--line));
+  background: color-mix(in srgb, var(--danger, #c41e3a) 8%, var(--surface-strong));
+}
+
+.qaHubCard {
+  gap: .55rem;
+}
+
+.qaHubFields {
+  margin: 0;
+  display: grid;
+  gap: .42rem;
+}
+
+.qaHubFieldRow {
+  display: grid;
+  grid-template-columns: minmax(0, 7.8rem) 1fr;
+  gap: .35rem .55rem;
+  align-items: start;
+}
+
+@media (max-width: 480px) {
+  .qaHubFieldRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.qaHubFieldRow dt {
+  margin: 0;
+  font-size: .72rem;
+  font-weight: 720;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--muted);
+}
+
+.qaHubFieldRow dd {
+  margin: 0;
+  font-size: .82rem;
+  line-height: 1.45;
+  color: var(--text);
+}
+
+.qaHubPassword {
+  display: inline-block;
+  margin: 0;
+  padding: .12rem .38rem;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--river) 12%, var(--surface));
+  border: 1px solid var(--line);
+  font-size: .76rem;
+}
+
+.qaHubActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem;
+  align-items: center;
+}
+
+.qaHubActions .caseLink {
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
+.qaSecondaryBtn {
+  flex: 0 0 auto;
+  min-height: 2.4rem;
+  padding: 0 .75rem;
+  border-radius: 12px;
+  border: 1px solid var(--line-strong);
+  background: var(--surface-strong);
+  color: var(--text);
+  font-weight: 680;
+  cursor: pointer;
+}
+
+.qaSecondaryBtn:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--brand) 65%, transparent);
+  outline-offset: 2px;
+}
+
 .caseCard {
   align-items: center;
 }

@@ -3,6 +3,7 @@ import 'server-only';
 import { pbkdf2Sync, randomBytes, timingSafeEqual } from 'node:crypto';
 import { cookies } from 'next/headers';
 import type { HydroUser, PublicHydroUser } from '@/features/auth/domain/auth.types';
+import { cookieNames } from '@/shared/http/cookie-names';
 import { readMock } from './mock-db';
 
 const HASH_PREFIX = 'pbkdf2_sha256';
@@ -38,7 +39,7 @@ export function toPublicUser(user: HydroUser): PublicHydroUser {
 
 export async function getSessionUser() {
   const cookieStore = await cookies();
-  const sessionId = cookieStore.get('hydrorivers_session')?.value;
+  const sessionId = cookieStore.get(cookieNames.session)?.value;
   if (!sessionId) return null;
 
   return readMock('users').find((user) => user.id === sessionId) ?? null;

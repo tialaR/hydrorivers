@@ -25,7 +25,7 @@
     "email": "admin@hydrorivers.com",
     "company": "HydroRivers",
     "role": "admin",
-    "approved": false,
+    "approved": true,
     "city": "Belém, PA",
     "passwordHash": "pbkdf2_sha256$100000$hydrorivers-admin$ab428a37474350a500c4969c3bd1ad6842d292dceef3b037c3206b25bb62d3d5"
   },
@@ -35,7 +35,7 @@
     "email": "mariana@bioamazonia.coop",
     "company": "BioAmazônia Cooperativa",
     "role": "shipper",
-    "approved": false,
+    "approved": true,
     "city": "Santarém, PA",
     "passwordHash": "pbkdf2_sha256$100000$hydrorivers-mariana$f48848f7f1cf1228e6f67a0c9878f580e186c1b129b4735955a61303f77add03"
   },
@@ -45,7 +45,7 @@
     "email": "carlos@hidroviasmadeira.com",
     "company": "Hidrovias Madeira",
     "role": "carrier",
-    "approved": false,
+    "approved": true,
     "city": "Porto Velho, RO",
     "passwordHash": "pbkdf2_sha256$100000$hydrorivers-carlos$6355a3ddc3ee0a74bceaa888703856ec4cbb4e9ce83270b46bfd29625e17b2d0"
   },

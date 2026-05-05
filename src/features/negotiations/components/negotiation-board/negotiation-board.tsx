@@ -33,7 +33,13 @@ export function NegotiationBoard({ negotiations }: { negotiations: Negotiation[]
   return (
     <section className={styles.board}>
       {negotiations.map((item) => (
-        <Link key={item.id} href={`/negociacoes/${item.id}`} className={styles.linkWrap}>
+        <Link
+          key={item.id}
+          href={`/negociacoes/${item.id}`}
+          className={styles.linkWrap}
+          data-testid="negotiation-card"
+          aria-label={t('openNegotiation', { title: translateMock(locale, item.cargoTitle) })}
+        >
           <Card className={`${styles.card} ${styles[item.riskLevel ?? 'low']}`}>
             <div className={styles.top}>
               <span className={styles.icon}><HydroIcon name={iconForTitle(item.cargoTitle)} /></span>

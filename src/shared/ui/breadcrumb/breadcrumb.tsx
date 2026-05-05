@@ -1,6 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/core/i18n/navigation';
 import { HydroIcon } from '@/shared/ui/hydro-icon/hydro-icon';
+import { intlAppPaths } from '@/shared/routing/app-routes';
 import styles from './breadcrumb.module.scss';
 
 export type BreadcrumbItem = {
@@ -13,7 +14,7 @@ export async function Breadcrumb({ items }: { items: BreadcrumbItem[] }) {
 
   return (
     <nav className={styles.breadcrumb} aria-label={t('breadcrumb')}>
-      <Link href="/" className={styles.home} aria-label={t('breadcrumbHome')}>
+      <Link href={intlAppPaths.home} className={styles.home} aria-label={t('breadcrumbHome')}>
         <HydroIcon name="dock" size={16} />
       </Link>
       {items.map((item, index) => {

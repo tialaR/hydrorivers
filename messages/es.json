@@ -3,6 +3,7 @@
     "home": "Inicio",
     "dashboard": "Panel",
     "cargoes": "Cargas",
+    "myCargoes": "Mis cargas",
     "vessels": "Embarcaciones",
     "negotiations": "Negociaciones",
     "tracking": "Rastreo",
@@ -16,12 +17,137 @@
     "closeMenu": "Cerrar menú",
     "mobileMenu": "Menú de navegación",
     "language": "Cambiar idioma",
+    "localeOption": {
+      "pt-BR": "Portugués de Brasil",
+      "en": "Estados Unidos",
+      "es": "Español genérico"
+    },
     "publish": "Publicar carga",
     "profile": "Perfil",
     "primaryNavigation": "Navegación principal",
     "government": "Gobierno",
     "currentRoute": "Ruta actual",
     "subpageContext": "contexto operativo activo"
+  },
+  "cargoStatusAi": {
+    "cardTitle": "Asistente de estado de la carga",
+    "cardHint": "Texto generado por simulación interna (sin proveedor externo de IA). No sustituye decisiones operativas, contratos ni habilitación documental.",
+    "disclaimerShort": "Sugerencia y resumen automáticos (simulación).",
+    "summaryLabel": "Resumen",
+    "nextStepsLabel": "Próximos pasos sugeridos",
+    "blockersLabel": "Bloqueos",
+    "risksLabel": "Riesgos y alertas",
+    "confidenceLabel": "Confianza del análisis",
+    "sourceLabel": "Origen de la respuesta",
+    "confidence": {
+      "low": "Baja",
+      "medium": "Media",
+      "high": "Alta"
+    },
+    "source": {
+      "mockAi": "Simulación interna (mock-ai)",
+      "fallbackRule": "Regla determinística (fallback-rule)"
+    },
+    "notAuthenticatedHint": "Inicie sesión para cargar el asistente de estado de esta carga.",
+    "forbiddenHint": "Su sesión no tiene permiso para este asistente en esta carga.",
+    "loadError": "No se pudo cargar el asistente en este momento.",
+    "retry": "Actualizar asistente",
+    "loading": "Generando resumen…",
+    "emptyList": "Sin ítems.",
+    "extra": {
+      "lowDocumentReadiness": "Baja preparación documental ({value}%) — puede retrasar la reserva y revisiones."
+    },
+    "fallback": {
+      "summary": "El estado de la carga no está mapeado en esta versión del asistente. Revise manualmente la ficha, documentos y negociaciones.",
+      "nextSteps": [
+        "Valide el estado con el equipo operativo.",
+        "Verifique la documentación y los próximos hitos en la vista de la carga."
+      ],
+      "blockers": [],
+      "risks": [
+        "La interpretación automática es limitada — confirme con una fuente oficial."
+      ]
+    },
+    "status": {
+      "open": {
+        "summary": "Carga publicada en el marketplace; a la espera de propuestas alineadas con ruta, tipo y restricciones declaradas.",
+        "nextSteps": [
+          "Revise el paquete documental sugerido y vacíos antes de la primera reserva.",
+          "Supervise la ventana operativa y señales de interés en el corredor.",
+          "Registre aclaraciones en la ficha si la operación requiere condiciones adicionales."
+        ],
+        "blockers": [],
+        "risks": [
+          "Propuestas incompatibles con calado, temperatura o plazos pueden retrasar el encaje logístico.",
+          "Baja conectividad en origen puede demorar cómo el mercado percibe el estado."
+        ]
+      },
+      "bidding": {
+        "summary": "Hay cotizaciones o contrapropuestas en revisión; la decisión sigue con el embarcador y las partes involucradas.",
+        "nextSteps": [
+          "Compare términos, valores y compromisos documentales de cada propuesta.",
+          "Solicite ajustes formales cuando falte evidencia o cláusula operativa.",
+          "Defina un plazo interno para aceptar o rechazar y no perder la ventana."
+        ],
+        "blockers": [],
+        "risks": [
+          "Estancamiento en la fase de ofertas puede hacer perder la ventana de embarque prevista.",
+          "Ambigüedad en documentación fiscal o sanitaria puede reabrir la negociación."
+        ]
+      },
+      "contracting": {
+        "summary": "La negociación avanzó a contratación; foco en formalización, documentos y reserva de capacidad.",
+        "nextSteps": [
+          "Valide borradores, garantías y responsabilidades antes del aceptación final.",
+          "Sincronice el embarque con disponibilidad real de muelle y calado.",
+          "Planifique checklist de embarque y evidencias exigidas por la ruta."
+        ],
+        "blockers": [],
+        "risks": [
+          "Retroceso contractual si los requisitos regulatorios no se cumplen a tiempo.",
+          "Dependencias de terceros (terminal, fiscalización) pueden alargar plazos."
+        ]
+      },
+      "reserved": {
+        "summary": "Capacidad o condición de reserva acordada; preparar embarque y conformidad final.",
+        "nextSteps": [
+          "Confirme lacres, temperatura y lotes con el transportista.",
+          "Cierre pendientes documentales aún listadas como obligatorias.",
+          "Programe ventana de atraque e inspección en el muelle."
+        ],
+        "blockers": [],
+        "risks": [
+          "La última milla documental aún puede bloquear la liberación física de la carga.",
+          "Condiciones fluviales o portuarias pueden exigir reprogramación fina."
+        ]
+      },
+      "boarded": {
+        "summary": "Carga embarcada o en tránsito fluvial; monitoree eventos, sincronización y pruebas operativas.",
+        "nextSteps": [
+          "Siga el rastreo y registros de incidencias a lo largo del corredor.",
+          "Mantenga un canal de contingencia para retrasos o desvíos de ruta.",
+          "Prepare validación de POD y cierre fiscal."
+        ],
+        "blockers": [],
+        "risks": [
+          "Tramos con señal limitada pueden retrasar la visibilidad casi en tiempo real.",
+          "Variaciones estacionales pueden impactar ETA y conexiones de cabotaje."
+        ]
+      },
+      "delivered": {
+        "summary": "Flujo principal concluido en la simulación operativa; foco en comprobantes y cierre.",
+        "nextSteps": [
+          "Archive POD, comprobantes y comunicaciones relevantes.",
+          "Registre lecciones aprendidas e indicadores para próximos ciclos.",
+          "Valide baja documental y facturación según contrato."
+        ],
+        "blockers": [],
+        "risks": [
+          "Pendencias post-entrega (divergencia de volumen, avería) pueden aparecer tras el desembarque.",
+          "Retención incompleta de documentos puede afectar auditorías futuras."
+        ]
+      }
+    }
   },
   "auth": {
     "login": "Entrar",
@@ -107,7 +233,8 @@
     "dashboard": {
       "eyebrow": "Operación",
       "title": "Panel HydroRivers",
-      "description": "Resumen de cargas, embarcaciones y negociaciones en curso."
+      "description": "Resumen de cargas, embarcaciones y negociaciones en curso.",
+      "myCargoesCta": "Ver mis cargas"
     },
     "devOnboarding": {
       "eyebrow": "Equipo",
@@ -147,13 +274,23 @@
     "cargoes": {
       "eyebrow": "Marketplace",
       "title": "Cargas disponibles",
-      "description": "Cargas fluviales y de cabotaje listas para recibir propuestas."
+      "description": "Cargas fluviales y de cabotaje listas para recibir propuestas.",
+      "loadingList": "Cargando cargas disponibles…"
     },
     "newCargo": {
       "eyebrow": "Publicación",
       "title": "Publicar nueva carga",
       "description": "Simula la apertura de una carga para recibir cotizaciones de embarcaciones aptas.",
       "breadcrumbCurrent": "Publicar nueva carga"
+    },
+    "minhasCargas": {
+      "eyebrow": "Cuenta",
+      "title": "Mis cargas",
+      "description": "Cargas vinculadas a tu rol (publicadas por ti o con negociación/propuesta en el mock). Para todo el marketplace, usa Cargas.",
+      "breadcrumbCurrent": "Mis cargas",
+      "createdBanner": "Carga publicada y guardada en el mock. Aparece aquí y en el marketplace.",
+      "emptyTitle": "Sin cargas vinculadas",
+      "emptyDescription": "Publica una carga o participa en una negociación en el mock para verla aquí."
     },
     "vessels": {
       "eyebrow": "Flota",
@@ -307,6 +444,8 @@
     "cargoDetail": {
       "kicker": "Oportunidad acuaviaria",
       "impactDescription": "Estimación visual de impacto al usar una ruta acuaviaria en vez de transporte carretero largo.",
+      "ownerAwaitingTitle": "Tu publicación está en el marketplace",
+      "ownerAwaitingDescription": "Esta carga la publicaste tú. Espera propuestas de transportistas aprobados.",
       "sendProposal": "Enviar propuesta",
       "amount": "Valor",
       "estimatedTime": "Tiempo estimado",
@@ -418,7 +557,10 @@
     "windowPlaceholder": "08-12 mayo",
     "targetPricePlaceholder": "R$ 8.400",
     "descriptionPlaceholder": "Carga refrigerada, con recolección en cooperativa y entrega en el puerto regional.",
-    "loading": "Publicando..."
+    "loading": "Publicando...",
+    "fillAllRequired": "Complete todos los campos obligatorios antes de publicar.",
+    "carrierCannotPublish": "Los transportadores no pueden publicar cargas en este flujo.",
+    "publishFailed": "No se pudo publicar la carga. Inténtelo de nuevo."
   },
   "common": {
     "co2": "CO₂ evitado",
@@ -475,6 +617,7 @@
     "mockUser": "Usuario HydroRivers",
     "draftPublication": "Borrador de publicación",
     "openCargo": "Abrir carga {title}",
+    "openNegotiation": "Abrir negociación {title}",
     "waterwayRoute": "Ruta fluvial/cabotaje",
     "target": "Objetivo",
     "viewCargo": "Ver carga",
@@ -644,6 +787,15 @@
       }
     }
   },
+  "errors": {
+    "notFound": {
+      "eyebrow": "404",
+      "title": "Página no encontrada",
+      "description": "La dirección puede ser incorrecta o el recurso ya no existe en este entorno mock.",
+      "linkHome": "Ir al inicio",
+      "linkCargoes": "Ver cargas en el marketplace"
+    }
+  },
   "metadata": {
     "title": "HydroRivers",
     "description": "Marketplace de carga fluvial y cabotaje para corredores digitales de carga."
@@ -653,7 +805,6 @@
     "subtitle": "Acceso rápido a escenarios, cuentas y validaciones del producto.",
     "button": "Modo mock",
     "close": "Cerrar panel QA",
-    "accountsTitle": "Cuentas falsas",
     "casesTitle": "Escenarios de prueba",
     "openCase": "Abrir caso",
     "passwordLabel": "Contraseña",
@@ -661,6 +812,74 @@
       "shipper": "Embarcador",
       "carrier": "Transportista",
       "admin": "Administrador"
+    },
+    "qaHub": {
+      "sectionTitle": "QA Hub — cuentas demo",
+      "sectionLead": "Tarjetas para probar con datos mock. “Usar en login” rellena el formulario (flujo normal con OTP). “Entrar como este usuario” llama POST /api/mock-mode/login-as y redirige (sin OTP). Solo fuera de production salvo flag de CI.",
+      "fieldLabels": {
+        "name": "Nombre",
+        "email": "Correo",
+        "password": "Contraseña fake",
+        "role": "Rol",
+        "approved": "Aprobado",
+        "company": "Empresa",
+        "testsWhat": "Qué prueba",
+        "mustValidate": "Qué validar",
+        "expectedResult": "Resultado esperado"
+      },
+      "useOnLogin": "Usar en login",
+      "signInAs": "Entrar como este usuario",
+      "signingIn": "Entrando…",
+      "approvedYes": "sí",
+      "approvedNo": "no",
+      "feedbackError": "No fue posible entrar como este usuario demo. Usa dev/mock; en production solo con flag de CI. Verifica que el userId exista en el mock.",
+      "personas": {
+        "tiala": {
+          "cardName": "Tiala Rocha",
+          "represents": "Embarcadora aprobada — Cooperativa Açaí Norte.",
+          "testsWhat": "Publicación y gestión de cargas propias; flujos de embarcador aprobado.",
+          "validateLine": "Validar rutas privadas y cargas ligadas al owner.",
+          "expectedLine": "Esperado: experiencia completa de shipper sin bloqueo por moderación.",
+          "assistantNote": "Cargo Status Assistant: usa una carga donde seas owner (marketplace). Esperado: tarjeta con resumen, próximos pasos, riesgos y origen mock-ai cuando aplique.",
+          "feedbackSuccess": "Entraste como Tiala Rocha, embarcadora aprobada. Prueba cargas propias y el Asistente de Estado de Carga."
+        },
+        "joao": {
+          "cardName": "João Navegante",
+          "represents": "Transportista aprobado — Navega Norte.",
+          "testsWhat": "Propuestas y negociaciones donde el transportista está vinculado.",
+          "validateLine": "Validar listas de negociación y acceso cuando hay vínculo.",
+          "expectedLine": "Esperado: transportista activo sin moderación pendiente.",
+          "assistantNote": "Cargo Status Assistant: prueba una carga con negociación para este carrierId. Esperado: permitido con vínculo; sin vínculo, bloqueado.",
+          "feedbackSuccess": "Entraste como João Navegante, transportista aprobado. Prueba negociaciones vinculadas y el asistente en alcance."
+        },
+        "carlos": {
+          "cardName": "Carlos Hidrovias Madeira",
+          "represents": "Transportista aprobado — Hidrovias Madeira.",
+          "testsWhat": "Comparar acceso autorizado vs bloqueado según negociación/carga.",
+          "validateLine": "Sin vínculo espera bloqueo; con vínculo espera acceso.",
+          "expectedLine": "Esperado: refuerzo del control de alcance del asistente/API.",
+          "assistantNote": "Úsalo para validar bloqueo en carga ajena: sin datos sensibles ni asistente autorizado fuera de alcance.",
+          "feedbackSuccess": "Entraste como Carlos (Hidrovias Madeira). Compara cargas con y sin negociación."
+        },
+        "ana": {
+          "cardName": "Ana RiosLog",
+          "represents": "Transportista en moderación (no aprobada).",
+          "testsWhat": "Flujos donde carrier pendiente encuentra restricciones.",
+          "validateLine": "Validar mensajes de moderación o perfil pendiente.",
+          "expectedLine": "Esperado: bloqueos por approved=false donde aplique el producto.",
+          "assistantNote": "Cargo Status Assistant: con Ana espera denegación por cuenta antes del alcance de carga.",
+          "feedbackSuccess": "Entraste como Ana RiosLog (moderación). Valida restricciones de carrier pendiente."
+        },
+        "admin": {
+          "cardName": "Admin HydroRivers",
+          "represents": "Administración interna HydroRivers.",
+          "testsWhat": "Panel admin, cambio de escenarios mock y herramientas restringidas.",
+          "validateLine": "Validar acceso a /admin y POST mock-mode cuando aplique.",
+          "expectedLine": "Esperado: control amplio sobre datasets demo.",
+          "assistantNote": "Admin omite alcance del asistente — útil para smoke rápido en cualquier carga.",
+          "feedbackSuccess": "Entraste como administrador. Usa mock-mode y validaciones amplias."
+        }
+      }
     },
     "cases": {
       "cargoList": {

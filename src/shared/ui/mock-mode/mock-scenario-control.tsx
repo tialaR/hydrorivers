@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { useAuthSession } from '@/features/auth/hooks/use-auth-session';
 import { HydroIcon } from '@/shared/ui/hydro-icon/hydro-icon';
 import { mockScenarioIds, type MockScenarioId } from '@/shared/config/mock-scenario-ids';
+import { apiRoutes } from '@/shared/routing/api-routes';
 import styles from './mock-mode.module.scss';
 
 type MockModeApiResponse = {
@@ -15,7 +16,7 @@ type MockModeApiResponse = {
 };
 
 async function readActiveScenario(): Promise<{ active: string | null; scenarioId: MockScenarioId | null }> {
-  const res = await fetch('/api/mock-mode', { credentials: 'include' });
+  const res = await fetch(apiRoutes.mockMode.root, { credentials: 'include' });
   const json = (await res.json()) as MockModeApiResponse;
   const next = json.data?.activeScenario ?? null;
   const scenarioId =
@@ -52,7 +53,7 @@ export function MockScenarioControl() {
     setPending(true);
     setError(false);
     try {
-      const res = await fetch('/api/mock-mode', {
+      const res = await fetch(apiRoutes.mockMode.root, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

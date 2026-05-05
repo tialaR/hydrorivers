@@ -1,20 +1,42 @@
 
 'use client';
 
-import { FormEvent, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { Anchor, ArrowLeft, Copy, LockKeyhole, Mail, ShieldCheck, ShipWheel, UserRound } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
+import { useSearchParams } from 'next/navigation';
 import { useRouter } from '@/core/i18n/navigation';
 import { Button } from '@/shared/ui/button/button';
+import { QA_LOGIN_PREFILL_STORAGE_KEY } from '@/shared/qa/login-prefill';
+import { routeSearchParams } from '@/shared/routing/route-search-params';
+import { intlAppPaths } from '@/shared/routing/app-routes';
 import { login, register } from '../../services/auth.client';
 import type { PublicUserRole } from '../../domain/auth.types';
 import styles from './auth-form.module.scss';
+
+function resolvePostLoginHref(nextParam: string | null, locale: string): string {
+  const fallback = intlAppPaths.dashboard.home;
+  if (!nextParam) return fallback;
+  let decoded = nextParam;
+  try {
+    decoded = decodeURIComponent(nextParam);
+  } catch {
+    return fallback;
+  }
+  if (!decoded.startsWith('/') || decoded.startsWith('//')) return fallback;
+  const prefix = `/${locale}`;
+  if (decoded !== prefix && !decoded.startsWith(`${prefix}/`)) return fallback;
+  if (decoded === prefix) return intlAppPaths.home;
+  return decoded.slice(prefix.length) || fallback;
+}
 
 type Mode = 'login' | 'register';
 
 export function AuthForm({ mode }: { mode: Mode }) {
   const t = useTranslations('auth');
+  const locale = useLocale();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [error, setError] = useState('');
   const [pending, setPending] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -24,6 +46,23 @@ export function AuthForm({ mode }: { mode: Mode }) {
   const [otp, setOtp] = useState('');
   const [otpCode, setOtpCode] = useState('');
   const [challenge, setChallenge] = useState('');
+
+  useEffect(() => {
+    if (mode !== 'login' || typeof window === 'undefined') return;
+    const handle = window.setTimeout(() => {
+      try {
+        const raw = sessionStorage.getItem(QA_LOGIN_PREFILL_STORAGE_KEY);
+        if (!raw) return;
+        sessionStorage.removeItem(QA_LOGIN_PREFILL_STORAGE_KEY);
+        const parsed = JSON.parse(raw) as { email?: string; password?: string };
+        if (typeof parsed.email === 'string') setEmail(parsed.email);
+        if (typeof parsed.password === 'string') setPassword(parsed.password);
+      } catch {
+        sessionStorage.removeItem(QA_LOGIN_PREFILL_STORAGE_KEY);
+      }
+    }, 0);
+    return () => window.clearTimeout(handle);
+  }, [mode]);
 
   const title = useMemo(() => {
     if (mode !== 'login') return t('registerTitle');
@@ -79,11 +118,11 @@ export function AuthForm({ mode }: { mode: Mode }) {
             setPending(false);
             return;
           }
-          if (result.user) router.push('/dashboard');
+          if (result.user) router.push(resolvePostLoginHref(searchParams.get(routeSearchParams.next), locale));
         } else {
           const result = await login({ email, password, otp, challenge });
           if (!result.user) throw new Error('invalid-otp');
-          router.push('/dashboard');
+          router.push(resolvePostLoginHref(searchParams.get(routeSearchParams.next), locale));
         }
       } else {
         await register({
@@ -93,7 +132,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
           email: String(form.get('email')),
           password: String(form.get('password'))
         });
-        router.push('/dashboard');
+        router.push(intlAppPaths.dashboard.home);
       }
     } catch (nextError) {
       const code = nextError instanceof Error ? nextError.message : 'request-failed';

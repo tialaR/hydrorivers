@@ -26,6 +26,7 @@ vi.mock('@/shared/server/auth', () => ({
 }));
 
 import { POST } from '@/app/api/auth/register/route';
+import { cookieNames } from '@/shared/http/cookie-names';
 
 describe('POST /api/auth/register', () => {
   beforeEach(() => {
@@ -113,7 +114,7 @@ describe('POST /api/auth/register', () => {
     expect(mockUpsertUser).toHaveBeenCalledTimes(1);
     expect(mockHashPassword).toHaveBeenCalledWith('123456');
     expect(cookieStore.set).toHaveBeenCalledWith(
-      'hydrorivers_session',
+      cookieNames.session,
       expect.any(String),
       expect.objectContaining({ httpOnly: true, sameSite: 'lax' })
     );
