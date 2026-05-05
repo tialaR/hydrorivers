@@ -169,7 +169,7 @@ describe('POST /api/ai/cargo-status', () => {
       return [];
     });
 
-    const response = await post({ cargoId: 'cargo-test-1', locale: 'en' });
+    const response = await post({ cargoId: 'cargo-test-1', locale: 'en-US' });
     expect(response.status).toBe(200);
     const body = await response.json();
     expect(body.data).toMatchObject({

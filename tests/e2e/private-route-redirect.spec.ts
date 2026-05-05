@@ -3,7 +3,7 @@ import type { AppLocale } from '@/shared/routing/route-types';
 import { appRoutes } from '@/shared/routing/app-routes';
 
 /**
- * Rotas com guarda em middleware.ts (prefixo de locale + path localizado).
+ * Rotas com guarda em proxy.ts (prefixo de locale + path localizado).
  * Sem cookie hydrorivers_session → redirect para /{locale}/login?next={pathname}
  */
 const L = 'pt-BR' as AppLocale;

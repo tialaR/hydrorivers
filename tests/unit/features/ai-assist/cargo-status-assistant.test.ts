@@ -32,7 +32,7 @@ describe('buildCargoStatusAssist', () => {
 
   it('usa fallback-rule para status fora do mapa i18n', () => {
     const odd = { ...minimalOpen, status: 'custom_unknown' } as unknown as Cargo;
-    const result = buildCargoStatusAssist(odd, 'en');
+    const result = buildCargoStatusAssist(odd, 'en-US');
     expect(result.source).toBe('fallback-rule');
     expect(result.confidence).toBe('low');
   });

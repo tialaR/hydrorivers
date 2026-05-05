@@ -46,6 +46,6 @@ test('com sessão ativa troca idioma no dashboard e permanece autenticado', asyn
   await expect(englishMenuItem).toBeVisible();
   await englishMenuItem.click();
 
-  await expect(page).toHaveURL(/\/en\/dashboard(\/)?$/);
+  await expect(page).toHaveURL(/\/en-US\/dashboard(\/)?$/);
   await expect(page.getByRole('button', { name: /log out/i })).toBeVisible();
 });

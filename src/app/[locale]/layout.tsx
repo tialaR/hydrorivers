@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import { Analytics } from '@vercel/analytics/next';
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
-import { getMessages, getTranslations } from 'next-intl/server';
+import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/core/i18n/routing';
+import '../globals.scss';
 import { AppHeader } from '@/shared/layout/app-header/app-header';
 import { AppFooter } from '@/shared/layout/app-footer';
 import { ThemeProvider } from '@/shared/providers/theme-provider';
@@ -33,19 +34,25 @@ export default async function LocaleLayout({
     notFound();
   }
 
+  setRequestLocale(locale);
+
   const messages = await getMessages({ locale });
 
   return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
-      <ThemeProvider>
-        <ToastProvider>
-          <AppHeader />
-          {children}
-          <AppFooter />
-          {isMockQaUiEnabled() ? <MockMode /> : null}
-          <Analytics />
-        </ToastProvider>
-      </ThemeProvider>
-    </NextIntlClientProvider>
+    <html lang={locale}>
+      <body>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <ThemeProvider>
+            <ToastProvider>
+              <AppHeader />
+              {children}
+              <AppFooter />
+              {isMockQaUiEnabled() ? <MockMode /> : null}
+              <Analytics />
+            </ToastProvider>
+          </ThemeProvider>
+        </NextIntlClientProvider>
+      </body>
+    </html>
   );
 }

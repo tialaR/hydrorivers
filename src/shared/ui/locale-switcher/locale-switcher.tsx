@@ -8,12 +8,12 @@ import { usePathname, useRouter } from '@/core/i18n/navigation';
 import type { AppLocale } from '@/core/i18n/routing';
 import styles from './locale-switcher.module.scss';
 
-const SUPPORTED_LOCALES: AppLocale[] = ['pt-BR', 'en', 'es'];
+const SUPPORTED_LOCALES: AppLocale[] = ['pt-BR', 'en-US', 'es'];
 
-/** BCP-47-style codes shown in UI; routing keys stay pt-BR / en / es. */
+/** Labels exibidos no menu (BCP-47). */
 const LOCALE_VISUAL: Record<AppLocale, { flag: string; code: string }> = {
   'pt-BR': { flag: '🇧🇷', code: 'pt-BR' },
-  en: { flag: '🇺🇸', code: 'en-US' },
+  'en-US': { flag: '🇺🇸', code: 'en-US' },
   es: { flag: '🇪🇸', code: 'es' }
 };
 

@@ -9,5 +9,5 @@ test('troca de idioma atualiza rota para inglês', async ({ page }) => {
   await localeTrigger.click();
   await page.getByRole('menuitem', { name: /en-US/i }).click();
 
-  await expect(page).toHaveURL(/\/en(\/)?$/);
+  await expect(page).toHaveURL(/\/en-US(\/)?$/);
 });
