@@ -11,14 +11,14 @@ const adminUser = { email: 'admin@hydrorivers.com', password: 'hydro123' } as co
 /** Detalhe com `ownerId` implicitamente `u-shipper-1` em `market-active` (`withRelationships` + primeiro shipper no mock). */
 const cargoDetailPath = '/pt-BR/cargas/cargo-001';
 
-test.describe('Cargas (mock API)', () => {
+test.describe('Cargas (publicação via Server Action)', () => {
   test.beforeEach(async ({ page }) => {
     /** Largura ≤1024px: lista expõe a busca nativa (`.nativeSearch`); em desktop ela fica `display:none`). */
     await page.setViewportSize({ width: 1000, height: 800 });
     await resetMockScenarioThenLogin(page, 'market-active', shipper);
   });
 
-  test('embarcador publica carga; ownerId na resposta é o shipper e a lista mostra o novo item', async ({
+  test('embarcador publica carga e vê o item em /minhas-cargas após submit', async ({
     page
   }) => {
     const marker = `e2e-cargo-${Date.now()}`;
@@ -32,20 +32,11 @@ test.describe('Cargas (mock API)', () => {
     await page.getByPlaceholder(/R\$ 8\.400/).fill('R$ 9.000');
     await page.getByPlaceholder(/Carga refrigerada/i).fill('Descrição E2E publicação');
 
-    const [post] = await Promise.all([
-      page.waitForResponse(
-        (response) => response.url().includes('/api/cargas') && response.request().method() === 'POST'
-      ),
-      page.getByTestId('new-cargo-submit').click()
-    ]);
+    await page.getByTestId('new-cargo-submit').click();
 
-    expect(post.status()).toBe(201);
-    const body = (await post.json()) as { data?: { ownerId?: string; cargoType?: string } };
-    expect(body.data?.ownerId).toBe('u-shipper-1');
-    expect(body.data?.cargoType).toBe(marker);
-
-    await page.goto('/pt-BR/cargas');
-    await page.getByTestId('cargo-list-search').fill(marker);
+    await expect(page).toHaveURL(/\/pt-BR\/minhas-cargas\?created=mock-/);
+    await expect(page.getByTestId('minhas-cargas-created-banner')).toBeVisible();
+    await expect(page.getByTestId('minhas-cargas-grid')).toBeVisible();
     await expect(page.getByTestId('cargo-card').filter({ hasText: marker })).toHaveCount(1);
   });
 
