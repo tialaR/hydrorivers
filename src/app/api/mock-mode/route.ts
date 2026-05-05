@@ -2,6 +2,7 @@ import { getActiveMockScenario, resetMockScenario } from '@/shared/server/mock-d
 import { mockScenarioIds } from '@/shared/server/mock-scenarios';
 import { getSessionUser } from '@/shared/server/auth';
 import { invalidPayload } from '@/shared/server/api-errors';
+import { httpStatus } from '@/shared/http/http-status';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -37,8 +38,8 @@ function parseMockModeBody(raw: string): { scenario?: string } | Response {
 
 export async function POST(request: Request) {
   const user = await getSessionUser();
-  if (!user) return Response.json({ error: 'unauthenticated' }, { status: 401 });
-  if (user.role !== 'admin') return Response.json({ error: 'forbidden' }, { status: 403 });
+  if (!user) return Response.json({ error: 'unauthenticated' }, { status: httpStatus.unauthorized });
+  if (user.role !== 'admin') return Response.json({ error: 'forbidden' }, { status: httpStatus.forbidden });
 
   const rawBody = await request.text();
   const parsed = parseMockModeBody(rawBody);

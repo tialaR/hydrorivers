@@ -7,6 +7,7 @@ import type { Cargo, CargoStatus } from '@/features/marketplace/domain/marketpla
 import { cargoCacheRevalidateProfile, cargoCacheTags } from '@/features/cargos/cache/cargo-cache-tags';
 import { routing } from '@/core/i18n/routing';
 import { appRoutes } from '@/shared/routing/app-routes';
+import { httpStatus } from '@/shared/http/http-status';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -78,5 +79,5 @@ export async function POST(request: Request) {
     revalidatePath(appRoutes.dashboard.home(locale));
   }
 
-  return Response.json({ data: cargo }, { status: 201 });
+  return Response.json({ data: cargo }, { status: httpStatus.created });
 }

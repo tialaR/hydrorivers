@@ -23,6 +23,7 @@ vi.mock('@/shared/server/auth', () => ({
 }));
 
 import { POST } from '@/app/api/auth/login/route';
+import { cookieNames } from '@/shared/http/cookie-names';
 
 describe('POST /api/auth/login', () => {
   beforeEach(() => {
@@ -159,7 +160,7 @@ describe('POST /api/auth/login', () => {
 
     expect(secondResponse.status).toBe(200);
     expect(cookieStore.set).toHaveBeenCalledWith(
-      'hydrorivers_session',
+      cookieNames.session,
       'u-shipper-1',
       expect.objectContaining({ httpOnly: true, sameSite: 'lax' })
     );

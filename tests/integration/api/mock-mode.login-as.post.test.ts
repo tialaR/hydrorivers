@@ -24,6 +24,7 @@ vi.mock('@/shared/server/auth', () => ({
 import type { HydroUser } from '@/features/auth/domain/auth.types';
 import { POST } from '@/app/api/mock-mode/login-as/route';
 import { apiRoutes } from '@/shared/routing/api-routes';
+import { cookieNames } from '@/shared/http/cookie-names';
 
 const loginAsPostUrl = `http://localhost${apiRoutes.mockMode.loginAs}`;
 
@@ -134,7 +135,7 @@ describe('POST /api/mock-mode/login-as', () => {
       redirectTo: '/cargas'
     });
     expect(cookieStore.set).toHaveBeenCalledWith(
-      'hydrorivers_session',
+      cookieNames.session,
       'u-shipper-1',
       expect.objectContaining({ httpOnly: true, sameSite: 'lax', path: '/' })
     );
@@ -145,7 +146,7 @@ describe('POST /api/mock-mode/login-as', () => {
 
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toMatchObject({ redirectTo: '/admin' });
-    expect(cookieStore.set).toHaveBeenCalledWith('hydrorivers_session', 'u-admin-1', expect.any(Object));
+    expect(cookieStore.set).toHaveBeenCalledWith(cookieNames.session, 'u-admin-1', expect.any(Object));
   });
 
   it('redirectTo /cargas para carrier aprovado', async () => {

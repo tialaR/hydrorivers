@@ -1,5 +1,8 @@
 import { cookies } from 'next/headers';
 import type { HydroUser, PublicUserRole } from '@/features/auth/domain/auth.types';
+import { sessionCookieOptions } from '@/features/auth/domain/auth-constants';
+import { cookieNames } from '@/shared/http/cookie-names';
+import { httpStatus } from '@/shared/http/http-status';
 import { hashPassword, isNonEmptyText, toPublicUser } from '@/shared/server/auth';
 import { forbidden, invalidPayload } from '@/shared/server/api-errors';
 import { readMock, upsertUser } from '@/shared/server/mock-db';
@@ -28,7 +31,7 @@ export async function POST(request: Request) {
   const users = readMock('users');
   const existing = users.find((item) => item.email.toLowerCase() === email);
   if (existing) {
-    return Response.json({ error: 'email-already-registered' }, { status: 409 });
+    return Response.json({ error: 'email-already-registered' }, { status: httpStatus.conflict });
   }
 
   const user: HydroUser = {
@@ -44,12 +47,7 @@ export async function POST(request: Request) {
   upsertUser(user);
 
   const cookieStore = await cookies();
-  cookieStore.set('hydrorivers_session', user.id, {
-    httpOnly: true,
-    sameSite: 'lax',
-    path: '/',
-    maxAge: 60 * 60 * 24 * 7
-  });
+  cookieStore.set(cookieNames.session, user.id, sessionCookieOptions);
 
-  return Response.json({ user: toPublicUser(user) }, { status: 201 });
+  return Response.json({ user: toPublicUser(user) }, { status: httpStatus.created });
 }

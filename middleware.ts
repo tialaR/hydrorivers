@@ -1,6 +1,7 @@
 import createMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
 import { routing } from './src/core/i18n/routing';
+import { cookieNames } from './src/shared/http/cookie-names';
 import { middlewarePrivateIntlPaths } from './src/shared/routing/app-routes';
 import { routeSearchParams } from './src/shared/routing/route-search-params';
 
@@ -19,7 +20,7 @@ export default function middleware(request: NextRequest) {
   const { locale, localizedPath } = getLocaleAndPath(pathname);
   const isPrivate = privateRoutes.some((route) => localizedPath === route || localizedPath.startsWith(`${route}/`));
 
-  if (isPrivate && !request.cookies.get('hydrorivers_session')?.value) {
+  if (isPrivate && !request.cookies.get(cookieNames.session)?.value) {
     const url = request.nextUrl.clone();
     url.pathname = `/${locale}/login`;
     url.searchParams.set(routeSearchParams.next, pathname);

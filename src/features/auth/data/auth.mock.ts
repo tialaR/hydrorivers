@@ -1,7 +1,5 @@
 import type { HydroUser } from '../domain/auth.types';
 
-export const DEMO_PASSWORD = 'hydro123';
-
 export const defaultUsers: HydroUser[] = [
   {
     id: 'u-shipper-1',

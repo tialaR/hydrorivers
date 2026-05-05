@@ -4,6 +4,7 @@
  */
 
 import { sanitizeUseCaseLogValue } from '@/shared/observability/use-case-logger';
+import { isDevScenarioLogsEnabled, isDevScenarioVerboseEnabled } from '@/shared/config/env';
 
 export type DevScenarioStatus =
   | 'started'
@@ -44,11 +45,11 @@ const BAR = '━━━━━━━━━━━━━━━━━━━━━━�
 
 /** Somente com HYDRORIVERS_DEV_SCENARIO_LOGS=true (evita poluir o terminal em dev/mock). */
 export function shouldEmitDevScenarioReports(): boolean {
-  return process.env.HYDRORIVERS_DEV_SCENARIO_LOGS === 'true';
+  return isDevScenarioLogsEnabled();
 }
 
 export function isDevScenarioVerbose(): boolean {
-  return process.env.HYDRORIVERS_DEV_SCENARIO_VERBOSE === 'true';
+  return isDevScenarioVerboseEnabled();
 }
 
 function fmtSection(label: string, lines: string[] | undefined): string[] {
