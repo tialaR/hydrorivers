@@ -1,5 +1,42 @@
 [
   {
+    "id": "neg-1777978923057",
+    "cargoId": "cargo-001",
+    "vesselId": "vessel-001",
+    "shipperId": "u-shipper-1",
+    "carrierId": "u-carrier-1",
+    "cargoTitle": "Polpa de açaí congelada — cooperativa ribeirinha",
+    "vesselName": "Comboio Rio Negro",
+    "stage": "contract",
+    "status": "accepted",
+    "amount": "R$ 7.500 e2e",
+    "lastUpdate": "2026-05-05T11:02:03.541Z",
+    "parties": [
+      "Coop. Açaí Pará",
+      "Navega Norte"
+    ],
+    "route": "Belém–Santarém",
+    "paymentTerms": "A combinar",
+    "insurance": "A validar",
+    "documents": [
+      "Proposta comercial"
+    ],
+    "nextStep": "Aguardar aceite do embarcador",
+    "riskLevel": "low",
+    "history": [
+      {
+        "title": "Proposta criada",
+        "description": "Proposta enviada por Navega Norte.",
+        "date": "2026-05-05T11:02:03.057Z"
+      },
+      {
+        "title": "Status atualizado para accepted",
+        "description": "Alteração realizada por Cooperativa Açaí Norte.",
+        "date": "2026-05-05T11:02:03.541Z"
+      }
+    ]
+  },
+  {
     "id": "neg-001",
     "cargoTitle": "Polpa de açaí congelada — cooperativa ribeirinha",
     "vesselName": "Frio Tapajós",
