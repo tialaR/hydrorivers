@@ -13,7 +13,7 @@ export function NegotiationDetail({ negotiation }: { negotiation: Negotiation })
   return (
     <section className={styles.layout}>
       <Card className={styles.summary}>
-        <span><HydroIcon name="document" /> {common(`dealStage.${negotiation.stage}`)}</span>
+        <span data-testid="negotiation-stage-label"><HydroIcon name="document" /> {common(`dealStage.${negotiation.stage}`)}</span>
         <h2>{translateMock(locale, negotiation.cargoTitle)}</h2>
         <p>{negotiation.route} • {negotiation.vesselName}</p>
         <strong>{negotiation.amount}</strong>

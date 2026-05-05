@@ -478,6 +478,7 @@
     "mockUser": "HydroRivers user",
     "draftPublication": "Draft publication",
     "openCargo": "Open cargo {title}",
+    "openNegotiation": "Open negotiation {title}",
     "waterwayRoute": "River/cabotage route",
     "target": "Target",
     "viewCargo": "View cargo",
