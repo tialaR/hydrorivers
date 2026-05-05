@@ -87,9 +87,28 @@ test.describe('Detalhe da carga — visibilidade da proposta por perfil', () => 
 
   test('transportador aprovado em carga de terceiro: vê formulário de proposta', async ({ page }) => {
     await resetMockScenarioThenLogin(page, 'market-active', carrier);
+    const before = await page.request.get('/api/negociacoes');
+    expect(before.status()).toBe(200);
+    const beforeBody = (await before.json()) as { data?: Array<{ id: string; cargoId?: string; carrierId?: string }> };
+    const beforeCount = beforeBody.data?.length ?? 0;
+
     await page.goto(cargoDetailPath);
     await expect(page.getByTestId('cargo-proposal-form')).toBeVisible();
     await expect(page.getByTestId('cargo-proposal-form')).toContainText(/Enviar proposta|Simular proposta/i);
+
+    await page.getByTestId('cargo-proposal-form').locator('input[name="amount"]').fill('R$ 7.500 e2e');
+    await page.getByTestId('cargo-proposal-form').locator('button[type="submit"]').click();
+
+    const after = await page.request.get('/api/negociacoes');
+    expect(after.status()).toBe(200);
+    const afterBody = (await after.json()) as { data?: Array<{ id: string; cargoId?: string; carrierId?: string; amount?: string }> };
+    const afterList = afterBody.data ?? [];
+    expect(afterList.length).toBe(beforeCount + 1);
+    expect(afterList[0]).toMatchObject({
+      cargoId: 'cargo-001',
+      carrierId: 'u-carrier-1',
+      amount: 'R$ 7.500 e2e'
+    });
   });
 
   test('transportador não aprovado: mensagem de moderação, sem formulário', async ({ page }) => {

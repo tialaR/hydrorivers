@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Card } from '@/shared/ui/card/card';
 import { Button } from '@/shared/ui/button/button';
@@ -52,15 +52,49 @@ export function CargoDetail({ cargo, viewer }: { cargo: Cargo; viewer?: CargoVie
   const locale = useLocale();
   const { showForHttpStatus } = useHumanizedHttpToast();
   const [proposalCount, setProposalCount] = useState(2);
+  const [submittingProposal, setSubmittingProposal] = useState(false);
 
   const cargoType = translateCargoType(common, cargo.cargoType);
   const proposalVisibility = getCargoProposalVisibility(viewer ?? null, cargo);
 
-  function simulateProposal() {
-    setProposalCount((value) => value + 1);
-    showForHttpStatus(httpStatus.created, 'cargo.proposal', {
-      title: translateMock(locale, cargo.title)
-    });
+  async function submitProposal(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (submittingProposal) return;
+
+    const fd = new FormData(event.currentTarget);
+    const amount = String(fd.get('amount') ?? '').trim();
+    if (!amount) {
+      showForHttpStatus(httpStatus.badRequest, 'cargo.proposal');
+      return;
+    }
+
+    setSubmittingProposal(true);
+    try {
+      const response = await fetch('/api/negociacoes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          cargoId: cargo.id,
+          amount,
+          // vesselId opcional: API resolve embarcação do carrier quando ausente.
+          paymentTerms: String(fd.get('operationPlan') ?? '').trim() || undefined,
+          insurance: String(fd.get('riskNote') ?? '').trim() || undefined,
+          documents: [String(fd.get('documentCommitment') ?? '').trim()].filter(Boolean)
+        })
+      });
+      showForHttpStatus(response.status, 'cargo.proposal', {
+        title: translateMock(locale, cargo.title)
+      });
+      if (!response.ok) return;
+      setProposalCount((value) => value + 1);
+      event.currentTarget.reset();
+    } catch {
+      showForHttpStatus(httpStatus.internalServerError, 'cargo.proposal', {
+        title: translateMock(locale, cargo.title)
+      });
+    } finally {
+      setSubmittingProposal(false);
+    }
   }
 
   return (
@@ -158,16 +192,16 @@ export function CargoDetail({ cargo, viewer }: { cargo: Cargo; viewer?: CargoVie
 
       {proposalVisibility.kind === 'show_form' ? (
         <Card className={styles.formCard} data-testid="cargo-proposal-form">
-          <form className={styles.form}>
+          <form className={styles.form} onSubmit={submitProposal}>
             <h3>{page('sendProposal')}</h3>
-            <label>{page('amount')}<input placeholder={cargo.targetPrice} inputMode="decimal" /></label>
-            <label>{page('estimatedTime')}<input placeholder={page('estimatedTimePlaceholder')} /></label>
-            <label>{page('vesselCompatibility')}<input placeholder={page('vesselCompatibilityPlaceholder')} /></label>
-            <label>{page('documentCommitment')}<select defaultValue="ready"><option value="ready">{page('documentReady')}</option><option value="pending">{page('documentPending')}</option></select></label>
-            <label>{page('operationPlan')}<input placeholder={page('operationPlanPlaceholder')} /></label>
-            <label>{page('contactChannel')}<input placeholder={page('contactChannelPlaceholder')} /></label>
-            <label>{page('riskNote')}<textarea placeholder={page('notesPlaceholder')} /></label>
-            <Button type="button" onClick={simulateProposal}><HydroIcon name="message" size={17} /> {page('simulateProposal')}</Button>
+            <label>{page('amount')}<input name="amount" required placeholder={cargo.targetPrice} inputMode="decimal" /></label>
+            <label>{page('estimatedTime')}<input name="estimatedTime" placeholder={page('estimatedTimePlaceholder')} /></label>
+            <label>{page('vesselCompatibility')}<input name="vesselCompatibility" placeholder={page('vesselCompatibilityPlaceholder')} /></label>
+            <label>{page('documentCommitment')}<select name="documentCommitment" defaultValue="ready"><option value="ready">{page('documentReady')}</option><option value="pending">{page('documentPending')}</option></select></label>
+            <label>{page('operationPlan')}<input name="operationPlan" placeholder={page('operationPlanPlaceholder')} /></label>
+            <label>{page('contactChannel')}<input name="contactChannel" placeholder={page('contactChannelPlaceholder')} /></label>
+            <label>{page('riskNote')}<textarea name="riskNote" placeholder={page('notesPlaceholder')} /></label>
+            <Button type="submit" loading={submittingProposal} loadingLabel={page('simulateProposal')}><HydroIcon name="message" size={17} /> {page('simulateProposal')}</Button>
           </form>
         </Card>
       ) : proposalVisibility.kind === 'shipper_owner' ? (
