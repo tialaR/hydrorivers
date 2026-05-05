@@ -60,27 +60,35 @@ A rota exige sessão e **bloqueia apenas `shipper`** (`user.role === 'shipper'` 
 
 ---
 
-## 3. `ownerId` em `POST /api/cargas`
+## 3. `ownerId` e `shipperId` na publicação de carga
 
-### Situação atual (auditoria)
+### Situação atual (código)
 
-O handler monta `Cargo` com `producer: user.company` mas **não atribui `ownerId`** no objeto persistido. Isso enfraquece autorização futura («minhas cargas») e cenários em `mock-scenarios` que esperam `ownerId` populado por relacionamento.
+As mutações **`POST /api/cargas`** e a **Server Action** de publicar carga (`publishCargoAction` → `commitPublishCargo` em `src/features/cargos/server/commit-publish-cargo.ts`) **persistem** a carga com:
+
+- **`ownerId: user.id`**
+- **`shipperId: user.id`**
+
+no fluxo atual de criador autenticado (regras de papel/`approved` aplicadas antes de persistir). **`producer`** continua derivado de `user.company`.
+
+Cargas antigas vindas só de **seed** ou cenários mock podem ainda não ter esses campos — tratar como legado até normalização; não confundir com o fluxo de publicação pela API/ação.
 
 ### Decisão
 
-**Toda carga criada por um usuário autenticado via `POST /api/cargas` deve ter `ownerId` definido como o `id` do usuário da sessão**, salvo política futura explícita para «carga em nome de terceiro» (institucional), que exigiria endpoint e permissões próprios.
+**Toda carga criada por um usuário autenticado pelos fluxos oficiais de publicação deve ter `ownerId` (e, no modelo atual, `shipperId` alinhado ao embarcador responsável) definidos a partir da sessão**, salvo política futura explícita para «carga em nome de terceiro» (institucional), que exigiria endpoint e permissões próprios.
 
 **Campos:**
 
-- **`ownerId`:** obrigatório na persistência — igual a `user.id` do criador no fluxo atual (shipper ou admin que publique — **«a confirmar»** se admin pode publicar carga em nome de outro; default seguro: sempre criador).
+- **`ownerId`:** obrigatório na persistência do fluxo de criação — igual a `user.id` do criador no modelo atual (**admin** que publica pela mesma rota fica como dono técnico no mock — aceitável para demo; produto futuro pode restringir quem publica).
+- **`shipperId`:** no mesmo fluxo, **igual a `user.id`** para alinhar filtros e cenários «minhas cargas» ao domínio de negociação.
 
 **Justificativa:**
 
-1. Consistência com modelo relacional planejado (`owner_id` em `docs/DATABASE-PLANNING.md`).
-2. Base para filtros em GET futuros e PATCH com ownership.
-3. Evita cargas «sem dono» em dados mock gerados pela API.
+1. Consistência com modelo relacional planejado (`docs/DATABASE-PLANNING.md`).
+2. Base para **`/minhas-cargas`**, filtros por dono e regras de UI (ex.: proposta no detalhe da carga por papel/`approved`).
+3. Evita cargas «sem dono» em dados **criados** pela API ou pela ação de publicação.
 
-**Nota:** o tipo `Cargo` usa `ownerId`; não introduzir segundo campo `shipperId` no domínio atual sem migração de modelo — **«ownerId = embarcador responsável pela publicação»**.
+**Nota:** evolução futura (institucional, multi-tenant) pode separar semanticamente `ownerId` e `shipperId`; hoje ambos refletem o **criador da publicação** no mock.
 
 ---
 
@@ -159,7 +167,7 @@ Todas as respostas de erro devem ser JSON com pelo menos:
 |----|------|---------|
 | D1 | `approved` por role | Shipper `true` e carrier `false` ao registrar — comportamento esperado oficial alinhado ao código atual. |
 | D2 | Admin em POST negociações | **Proibido:** apenas `carrier` (futuro); admin usa mock-mode para cenários. |
-| D3 | `ownerId` em POST cargas | **Obrigatório:** `ownerId = user.id` do criador no fluxo padrão. |
+| D3 | `ownerId` / `shipperId` na publicação de carga | **Implementado** em `commitPublishCargo` (API POST + Server Action); seeds legadas podem divergir. |
 | D4 | JSON inválido mock-mode | **400 + não resetar** base mock. |
 | D5 | Erro API | Contrato `{ error, reason? }` com migração gradual a partir do legado. |
 | D6 | CSRF/logout | Documentar risco; recomendar tokens/Headers em fase posterior. |
@@ -172,7 +180,7 @@ Todas as respostas de erro devem ser JSON com pelo menos:
 |---------|---------|
 | D1 | Possível trabalho de UX/copy para carriers não aprovados; eventual API de aprovação. |
 | D2 | Alteração condicional em `negociacoes/route.ts` POST + mensagens `403`. |
-| D3 | Alteração em `cargas/route.ts` POST; revisar seeds que criam cargas sem API. |
+| D3 | Manter paridade em novos fluxos de escrita; opcionalmente **backfill** ou documentar seeds sem `ownerId`. |
 | D4 | Guard clause antes de `resetMockScenario` em `mock-mode/route.ts`. |
 | D5 | Expansão de `api-errors.ts` ou helpers 404; alinhar login/register gradualmente. |
 | D6 | Middleware ou helper CSRF; possível mudança em cliente fetch. |
@@ -184,7 +192,7 @@ Todas as respostas de erro devem ser JSON com pelo menos:
 | Decisão | Impacto em testes (quando implementado) |
 |---------|------------------------------------------|
 | D2 | Integração: admin → `403` em POST negociações; carrier mantém `201`. |
-| D3 | Integração POST cargas: body ou resposta deve incluir `ownerId` esperado. |
+| D3 | Integração POST cargas / publicação: resposta deve incluir `ownerId` e `shipperId` esperados. |
 | D4 | Integração mock-mode: body inválido → `400`, mock não alterado (assert pré/pós arquivo ou spy em `resetMockScenario`). |
 | D5 | Snapshots/assert em formato JSON de erro; regressão login legível. |
 | D6 | Testes E2E ou integração para logout com token quando existir. |
@@ -198,7 +206,6 @@ Todas as respostas de erro devem ser JSON com pelo menos:
 | Prioridade | Item |
 |------------|------|
 | **P0** | D4 (mock-mode + JSON inválido) — evita efeito colateral destructivo |
-| **P0** | D3 (`ownerId`) — base para todas as autorizações futuras em cargas |
 | **P1** | D2 (admin POST negociações) — integridade de auditoria |
 | **P1** | D5 (padronização erros) — observabilidade e clientes estáveis |
 | **P2** | D1 (documentação UX + fluxo aprovação carrier se ausente) |
@@ -209,7 +216,7 @@ Todas as respostas de erro devem ser JSON com pelo menos:
 ## PRs recomendados (somente planejamento)
 
 1. **`fix(api): mock-mode não reseta com JSON inválido`** — D4 + testes integração.
-2. **`feat(api): definir ownerId em POST /api/cargas`** — D3 + testes + revisão mock-scenarios se necessário.
+2. ~~**`feat(api): definir ownerId em POST /api/cargas`**~~ — **feito:** `commitPublishCargo` + Server Action; opcional: PR de higiene em seeds legados.
 3. **`fix(api): restringir POST /api/negociacoes a carrier`** — D2 + testes (admin regression).
 4. **`refactor(api): padronizar erros 404 e helpers`** — D5 incremental.
 5. **`docs + chore:`** política CSRF e checklist deploy — D6 preparatório.

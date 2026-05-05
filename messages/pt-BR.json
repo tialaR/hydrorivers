@@ -446,6 +446,10 @@
       "impactDescription": "Estimativa visual de impacto ao usar rota aquaviária em vez de transporte rodoviário longo.",
       "ownerAwaitingTitle": "Sua publicação está no marketplace",
       "ownerAwaitingDescription": "Esta carga foi publicada por você. Aguarde propostas de transportadores aprovados.",
+      "carrierPendingTitle": "Perfil em aprovação",
+      "carrierPendingDescription": "Sua conta de transportador ainda não foi aprovada. Conclua o cadastro e aguarde a moderação para enviar propostas nesta carga.",
+      "adminNoProposalTitle": "Visualização administrativa",
+      "adminNoProposalDescription": "Administradores podem auditar a carga e o marketplace, mas não enviam proposta operacional por este fluxo.",
       "sendProposal": "Enviar proposta",
       "amount": "Valor",
       "estimatedTime": "Tempo estimado",
@@ -472,8 +476,6 @@
       "documentReady": "Documentos conferidos",
       "documentPending": "Documento será regularizado",
       "riskNote": "Observação de risco e operação",
-      "proposalToastTitle": "Proposta simulada enviada",
-      "proposalToastDescription": "A carga “{title}” recebeu uma nova proposta mockada.",
       "documentDescription": "Requisitos por tipo de carga, rota e fase operacional.",
       "operationPlan": "Plano operacional",
       "operationPlanPlaceholder": "Ex.: embarque em 2 lotes com conferência no cais.",
@@ -794,6 +796,67 @@
       "description": "O endereço pode estar incorreto ou o recurso não existe mais neste ambiente mock.",
       "linkHome": "Ir para o início",
       "linkCargoes": "Ver cargas no marketplace"
+    }
+  },
+  "toasts": {
+    "close": "Fechar",
+    "http": {
+      "buckets": {
+        "success": {
+          "title": "Tudo certo",
+          "description": "A operação foi concluída."
+        },
+        "badRequest": {
+          "title": "Dados inválidos",
+          "description": "Revise os campos enviados e tente novamente."
+        },
+        "unauthorized": {
+          "title": "Sessão necessária",
+          "description": "Faça login para continuar."
+        },
+        "forbidden": {
+          "title": "Sem permissão",
+          "description": "Você não tem acesso a esta ação."
+        },
+        "notFound": {
+          "title": "Não encontrado",
+          "description": "O recurso não está disponível ou não existe neste ambiente."
+        },
+        "conflict": {
+          "title": "Conflito",
+          "description": "A operação conflita com o estado atual. Atualize a página e tente de novo."
+        },
+        "unprocessableEntity": {
+          "title": "Regras de negócio",
+          "description": "Os dados não passaram nas validações de domínio."
+        },
+        "serverError": {
+          "title": "Erro inesperado",
+          "description": "Tente novamente em instantes. Se persistir, avise o suporte."
+        }
+      },
+      "cargoPublish": {
+        "success": {
+          "title": "Carga publicada",
+          "description": "Sua carga entrou no marketplace mock."
+        }
+      },
+      "cargoProposal": {
+        "success": {
+          "title": "Proposta simulada enviada",
+          "description": "A carga “{title}” recebeu uma nova proposta mockada."
+        }
+      },
+      "authLogin": {
+        "unauthorized": {
+          "title": "Login necessário",
+          "description": "Sua sessão expirou ou você não está autenticado."
+        },
+        "forbidden": {
+          "title": "Acesso negado",
+          "description": "Esta conta não pode concluir o login neste contexto."
+        }
+      }
     }
   },
   "metadata": {

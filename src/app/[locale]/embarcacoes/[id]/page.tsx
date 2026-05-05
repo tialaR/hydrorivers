@@ -4,6 +4,7 @@ import { PageShell } from '@/shared/ui/page-shell/page-shell';
 import { Breadcrumb } from '@/shared/ui/breadcrumb/breadcrumb';
 import { VesselDetail } from '@/features/vessels/components/vessel-detail/vessel-detail';
 import { getVesselById } from '@/features/marketplace/services/marketplace.service';
+import { intlAppPaths } from '@/shared/routing/app-routes';
 
 export default async function VesselDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -14,7 +15,7 @@ export default async function VesselDetailPage({ params }: { params: Promise<{ i
 
   return (
     <PageShell eyebrow={t('eyebrow')} title={vessel.name} description={vessel.route}>
-      <Breadcrumb items={[{ label: t('breadcrumb'), href: '/embarcacoes' }, { label: vessel.name }]} />
+      <Breadcrumb items={[{ label: t('breadcrumb'), href: intlAppPaths.vessels.marketplace }, { label: vessel.name }]} />
       <VesselDetail vessel={vessel} />
     </PageShell>
   );

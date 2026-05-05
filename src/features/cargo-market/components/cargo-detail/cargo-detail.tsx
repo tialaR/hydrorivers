@@ -7,10 +7,11 @@ import { Button } from '@/shared/ui/button/button';
 import { Badge } from '@/shared/ui/badge/badge';
 import { HydroIcon } from '@/shared/ui/hydro-icon/hydro-icon';
 import { Tooltip } from '@/shared/ui/tooltip/tooltip';
-import { useToast } from '@/shared/ui/toast/toast-provider';
+import { httpStatus } from '@/shared/http/http-status';
+import { useHumanizedHttpToast } from '@/shared/ui/toast/use-humanized-http-toast';
 import type { Cargo } from '@/features/marketplace/domain/marketplace.types';
 import type { CargoViewer } from '@/features/cargo-market/utils/cargo-proposal-visibility';
-import { shouldShowCargoProposalForm } from '@/features/cargo-market/utils/cargo-proposal-visibility';
+import { getCargoProposalVisibility } from '@/features/cargo-market/utils/cargo-proposal-visibility';
 import { CargoStatusAssistantCard } from '@/features/ai-assist/components/CargoStatusAssistantCard';
 import { translateMock } from '@/shared/i18n/mock-content';
 import styles from './cargo-detail.module.scss';
@@ -49,18 +50,16 @@ export function CargoDetail({ cargo, viewer }: { cargo: Cargo; viewer?: CargoVie
   const page = useTranslations('pages.cargoDetail');
   const common = useTranslations('common');
   const locale = useLocale();
-  const { showToast } = useToast();
+  const { showForHttpStatus } = useHumanizedHttpToast();
   const [proposalCount, setProposalCount] = useState(2);
 
   const cargoType = translateCargoType(common, cargo.cargoType);
-  const showProposalForm = shouldShowCargoProposalForm(viewer ?? null, cargo);
+  const proposalVisibility = getCargoProposalVisibility(viewer ?? null, cargo);
 
   function simulateProposal() {
     setProposalCount((value) => value + 1);
-    showToast({
-      tone: 'success',
-      title: page('proposalToastTitle'),
-      description: page('proposalToastDescription', { title: translateMock(locale, cargo.title) })
+    showForHttpStatus(httpStatus.created, 'cargo.proposal', {
+      title: translateMock(locale, cargo.title)
     });
   }
 
@@ -157,7 +156,7 @@ export function CargoDetail({ cargo, viewer }: { cargo: Cargo; viewer?: CargoVie
         ) : null}
       </Card>
 
-      {showProposalForm ? (
+      {proposalVisibility.kind === 'show_form' ? (
         <Card className={styles.formCard} data-testid="cargo-proposal-form">
           <form className={styles.form}>
             <h3>{page('sendProposal')}</h3>
@@ -171,12 +170,28 @@ export function CargoDetail({ cargo, viewer }: { cargo: Cargo; viewer?: CargoVie
             <Button type="button" onClick={simulateProposal}><HydroIcon name="message" size={17} /> {page('simulateProposal')}</Button>
           </form>
         </Card>
-      ) : (
+      ) : proposalVisibility.kind === 'shipper_owner' ? (
         <Card className={styles.formCard} data-testid="cargo-owner-awaiting-card">
           <div className={styles.ownerAwaiting}>
             <HydroIcon name="cargo" size={22} />
             <h3>{page('ownerAwaitingTitle')}</h3>
             <p>{page('ownerAwaitingDescription')}</p>
+          </div>
+        </Card>
+      ) : proposalVisibility.kind === 'carrier_pending_approval' ? (
+        <Card className={styles.formCard} data-testid="cargo-proposal-carrier-pending-card">
+          <div className={styles.ownerAwaiting}>
+            <HydroIcon name="shield" size={22} />
+            <h3>{page('carrierPendingTitle')}</h3>
+            <p>{page('carrierPendingDescription')}</p>
+          </div>
+        </Card>
+      ) : (
+        <Card className={styles.formCard} data-testid="cargo-proposal-admin-card">
+          <div className={styles.ownerAwaiting}>
+            <HydroIcon name="shield" size={22} />
+            <h3>{page('adminNoProposalTitle')}</h3>
+            <p>{page('adminNoProposalDescription')}</p>
           </div>
         </Card>
       )}

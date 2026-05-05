@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useTranslations } from 'next-intl';
 import { HydroIcon } from '@/shared/ui/hydro-icon/hydro-icon';
 import { toastConstants } from '@/shared/ui/toast/toast-constants';
 import styles from './toast.module.scss';
@@ -34,6 +35,7 @@ export function useToast() {
 }
 
 export function ToastProvider({ children }: { children: ReactNode }) {
+  const t = useTranslations('toasts');
   const [items, setItems] = useState<ToastMessage[]>([]);
 
   const showToast = useCallback((toast: Omit<ToastMessage, 'id'>) => {
@@ -65,7 +67,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               <strong>{item.title}</strong>
               {item.description ? <small>{item.description}</small> : null}
             </span>
-            <button type="button" onClick={() => setItems((current) => current.filter((toast) => toast.id !== item.id))} aria-label="Fechar">
+            <button type="button" onClick={() => setItems((current) => current.filter((toast) => toast.id !== item.id))} aria-label={t('close')}>
               <HydroIcon name="close" size={14} />
             </button>
           </div>

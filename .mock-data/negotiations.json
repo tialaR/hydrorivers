@@ -1,6 +1,6 @@
 [
   {
-    "id": "neg-1777939534090",
+    "id": "neg-1777978923057",
     "cargoId": "cargo-001",
     "vesselId": "vessel-001",
     "shipperId": "u-shipper-1",
@@ -10,7 +10,7 @@
     "stage": "contract",
     "status": "accepted",
     "amount": "R$ 7.500 e2e",
-    "lastUpdate": "2026-05-05T00:05:34.884Z",
+    "lastUpdate": "2026-05-05T11:02:03.541Z",
     "parties": [
       "Coop. Açaí Pará",
       "Navega Norte"
@@ -27,12 +27,12 @@
       {
         "title": "Proposta criada",
         "description": "Proposta enviada por Navega Norte.",
-        "date": "2026-05-05T00:05:34.090Z"
+        "date": "2026-05-05T11:02:03.057Z"
       },
       {
         "title": "Status atualizado para accepted",
         "description": "Alteração realizada por Cooperativa Açaí Norte.",
-        "date": "2026-05-05T00:05:34.884Z"
+        "date": "2026-05-05T11:02:03.541Z"
       }
     ]
   },

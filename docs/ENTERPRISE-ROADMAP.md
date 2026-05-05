@@ -40,7 +40,7 @@ Resumo objetivo — detalhes em `README.md`, `docs/PORTFOLIO-CASE.md`, `docs/DEV
 | **Rotas / domínios** | Cargas, embarcações, negociações, rastreio, impacto, governo, dashboard, perfil, admin (vide `README.md`). |
 | **Rastreio** | Tipos operacionais (`OperationalTrackingEventKind`), inferência, timeline UI + `GET /api/rastreio` (**GET público** — gap de segurança para produção real). |
 | **Qualidade** | `npm run lint`, `typecheck`, `check:i18n`, `test` (Vitest); `test:e2e` (Playwright); `check:onboarding` (`docs/ONBOARDING-PROGRESS-CHECK.md`). |
-| **Documentação** | Auditoria de APIs, decisões de produto, planejamentos de dados/documentos/dashboard/IA/agentes. |
+| **Documentação** | Auditoria de APIs, decisões de produto, planejamentos de dados/documentos/dashboard/IA/agentes; padrão **React 19 / Server Actions** na publicação de carga (`docs/REACT19-CLEANUP.md`). |
 
 **Não implementado como produto final:** Postgres/transações enterprise; uploads de documentos com storage seguro (`docs/DOCUMENTS-MODULE.md`); dashboard executivo **completo** por persona (`docs/EXECUTIVE-DASHBOARD.md`); IA/agentes em runtime (`docs/AI-ROADMAP.md`, `docs/AGENTS-ROADMAP.md`).
 
@@ -54,7 +54,7 @@ Registradas principalmente em **`docs/SECURITY-PRODUCT-DECISIONS.md`** e **`docs
 |------|---------------------|
 | **Cadastro `approved`** | Shipper liberado no modelo atual do handler; carrier não aprovado por padrão — política de produto explicitada; mitigar abuso futuro. |
 | **Admin e negociações** | Decisão: administradores **não** devem criar negociações via `POST /api/negociacoes` em produção — cenários via mock-mode/administração adequada. |
-| **`ownerId` em cargas** | Decisão: carga criada por usuário autenticado deve ter **`ownerId = user.id`** — alinhamento futuro com DB; implementação pode estar incompleta (**«a confirmar»** na auditoria). |
+| **`ownerId` / `shipperId` na publicação** | **Implementado** em `commitPublishCargo` (POST `/api/cargas` + Server Action); alinhamento com **GET escopado** e DB real **◇ roadmap**. |
 | **`mock-mode` e JSON inválido** | Decisão: parse inválido **não** deve disparar reset silencioso — comportamento esperado documentado para PR futuro. |
 | **Política de IA no repositório** | **`AGENTS.md`:** não adicionar IA em produto antes de **segurança**, **validação** e **testes** consolidados. |
 | **Repository boundary** | Decisão arquitetural: handlers devem migrar para **repositórios** como porta única — **`GET /api/cargas`** já piloto (`docs/REPOSITORY-BOUNDARY.md`). |
@@ -67,7 +67,7 @@ Registradas principalmente em **`docs/SECURITY-PRODUCT-DECISIONS.md`** e **`docs
 
 | Marco | Descrição |
 |-------|-----------|
-| **MVP navegável** | App Router, locales, fluxos principais de marketplace e páginas institucionais (`README.md`). |
+| **MVP navegável** | App Router, locales, fluxos principais de marketplace, **`/minhas-cargas`**, páginas institucionais (`README.md`). |
 | **Persistência mock estável** | JSON server-side; política de não usar `localStorage` para dados de produto (vide README). |
 | **Auth mock + middleware** | Rotas privadas; handlers auth documentados na matriz de auditoria. |
 | **Qualidade baseline** | Lint, TypeScript strict workflow, i18n check, Vitest (unit + integração API). |
@@ -85,7 +85,7 @@ Trabalho **parcial** ou **decidido mas não uniforme** no código:
 | Fase | Situação |
 |------|----------|
 | **Repository boundary — continuação** | `POST /api/cargas` e outras rotas ainda podem usar mock direto; **◇** repositórios para negociações/embarcações planejados (`docs/REPOSITORY-BOUNDARY.md`). |
-| **Alinhamento ownership** | `ownerId` e escopo “minhas cargas” — decisão tomada; convergência com handlers **em curso / «a confirmar»** (`docs/SECURITY-PRODUCT-DECISIONS.md`, auditoria). |
+| **Alinhamento ownership** | **Escrita e UI mock:** `ownerId`/`shipperId` na publicação; **`/minhas-cargas`**; visibilidade de proposta por papel/`approved` no detalhe. **Próximo:** GETs e listagens por escopo + paridade total em dados legados (`docs/API-SECURITY-AUDIT.md`, `docs/SECURITY-PRODUCT-DECISIONS.md`). |
 | **Hard API reads** | GETs amplos sem sessão **ainda comportamento atual**; recomendações escritas — endurecimento **incremental esperado** (`docs/API-SECURITY-AUDIT.md`). |
 | **Timeline auditável — API** | Modelo/tipos e UI **implementados**; filtros por participante e escrita auditável na API **◇ planejados** (`docs/TRACKING-TIMELINE.md`). |
 | **E2E vs fluxos novos** | Cobertura inicial existe; expansão quando UX/API estabilizarem (`docs/E2E-PLAYWRIGHT.md`). |
@@ -96,7 +96,7 @@ Trabalho **parcial** ou **decidido mas não uniforme** no código:
 
 Ordem pode ser ajustada pelo time; dependências críticas entre **dados**, **segurança** e **produto**:
 
-1. **Centralizar leituras/escritas** atrás de repositórios + aplicar decisões `ownerId`/participante nos handlers ou serviços.
+1. **Centralizar leituras/escritas** atrás de repositórios + aplicar decisões de **participante** e **escopo em GET** nos handlers ou serviços.
 2. **Endurecer GETs** sensíveis (sessão + filtros por papel/participação).
 3. **Introduzir banco real** atrás dos mesmos contratos (`docs/DATABASE-PLANNING.md`).
 4. **Módulo de documentos** (metadados + storage privado) (`docs/DOCUMENTS-MODULE.md`).
@@ -177,7 +177,7 @@ Lista **orientadora** — não checklist legal completa:
 |---|----------|
 | P1 | Autorização nas **leituras** coerente com papel/participação (**paridade** com o que usuário pode ver). |
 | P2 | Persistência transacional (DB) para dados que não podem correr em arquivo JSON concorrente. |
-| P3 | **`ownerId`/ownership** aplicado de forma consistente nas cargas e refletido nas queries. |
+| P3 | **`ownerId`/ownership** refletido nas **queries** e leituras autorizadas (hoje: **mutação + filtros de UI mock**; GET amplo continua — `API-SECURITY-AUDIT`) |
 | P4 | Módulo de documentos ou equivalente para evidências quando compliance exigir (`docs/DOCUMENTS-MODULE.md`). |
 | P5 | Timeline/rastreio com API escopada e **◇** escrita auditável quando for requisito operacional (`docs/TRACKING-TIMELINE.md`). |
 | P6 | Observabilidade (logs estruturados, métricas, alertas) adequada ao ambiente alvo. |

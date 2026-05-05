@@ -10,7 +10,9 @@ import {
   publishCargoAction,
   type PublishCargoActionState
 } from '@/features/cargo-market/actions/publish-cargo-action';
+import { httpStatus } from '@/shared/http/http-status';
 import { appendRouteSearchParams, routeSearchParams } from '@/shared/routing/route-search-params';
+import { useHumanizedHttpToast } from '@/shared/ui/toast/use-humanized-http-toast';
 import { intlAppPaths } from '@/shared/routing/app-routes';
 import styles from './new-cargo-form.module.scss';
 
@@ -29,18 +31,20 @@ export function NewCargoForm() {
   const t = useTranslations('forms');
   const locale = useLocale();
   const router = useRouter();
+  const { showForHttpStatus } = useHumanizedHttpToast();
   const [state, formAction, isPending] = useActionState(publishCargoAction, initialActionState);
   const [clientError, setClientError] = useState<string | null>(null);
 
   useEffect(() => {
     if (state.status !== 'success') return;
+    showForHttpStatus(httpStatus.created, 'cargo.publish');
     window.dispatchEvent(new CustomEvent('hydrorivers:mock-changed', { detail: { key: 'cargoes' } }));
     router.push(
       appendRouteSearchParams(intlAppPaths.cargos.myCargos, {
         [routeSearchParams.created]: state.cargoId
       })
     );
-  }, [state, router]);
+  }, [state, router, showForHttpStatus]);
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
     const fd = new FormData(event.currentTarget);

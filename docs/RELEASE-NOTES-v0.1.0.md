@@ -27,10 +27,12 @@ Lista **estrita** ao repositório executável — detalhes adicionais em [`READM
 | Área | Entrega nesta baseline |
 |------|-------------------------|
 | **Produto MVP** | Marketplace: cargas, embarcações, negociações; rastreio com timeline e API `GET /api/rastreio`; impacto; dashboard; admin; página institucional `governo`; rotas localizadas. |
+| **Publicação de carga (React 19)** | Formulário com **`useActionState`** chama **Server Action** (`publishCargoAction`) que delega persistência/revalidação para **`commitPublishCargo`** (também usada por `POST /api/cargas`). |
 | **Auth** | Fluxo mock: login, registro público (**shipper** / **carrier**), logout, perfil; sessão **`hydrorivers_session`**; hashing de senhas com **PBKDF2** no servidor; respostas sem **`passwordHash`** ao cliente (`docs/API-SECURITY-AUDIT.md`). |
 | **Proteção de UI** | **Middleware** em rotas privadas conforme projeto (vide `README.md`). |
 | **Dados** | Leitura/escrita mock em arquivo JSON sob `.mock-data/`; cenários **`/api/mock-mode`** (uso restrito a **admin** no POST conforme auditoria). |
 | **i18n** | `next-intl`; mensagens em `messages/*`; **`npm run check:i18n`** para paridade de chaves entre os três idiomas. |
+| **Contratos de plataforma** | Routing (`app-routes`, `api-routes`, `route-search-params`), cache/revalidation por tags/paths e constants de domínio/HTTP/cookies/env já compõem a base técnica do MVP. |
 | **Produto técnico** | Vercel Analytics (dependência declarada em `package.json`). |
 
 ---
@@ -55,7 +57,7 @@ Esta baseline é **honesta** sobre o estágio atual: comportamento efetivo e ris
 | **Mutations** | Várias rotas exigem sessão, papel ou participação conforme matriz na auditoria (ex.: POST cargas não carrier; PATCH negociações com participação). |
 | **Leituras GET amplas** | `GET /api/cargas`, `GET /api/negociacoes`, `GET /api/embarcacoes`, `GET /api/rastreio` permanecem **sem exigência de sessão** no modelo auditado — **alto risco** para cenário real; recomendações documentadas para endurecimento futuro. |
 | **`approved` no cadastro** | **Shipper** tende a nascer **aprovado**; **carrier**, **não** — política oficial documentada (`SECURITY-PRODUCT-DECISIONS`). |
-| **`ownerId` em POST cargas** | **Decisão:** `ownerId = user.id` para cargas criadas pela API autenticada — **implementação pode estar incompleta** («a confirmar» na auditoria). |
+| **`ownerId` / `shipperId` em publicação de carga** | **`commitPublishCargo`** define ambos como `user.id` em **`POST /api/cargas`** e no fluxo de **Server Action** da UI; decisão D3 em `SECURITY-PRODUCT-DECISIONS` **refletida na escrita**. Seeds antigos ou cargas só de cenário podem divergir. |
 | **Admin em `POST /api/negociacoes`** | **Decisão:** admin **não** deve usar essa rota em produção para criar negociações; QA via **mock-mode** onde aplicável (`SECURITY-PRODUCT-DECISIONS`). |
 | **Mock-mode** | POST restrito a **admin**; GET de metadados de cenário **público** na matriz atual — pontos para endurecimento opcional futuro. |
 
@@ -112,7 +114,7 @@ Outros `docs/` (por exemplo DATABASE-PLANNING, DOCUMENTS-MODULE, AI-ROADMAP) faz
 1. **Persistência em arquivo** — inadequada para produção distribuída concorrente; substituir por banco/transações antes de cenário enterprise real (`README.md`, `ENTERPRISE-ROADMAP`).  
 2. **GETs operacionais abertos** — exposição ampla na demo; autorização nas leituras é **trabalho pendente planejado** (`API-SECURITY-AUDIT`).  
 3. **Auth mock** — não equivalente a IdP OAuth/OIDC, MFA real, rate limiting completo nem política SameSite definitiva (`API-SECURITY-AUDIT`).  
-4. **Ownership e estado** — `ownerId`/transições de negociação podem precisar alinhamento com decisões já escritas (`SECURITY-PRODUCT-DECISIONS`).  
+4. **Dados legados e negociações** — seeds/cenários podem ter cargas sem `ownerId`/`shipperId`; transições de negociação podem ainda precisar de máquina de estados explícita (`API-SECURITY-AUDIT`, `SECURITY-PRODUCT-DECISIONS`).  
 5. **Módulo de documentos, dashboard executivo completo e IA runtime** — **não fazem parte** da entrega desta baseline (`ENTERPRISE-ROADMAP`, `PORTFOLIO-CASE`).  
 6. **Dados de impacto e narrativas** — majoritariamente demonstrativos; não auditáveis como série oficial até integração futura adequada (`PORTFOLIO-CASE`).  
 7. **CI** — não executa Playwright nem `npm run build` por padrão nesta baseline (`CI-QUALITY-GATES`).  
@@ -123,7 +125,7 @@ Outros `docs/` (por exemplo DATABASE-PLANNING, DOCUMENTS-MODULE, AI-ROADMAP) faz
 
 Ordenação orientadora (ajustável pelo time) conforme [`docs/ENTERPRISE-ROADMAP.md`](ENTERPRISE-ROADMAP.md):
 
-1. Estender **repository boundary** e alinhar **mutações**/ownership (`ownerId`, participantes).  
+1. Estender **repository boundary** e alinhar **mutações** restantes (ex.: participantes); endurecer **GETs** / ownership nas **queries** quando houver DB.  
 2. Endurecer **GETs sensíveis** (sessão + escopo por papel/participação).  
 3. Introduzir **persistência relacional** mantendo contratos HTTP/domínio (`docs/DATABASE-PLANNING.md`).  
 4. Evoluir **documentos**/compliance e **timeline** auditável na API onde for requisito (`docs/DOCUMENTS-MODULE.md`, `docs/TRACKING-TIMELINE.md`).  

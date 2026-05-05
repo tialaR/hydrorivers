@@ -63,12 +63,16 @@ O projeto endereça isso como **uma superfície única demonstrável**: fluxos t
 | Área | Entrega |
 |------|---------|
 | **Framework** | Next.js **16.2.4** (App Router), React **19**, TypeScript, ESLint (`README.md`, `package.json`). |
+| **Arquitetura de mutação (React 19)** | Publicação de carga via **Server Action** (`publishCargoAction`) com **`useActionState`** no formulário e commit central em **`commitPublishCargo`** (persistência + revalidation). |
 | **Estilo / UI** | Sass Modules; tema claro/escuro sem `next-themes`; ícones SVG internos + **lucide-react** em formulários (`README.md`). |
 | **i18n** | Locales **`pt-BR`**, **`en`**, **`es`**; script **`npm run check:i18n`** para paridade de chaves. |
+| **Contratos transversais** | Contratos de **routing** (`app-routes`, `api-routes`, `route-search-params`), **cache/revalidation** por tags/paths e constants de domínio/HTTP/cookies/env usados como base de consistência entre features. |
 | **Persistência mock** | Leitura/escrita server-side em **`.mock-data/*.json`** (usuários, cargas, embarcações, negociações, eventos de rastreio); reset documentado (`README.md`). |
 | **Auth mock** | Login (fluxo com **OTP opcional** conforme handlers auditados), cadastro público **shipper/carrier**, logout, perfil; senhas com **PBKDF2**; cookie **`hydrorivers_session`**; respostas sem **`passwordHash`** ao cliente (`README.md`, `docs/API-SECURITY-AUDIT.md`). |
 | **Rotas privadas** | **Middleware** protege conjunto documentado no README (`/dashboard`, `/cargas/nova`, `/perfil`, `/negociacoes`, `/rastreio`, `/admin`, etc.). |
-| **Marketplace** | Páginas e fluxos de **cargas**, **embarcações**, **negociações**; APIs **`/api/cargas`**, **`/api/embarcacoes`**, **`/api/negociacoes`** (`README.md`). |
+| **Marketplace** | Páginas e fluxos de **cargas**, **embarcações**, **negociações**; APIs **`/api/cargas`**, **`/api/embarcacoes`**, **`/api/negociacoes`**; rota **`/minhas-cargas`** (lista filtrada por dono/shipper no mock); publicação de carga com **`ownerId`/`shipperId`** via **`commitPublishCargo`** (POST API + Server Action + **`useActionState`** no formulário). |
+| **Proposta no detalhe da carga (demo)** | Mensagens i18n e exibição do formulário conforme **papel** e **`approved`** (`cargo-proposal-visibility` / `CargoDetail`) — não substitui regras de API. |
+| **Toasts e A11y** | Camada de toasts humanizados por **status HTTP + contexto** (`cargo.publish`, `cargo.proposal`, `auth.login`, `generic`) e fechamento com `aria-label` internacionalizado. |
 | **Rastreio** | Página **`/rastreio`** com timeline; modelo **`OperationalTrackingEventKind`**, inferência quando `kind` ausente, compatibilidade com dados legados documentada (`docs/TRACKING-TIMELINE.md`); **`GET /api/rastreio`**. |
 | **Impacto / governo / admin** | **`/impacto`**, **`/impacto/[id]`**, **`/[locale]/governo`**, **`/admin`** (`README.md`, estrutura do app). |
 | **Cenários / QA** | **`POST /api/mock-mode`** com restrição **admin** (`docs/API-SECURITY-AUDIT.md`). |
@@ -83,8 +87,9 @@ O projeto endereça isso como **uma superfície única demonstrável**: fluxos t
 
 | Item | Estado |
 |------|--------|
-| **Repository boundary** | **Piloto:** `GET /api/cargas` via `getRepositories()`; `POST /api/cargas` e demais rotas ainda podem usar caminhos diretos ao mock (`docs/REPOSITORY-BOUNDARY.md`). |
-| **Ownership / escopo de dados** | Decisões documentadas (**ex.:** `ownerId` em cargas criadas pela API); implementação pode estar **desalinhada** em parte dos handlers — risco registrado (`docs/SECURITY-PRODUCT-DECISIONS.md`). |
+| **Repository boundary** | **Piloto:** `GET /api/cargas` via `getRepositories()`; `POST /api/cargas` delega a **`commitPublishCargo`** (persistência compartilhada com a Server Action, ainda fora do objeto `CargoesRepository`) (`docs/REPOSITORY-BOUNDARY.md`). |
+| **Ownership / escopo de dados** | **Escrita:** `ownerId`/`shipperId` definidos em **`commitPublishCargo`**. **Leitura:** GETs amplos sem sessão continuam sendo o principal gap para produção real; seeds legados podem não ter ownership preenchido (`docs/API-SECURITY-AUDIT.md`, `docs/SECURITY-PRODUCT-DECISIONS.md`). |
+| **Contratos em call sites** | Limpeza parcial/final de rotas hardcoded para contratos compartilhados já aplicada em pontos centrais de navegação e QA; manutenção incremental segue em PRs pequenos. |
 | **Segurança de leitura** | Auditoria lista **GETs amplos sem sessão** como **alto risco** para cenário real; recomendações escritas, **migração incremental esperada** (`docs/API-SECURITY-AUDIT.md`). |
 | **Timeline auditável** | Tipos de evento e inferência **implementados**; filtros por participante na API e escrita auditável **planejados** (`docs/TRACKING-TIMELINE.md`). |
 | **Dashboard executivo** | **Cards/overview existem** como tijolos de UI; **KPIs por persona + API agregadora escopada** são **especificação** (`docs/EXECUTIVE-DASHBOARD.md`). |
@@ -158,7 +163,7 @@ Conceitos principais **implementados** nos tipos e mocks (nomes podem variar em 
 
 - Middleware em rotas privadas do aplicativo.
 - Sessão mock; política de não expor hash de senha ao cliente.
-- Endurecimento documentado em **mutações** exemplares: **`POST /api/cargas`** (carrier não publica; usuário não aprovado bloqueado), **`PATCH /api/negociacoes`** (participante), **`POST /api/mock-mode`** (admin).
+- Endurecimento documentado em **mutações** exemplares: **`POST /api/cargas`** (carrier não publica; usuário não aprovado bloqueado; resposta com **`ownerId`/`shipperId`** via `commitPublishCargo`), **`PATCH /api/negociacoes`** (participante), **`POST /api/mock-mode`** (admin).
 - OTP condicional para demo/E2E quando **`HYDRORIVERS_EXPOSE_OTP_CODE=true`** (`docs/API-SECURITY-AUDIT.md`).
 
 ### Em evolução / gap transparente
