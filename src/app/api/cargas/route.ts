@@ -1,8 +1,10 @@
+import { revalidatePath } from 'next/cache';
 import { getSessionUser, isNonEmptyText } from '@/shared/server/auth';
 import { forbidden, invalidPayload, unauthenticated } from '@/shared/server/api-errors';
 import { upsertCargo } from '@/shared/server/mock-db';
 import { getRepositories } from '@/shared/server/repositories';
 import type { Cargo, CargoStatus } from '@/features/marketplace/domain/marketplace.types';
+import { routing } from '@/core/i18n/routing';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -31,6 +33,7 @@ export async function POST(request: Request) {
   const cargo: Cargo = {
     id: payload.id ?? `mock-${Date.now()}`,
     ownerId: user.id,
+    shipperId: user.id,
     title: isNonEmptyText(payload.title) ? String(payload.title).trim() : String(payload.cargoType).trim(),
     origin: String(payload.origin).trim(),
     destination: String(payload.destination).trim(),
@@ -38,7 +41,7 @@ export async function POST(request: Request) {
     window: isNonEmptyText(payload.window) ? String(payload.window).trim() : 'A definir',
     cargoType: String(payload.cargoType).trim(),
     status,
-    co2Saving: isNonEmptyText(payload.co2Saving) ? String(payload.co2Saving).trim() : '-52% CO2',
+    co2Saving: isNonEmptyText(payload.co2Saving) ? String(payload.co2Saving).trim() : '-52% CO₂',
     targetPrice: isNonEmptyText(payload.targetPrice) ? String(payload.targetPrice).trim() : 'Sob consulta',
     description: isNonEmptyText(payload.description, 800) ? String(payload.description).trim() : undefined,
     producer: user.company,
@@ -61,5 +64,12 @@ export async function POST(request: Request) {
   };
 
   upsertCargo(cargo);
+
+  for (const locale of routing.locales) {
+    revalidatePath(`/${locale}/cargas`);
+    revalidatePath(`/${locale}/minhas-cargas`);
+    revalidatePath(`/${locale}/dashboard`);
+  }
+
   return Response.json({ data: cargo }, { status: 201 });
 }

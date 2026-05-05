@@ -1,8 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const { mockGetSessionUser, mockUpsertCargo } = vi.hoisted(() => ({
+const { mockGetSessionUser, mockUpsertCargo, mockRevalidatePath } = vi.hoisted(() => ({
   mockGetSessionUser: vi.fn(),
-  mockUpsertCargo: vi.fn()
+  mockUpsertCargo: vi.fn(),
+  mockRevalidatePath: vi.fn()
 }));
 
 vi.mock('@/shared/server/auth', () => ({
@@ -14,6 +15,10 @@ vi.mock('@/shared/server/auth', () => ({
 vi.mock('@/shared/server/mock-db', () => ({
   readMock: vi.fn(),
   upsertCargo: mockUpsertCargo
+}));
+
+vi.mock('next/cache', () => ({
+  revalidatePath: mockRevalidatePath
 }));
 
 import { POST } from '@/app/api/cargas/route';
@@ -113,6 +118,7 @@ describe('POST /api/cargas', () => {
     expect(response.status).toBe(201);
     expect(mockUpsertCargo).toHaveBeenCalledWith(expect.objectContaining({
       ownerId: 'u-shipper-1',
+      shipperId: 'u-shipper-1',
       origin: 'Belém, PA',
       destination: 'Santarém, PA',
       cargoType: 'Refrigerada',
@@ -120,6 +126,7 @@ describe('POST /api/cargas', () => {
     }));
     expect(body.data).toMatchObject({
       ownerId: 'u-shipper-1',
+      shipperId: 'u-shipper-1',
       origin: 'Belém, PA',
       destination: 'Santarém, PA',
       cargoType: 'Refrigerada'
@@ -148,6 +155,7 @@ describe('POST /api/cargas', () => {
     expect(response.status).toBe(201);
     expect(mockUpsertCargo).toHaveBeenCalledWith(expect.objectContaining({
       ownerId: 'u-admin-1',
+      shipperId: 'u-admin-1',
       origin: 'Manaus, AM',
       destination: 'Belém, PA',
       cargoType: 'Geral',
@@ -155,9 +163,35 @@ describe('POST /api/cargas', () => {
     }));
     expect(body.data).toMatchObject({
       ownerId: 'u-admin-1',
+      shipperId: 'u-admin-1',
       origin: 'Manaus, AM',
       destination: 'Belém, PA',
       cargoType: 'Geral'
     });
+  });
+
+  it('revalida páginas de cargas, minhas-cargas e dashboard por locale após POST', async () => {
+    mockGetSessionUser.mockResolvedValue({
+      id: 'u-shipper-1',
+      role: 'shipper',
+      approved: true,
+      company: 'Cooperativa Açaí Norte'
+    });
+
+    await POST(new Request('http://localhost/api/cargas', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        origin: 'Belém, PA',
+        destination: 'Santarém, PA',
+        cargoType: 'Refrigerada',
+        title: 'Revalidação'
+      })
+    }));
+
+    expect(mockRevalidatePath).toHaveBeenCalledTimes(9);
+    expect(mockRevalidatePath.mock.calls.map((c) => c[0])).toEqual(
+      expect.arrayContaining(['/pt-BR/cargas', '/en/minhas-cargas', '/es/dashboard'])
+    );
   });
 });

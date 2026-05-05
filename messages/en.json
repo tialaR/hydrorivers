@@ -3,6 +3,7 @@
     "home": "Home",
     "dashboard": "Dashboard",
     "cargoes": "Cargoes",
+    "myCargoes": "My cargoes",
     "vessels": "Vessels",
     "negotiations": "Deals",
     "tracking": "Tracking",
@@ -230,9 +231,10 @@
   },
   "pages": {
     "dashboard": {
-      "eyebrow": "Operação",
-      "title": "Painel HydroRivers",
-      "description": "Resumo das cargas, embarcações e negociações em andamento."
+      "eyebrow": "Operations",
+      "title": "HydroRivers dashboard",
+      "description": "Summary of cargoes, vessels and negotiations in progress.",
+      "myCargoesCta": "View my cargoes"
     },
     "devOnboarding": {
       "eyebrow": "Team",
@@ -279,6 +281,15 @@
       "title": "Post new cargo",
       "description": "Simulate opening a cargo request to receive quotes from eligible vessels.",
       "breadcrumbCurrent": "Post new cargo"
+    },
+    "minhasCargas": {
+      "eyebrow": "Account",
+      "title": "My cargoes",
+      "description": "Cargoes linked to your role (published by you or with a negotiation/proposal in the mock). Use Cargoes for the full marketplace.",
+      "breadcrumbCurrent": "My cargoes",
+      "createdBanner": "Cargo published and saved in the mock. It appears here and in the marketplace.",
+      "emptyTitle": "No linked cargoes",
+      "emptyDescription": "Publish a cargo or join a negotiation in the mock to see it here."
     },
     "vessels": {
       "eyebrow": "Frota",
@@ -432,6 +443,8 @@
     "cargoDetail": {
       "kicker": "Waterway opportunity",
       "impactDescription": "Visual impact estimate from using a waterway route instead of long road transport.",
+      "ownerAwaitingTitle": "Your listing is on the marketplace",
+      "ownerAwaitingDescription": "You published this cargo. Wait for proposals from approved carriers.",
       "sendProposal": "Send proposal",
       "amount": "Amount",
       "estimatedTime": "Estimated time",
@@ -782,7 +795,6 @@
     "subtitle": "Quick access to scenarios, accounts and product validations.",
     "button": "Mock mode",
     "close": "Close QA panel",
-    "accountsTitle": "Fake accounts",
     "casesTitle": "Test scenarios",
     "openCase": "Open case",
     "passwordLabel": "Password",
@@ -790,6 +802,74 @@
       "shipper": "Shipper",
       "carrier": "Carrier",
       "admin": "Administrator"
+    },
+    "qaHub": {
+      "sectionTitle": "QA Hub — demo accounts",
+      "sectionLead": "Cards for testing on mock data. “Use on login” fills the form (normal OTP flow). “Sign in as this user” calls POST /api/mock-mode/login-as and redirects (no OTP). Shown only outside production unless a CI force flag is set.",
+      "fieldLabels": {
+        "name": "Name",
+        "email": "Email",
+        "password": "Fake password",
+        "role": "Role",
+        "approved": "Approved",
+        "company": "Company",
+        "testsWhat": "What this persona exercises",
+        "mustValidate": "What to validate",
+        "expectedResult": "Expected outcome"
+      },
+      "useOnLogin": "Use on login",
+      "signInAs": "Sign in as this user",
+      "signingIn": "Signing in…",
+      "approvedYes": "yes",
+      "approvedNo": "no",
+      "feedbackError": "Could not sign in as this demo user. Use dev/mock; in production only with a CI bypass flag. Ensure the user id exists in mock data.",
+      "personas": {
+        "tiala": {
+          "cardName": "Tiala Rocha",
+          "represents": "Approved shipper — Cooperativa Açaí Norte.",
+          "testsWhat": "Publishing and managing owned cargoes; approved shipper journeys.",
+          "validateLine": "Validate private routes load and cargo tied to this owner appears.",
+          "expectedLine": "Expected: full shipper UX without moderation holds.",
+          "assistantNote": "Cargo Status Assistant: use a cargo where this user is owner (marketplace scenarios). Expected: card with summary, next steps, risks and mock-ai source when applicable.",
+          "feedbackSuccess": "You signed in as Tiala Rocha, approved shipper. Now test owned cargoes and the Cargo Status Assistant."
+        },
+        "joao": {
+          "cardName": "João Navegante",
+          "represents": "Approved carrier — Navega Norte.",
+          "testsWhat": "Proposals and negotiations where the carrier is linked to the cargo.",
+          "validateLine": "Validate negotiation lists and cargo access when linked.",
+          "expectedLine": "Expected: active carrier without moderation holds.",
+          "assistantNote": "Cargo Status Assistant: try a cargo that has a negotiation for this carrierId. Expected: assistant allowed; without linkage, blocked.",
+          "feedbackSuccess": "You signed in as João Navegante, approved carrier. Test linked negotiations and the assistant within scope."
+        },
+        "carlos": {
+          "cardName": "Carlos Hidrovias Madeira",
+          "represents": "Approved carrier — Hidrovias Madeira.",
+          "testsWhat": "Compare authorised vs blocked access depending on negotiation/cargo picked.",
+          "validateLine": "Without negotiation linkage expect blocks; with linkage expect access.",
+          "expectedLine": "Expected: reinforces assistant/API scope controls.",
+          "assistantNote": "Use this persona to validate blocking on someone else's cargo: no sensitive data and no authorised assistant outside scope.",
+          "feedbackSuccess": "You signed in as Carlos (Hidrovias Madeira). Compare cargas with and without a negotiation link."
+        },
+        "ana": {
+          "cardName": "Ana RiosLog",
+          "represents": "Carrier pending moderation (not approved).",
+          "testsWhat": "Flows where a pending carrier hits restrictions (assistant, private areas).",
+          "validateLine": "Validate moderation messaging or pending profile UX.",
+          "expectedLine": "Expected: blocks where the product applies approved=false.",
+          "assistantNote": "Cargo Status Assistant: with Ana signed in expect denial due to account approval before cargo scope.",
+          "feedbackSuccess": "You signed in as Ana RiosLog (moderation). Validate restrictions for pending carriers."
+        },
+        "admin": {
+          "cardName": "Admin HydroRivers",
+          "represents": "Internal HydroRivers administration.",
+          "testsWhat": "Admin shell, mock scenario switches and restricted tooling.",
+          "validateLine": "Validate access to /admin and mock-mode POST where applicable.",
+          "expectedLine": "Expected: broad control over demo datasets.",
+          "assistantNote": "Admin bypasses assistant cargo scope — handy for quick smoke on any cargo.",
+          "feedbackSuccess": "You signed in as administrator. Use mock-mode and broad validations."
+        }
+      }
     },
     "cases": {
       "cargoList": {

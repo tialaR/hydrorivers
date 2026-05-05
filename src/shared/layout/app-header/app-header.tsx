@@ -60,13 +60,23 @@ export function AppHeader() {
   const dragDeltaRef = useRef(0);
   const dragPointerRef = useRef<number | null>(null);
   const lockedScrollYRef = useRef(0);
-  const desktopNavigation = useMemo(() => mainNavigation.filter((item) => item.href !== '/admin'), []);
+  const { user } = useAuthSession();
+  const desktopNavigation = useMemo(
+    () =>
+      mainNavigation
+        .filter((item) => item.href !== '/admin')
+        .filter(
+          (item) =>
+            item.href !== '/minhas-cargas' ||
+            Boolean(user && (user.role === 'shipper' || user.role === 'carrier'))
+        ),
+    [user]
+  );
   const primary = useMemo(() => desktopNavigation.slice(0, 4), [desktopNavigation]);
   const overflow = useMemo(() => desktopNavigation.slice(4), [desktopNavigation]);
   const activeHref = useMemo(() => resolveActiveHref(pathname), [pathname]);
   const activeItem = useMemo(() => mainNavigation.find((item) => item.href === activeHref), [activeHref]);
   const overflowActive = useMemo(() => overflow.some((item) => item.href === activeHref), [overflow, activeHref]);
-  const { user } = useAuthSession();
   const sheetVisible = sheetState !== 'closed';
   const mounted = useSyncExternalStore(
     () => () => {},

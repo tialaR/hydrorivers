@@ -3,6 +3,7 @@
     "home": "Inicio",
     "dashboard": "Panel",
     "cargoes": "Cargas",
+    "myCargoes": "Mis cargas",
     "vessels": "Embarcaciones",
     "negotiations": "Negociaciones",
     "tracking": "Rastreo",
@@ -232,7 +233,8 @@
     "dashboard": {
       "eyebrow": "Operación",
       "title": "Panel HydroRivers",
-      "description": "Resumen de cargas, embarcaciones y negociaciones en curso."
+      "description": "Resumen de cargas, embarcaciones y negociaciones en curso.",
+      "myCargoesCta": "Ver mis cargas"
     },
     "devOnboarding": {
       "eyebrow": "Equipo",
@@ -279,6 +281,15 @@
       "title": "Publicar nueva carga",
       "description": "Simula la apertura de una carga para recibir cotizaciones de embarcaciones aptas.",
       "breadcrumbCurrent": "Publicar nueva carga"
+    },
+    "minhasCargas": {
+      "eyebrow": "Cuenta",
+      "title": "Mis cargas",
+      "description": "Cargas vinculadas a tu rol (publicadas por ti o con negociación/propuesta en el mock). Para todo el marketplace, usa Cargas.",
+      "breadcrumbCurrent": "Mis cargas",
+      "createdBanner": "Carga publicada y guardada en el mock. Aparece aquí y en el marketplace.",
+      "emptyTitle": "Sin cargas vinculadas",
+      "emptyDescription": "Publica una carga o participa en una negociación en el mock para verla aquí."
     },
     "vessels": {
       "eyebrow": "Flota",
@@ -432,6 +443,8 @@
     "cargoDetail": {
       "kicker": "Oportunidad acuaviaria",
       "impactDescription": "Estimación visual de impacto al usar una ruta acuaviaria en vez de transporte carretero largo.",
+      "ownerAwaitingTitle": "Tu publicación está en el marketplace",
+      "ownerAwaitingDescription": "Esta carga la publicaste tú. Espera propuestas de transportistas aprobados.",
       "sendProposal": "Enviar propuesta",
       "amount": "Valor",
       "estimatedTime": "Tiempo estimado",
@@ -782,7 +795,6 @@
     "subtitle": "Acceso rápido a escenarios, cuentas y validaciones del producto.",
     "button": "Modo mock",
     "close": "Cerrar panel QA",
-    "accountsTitle": "Cuentas falsas",
     "casesTitle": "Escenarios de prueba",
     "openCase": "Abrir caso",
     "passwordLabel": "Contraseña",
@@ -790,6 +802,74 @@
       "shipper": "Embarcador",
       "carrier": "Transportista",
       "admin": "Administrador"
+    },
+    "qaHub": {
+      "sectionTitle": "QA Hub — cuentas demo",
+      "sectionLead": "Tarjetas para probar con datos mock. “Usar en login” rellena el formulario (flujo normal con OTP). “Entrar como este usuario” llama POST /api/mock-mode/login-as y redirige (sin OTP). Solo fuera de production salvo flag de CI.",
+      "fieldLabels": {
+        "name": "Nombre",
+        "email": "Correo",
+        "password": "Contraseña fake",
+        "role": "Rol",
+        "approved": "Aprobado",
+        "company": "Empresa",
+        "testsWhat": "Qué prueba",
+        "mustValidate": "Qué validar",
+        "expectedResult": "Resultado esperado"
+      },
+      "useOnLogin": "Usar en login",
+      "signInAs": "Entrar como este usuario",
+      "signingIn": "Entrando…",
+      "approvedYes": "sí",
+      "approvedNo": "no",
+      "feedbackError": "No fue posible entrar como este usuario demo. Usa dev/mock; en production solo con flag de CI. Verifica que el userId exista en el mock.",
+      "personas": {
+        "tiala": {
+          "cardName": "Tiala Rocha",
+          "represents": "Embarcadora aprobada — Cooperativa Açaí Norte.",
+          "testsWhat": "Publicación y gestión de cargas propias; flujos de embarcador aprobado.",
+          "validateLine": "Validar rutas privadas y cargas ligadas al owner.",
+          "expectedLine": "Esperado: experiencia completa de shipper sin bloqueo por moderación.",
+          "assistantNote": "Cargo Status Assistant: usa una carga donde seas owner (marketplace). Esperado: tarjeta con resumen, próximos pasos, riesgos y origen mock-ai cuando aplique.",
+          "feedbackSuccess": "Entraste como Tiala Rocha, embarcadora aprobada. Prueba cargas propias y el Asistente de Estado de Carga."
+        },
+        "joao": {
+          "cardName": "João Navegante",
+          "represents": "Transportista aprobado — Navega Norte.",
+          "testsWhat": "Propuestas y negociaciones donde el transportista está vinculado.",
+          "validateLine": "Validar listas de negociación y acceso cuando hay vínculo.",
+          "expectedLine": "Esperado: transportista activo sin moderación pendiente.",
+          "assistantNote": "Cargo Status Assistant: prueba una carga con negociación para este carrierId. Esperado: permitido con vínculo; sin vínculo, bloqueado.",
+          "feedbackSuccess": "Entraste como João Navegante, transportista aprobado. Prueba negociaciones vinculadas y el asistente en alcance."
+        },
+        "carlos": {
+          "cardName": "Carlos Hidrovias Madeira",
+          "represents": "Transportista aprobado — Hidrovias Madeira.",
+          "testsWhat": "Comparar acceso autorizado vs bloqueado según negociación/carga.",
+          "validateLine": "Sin vínculo espera bloqueo; con vínculo espera acceso.",
+          "expectedLine": "Esperado: refuerzo del control de alcance del asistente/API.",
+          "assistantNote": "Úsalo para validar bloqueo en carga ajena: sin datos sensibles ni asistente autorizado fuera de alcance.",
+          "feedbackSuccess": "Entraste como Carlos (Hidrovias Madeira). Compara cargas con y sin negociación."
+        },
+        "ana": {
+          "cardName": "Ana RiosLog",
+          "represents": "Transportista en moderación (no aprobada).",
+          "testsWhat": "Flujos donde carrier pendiente encuentra restricciones.",
+          "validateLine": "Validar mensajes de moderación o perfil pendiente.",
+          "expectedLine": "Esperado: bloqueos por approved=false donde aplique el producto.",
+          "assistantNote": "Cargo Status Assistant: con Ana espera denegación por cuenta antes del alcance de carga.",
+          "feedbackSuccess": "Entraste como Ana RiosLog (moderación). Valida restricciones de carrier pendiente."
+        },
+        "admin": {
+          "cardName": "Admin HydroRivers",
+          "represents": "Administración interna HydroRivers.",
+          "testsWhat": "Panel admin, cambio de escenarios mock y herramientas restringidas.",
+          "validateLine": "Validar acceso a /admin y POST mock-mode cuando aplique.",
+          "expectedLine": "Esperado: control amplio sobre datasets demo.",
+          "assistantNote": "Admin omite alcance del asistente — útil para smoke rápido en cualquier carga.",
+          "feedbackSuccess": "Entraste como administrador. Usa mock-mode y validaciones amplias."
+        }
+      }
     },
     "cases": {
       "cargoList": {

@@ -26,20 +26,13 @@ Explicar, em linguagem operacional, o **status atual de uma carga** na tela de d
 - **404** se o `cargoId` não existir no mock **após** autenticação (evita vazar conteúdo a anônimos; usuários autenticados ainda podem inferir existência por 403 vs 404 — trade-off explícito para mensagens claras).
 - **400** se o JSON não trouxer `cargoId` string não vazia (`missing-cargo-id`).
 
-## Observabilidade (`logUseCaseEvent`)
+## Observabilidade e QA
 
-A rota `POST /api/ai/cargo-status` registra eventos com `useCase: AI_CARGO_STATUS_ASSISTANT` quando o logger está habilitado (`NODE_ENV !== production` ou `HYDRORIVERS_USE_CASE_LOGS=true` — ver `src/shared/observability/use-case-logger.ts`):
+A rota **`POST /api/ai/cargo-status` não chama `logUseCaseEvent`** — evita ruído no terminal durante navegação normal em dev/mock. O feedback operacional para QA deve vir da [**Mock Mode QA Hub**](MOCK-MODE-QA-HUB.md), da própria UI do assistente e, quando necessário, da aba **Rede** do DevTools (`POST /api/ai/cargo-status`).
 
-| step | status | Quando |
-|------|--------|--------|
-| `REQUEST_RECEIVED` | `started` | Payload válido; início do processamento da solicitação |
-| `REQUEST_RECEIVED` | `failed` | Payload inválido (`cargoId` ausente/vazio) |
-| `CARGO_NOT_FOUND` | `failed` | Carga não existe no mock |
-| `ACCESS_DENIED` | `blocked` | Usuário não aprovado ou sem escopo na carga |
-| `FALLBACK_USED` | `fallback` | Resposta gerada com `source: fallback-rule` |
-| `RESPONSE_GENERATED` | `success` | Resposta `AiAssistResponse` montada com sucesso |
+Para depuração pontual no terminal em outros pontos do código (ou após instrumentação local), use **`HYDRORIVERS_USE_CASE_LOGS=true`** com `logUseCaseEvent` em `src/shared/observability/use-case-logger.ts` (opt-in estrito em qualquer `NODE_ENV`). O utilitário só imprime quando a flag é `=== 'true'`; `actor`/`context` seguem as regras de sanitização do módulo.
 
-O `actor` enviado ao logger contém apenas `userId` e `role`. Não são logados token, cookie, senha, `authorization` nem payload bruto da requisição.
+A função `reportDevScenario` permanece no mesmo pacote para cenários dev quando **`HYDRORIVERS_DEV_SCENARIO_LOGS=true`** (e **`HYDRORIVERS_DEV_SCENARIO_VERBOSE=true`** para hints sanitizados); rotas de auth e esta rota **não** a invocam.
 
 ## Mock-first e evolução
 
@@ -56,5 +49,5 @@ O `actor` enviado ao logger contém apenas `userId` e `role`. Não são logados 
 
 ## Testes automatizados
 
-- Integração: `tests/integration/api/ai.cargo-status.post.test.ts` (401, 400, 403 escopo, 404, 200, fallback, asserções de `logUseCaseEvent` mockado, ausência de `passwordHash` nos argumentos de log).
-- Unitário: `tests/unit/features/ai-assist/cargo-status-assistant.test.ts` (fonte, bloqueio extra por prontidão documental).
+- Integração: `tests/integration/api/ai.cargo-status.post.test.ts` (401, 400, 403 escopo, 404, 200, fallback, ausência de `passwordHash` no JSON da resposta).
+- Unitário: `tests/unit/features/ai-assist/cargo-status-ai-access.test.ts`, `tests/unit/features/ai-assist/cargo-status-assistant.test.ts` (fonte, bloqueio extra por prontidão documental).

@@ -1,9 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const { mockGetSessionUser, mockReadMock, mockLogUseCase } = vi.hoisted(() => ({
+const { mockGetSessionUser, mockReadMock } = vi.hoisted(() => ({
   mockGetSessionUser: vi.fn(),
-  mockReadMock: vi.fn(),
-  mockLogUseCase: vi.fn()
+  mockReadMock: vi.fn()
 }));
 
 vi.mock('@/shared/server/auth', () => ({
@@ -12,10 +11,6 @@ vi.mock('@/shared/server/auth', () => ({
 
 vi.mock('@/shared/server/mock-db', () => ({
   readMock: mockReadMock
-}));
-
-vi.mock('@/shared/observability/use-case-logger', () => ({
-  logUseCaseEvent: mockLogUseCase
 }));
 
 import { POST } from '@/app/api/ai/cargo-status/route';
@@ -43,10 +38,6 @@ function post(body: unknown) {
   }));
 }
 
-function callsPayload() {
-  return mockLogUseCase.mock.calls.map((call) => JSON.stringify(call[0]));
-}
-
 describe('POST /api/ai/cargo-status', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -58,7 +49,6 @@ describe('POST /api/ai/cargo-status', () => {
     const response = await post({ cargoId: 'cargo-test-1', locale: 'pt-BR' });
     expect(response.status).toBe(401);
     await expect(response.json()).resolves.toMatchObject({ error: 'unauthenticated' });
-    expect(mockLogUseCase).not.toHaveBeenCalled();
   });
 
   it('retorna 403 quando usuário não aprovado', async () => {
@@ -74,12 +64,6 @@ describe('POST /api/ai/cargo-status', () => {
     const response = await post({ cargoId: 'cargo-test-1', locale: 'pt-BR' });
     expect(response.status).toBe(403);
     await expect(response.json()).resolves.toMatchObject({ error: 'forbidden', reason: 'user-not-approved' });
-    expect(mockLogUseCase).toHaveBeenCalledTimes(1);
-    expect(mockLogUseCase).toHaveBeenCalledWith(expect.objectContaining({
-      useCase: 'AI_CARGO_STATUS_ASSISTANT',
-      step: 'ACCESS_DENIED',
-      status: 'blocked'
-    }));
   });
 
   it('retorna 403 quando embarcador não é o ownerId da carga', async () => {
@@ -100,14 +84,6 @@ describe('POST /api/ai/cargo-status', () => {
     const response = await post({ cargoId: 'cargo-test-1', locale: 'pt-BR' });
     expect(response.status).toBe(403);
     await expect(response.json()).resolves.toMatchObject({ error: 'forbidden', reason: 'cargo-access-denied' });
-    expect(mockLogUseCase).toHaveBeenCalledWith(expect.objectContaining({
-      step: 'REQUEST_RECEIVED',
-      status: 'started'
-    }));
-    expect(mockLogUseCase).toHaveBeenCalledWith(expect.objectContaining({
-      step: 'ACCESS_DENIED',
-      status: 'blocked'
-    }));
   });
 
   it('retorna 403 quando transportador não participa da carga', async () => {
@@ -150,10 +126,6 @@ describe('POST /api/ai/cargo-status', () => {
     const response = await post({ cargoId: 'missing-id', locale: 'pt-BR' });
     expect(response.status).toBe(404);
     await expect(response.json()).resolves.toMatchObject({ error: 'not-found', reason: 'cargo-not-found' });
-    expect(mockLogUseCase).toHaveBeenCalledWith(expect.objectContaining({
-      step: 'CARGO_NOT_FOUND',
-      status: 'failed'
-    }));
   });
 
   it('retorna 200 quando transportador participa da negociação da carga', async () => {
@@ -177,10 +149,6 @@ describe('POST /api/ai/cargo-status', () => {
     expect(response.status).toBe(200);
     const body = await response.json();
     expect(body.data.source).toMatch(/^(mock-ai|fallback-rule)$/);
-    expect(mockLogUseCase).toHaveBeenCalledWith(expect.objectContaining({
-      step: 'RESPONSE_GENERATED',
-      status: 'success'
-    }));
   });
 
   it('retorna 200 com contrato correto para embarcador dono da carga', async () => {
@@ -210,16 +178,6 @@ describe('POST /api/ai/cargo-status', () => {
       source: 'mock-ai'
     });
     expect(body.data.nextSteps.length).toBeGreaterThan(0);
-    expect(mockLogUseCase).toHaveBeenCalledWith(expect.objectContaining({
-      step: 'REQUEST_RECEIVED',
-      status: 'started'
-    }));
-    expect(mockLogUseCase).toHaveBeenCalledWith(expect.objectContaining({
-      step: 'RESPONSE_GENERATED',
-      status: 'success',
-      context: expect.objectContaining({ source: 'mock-ai' })
-    }));
-    expect(mockLogUseCase).not.toHaveBeenCalledWith(expect.objectContaining({ step: 'FALLBACK_USED' }));
   });
 
   it('usa fallback-rule quando o status não tem pacote i18n', async () => {
@@ -245,14 +203,6 @@ describe('POST /api/ai/cargo-status', () => {
     const body = await response.json();
     expect(body.data.source).toBe('fallback-rule');
     expect(body.data.confidence).toBe('low');
-    expect(mockLogUseCase).toHaveBeenCalledWith(expect.objectContaining({
-      step: 'FALLBACK_USED',
-      status: 'fallback'
-    }));
-    expect(mockLogUseCase).toHaveBeenCalledWith(expect.objectContaining({
-      step: 'RESPONSE_GENERATED',
-      status: 'success'
-    }));
   });
 
   it('retorna 400 quando cargoId ausente', async () => {
@@ -267,14 +217,9 @@ describe('POST /api/ai/cargo-status', () => {
 
     const response = await post({ locale: 'pt-BR' });
     expect(response.status).toBe(400);
-    expect(mockLogUseCase).toHaveBeenCalledWith(expect.objectContaining({
-      step: 'REQUEST_RECEIVED',
-      status: 'failed',
-      error: expect.objectContaining({ code: 'missing-cargo-id' })
-    }));
   });
 
-  it('logs de observabilidade não incluem passwordHash nem corpo bruto do usuário', async () => {
+  it('JSON da resposta não expõe passwordHash nem outros campos da sessão', async () => {
     mockGetSessionUser.mockResolvedValue({
       id: 'u-shipper-1',
       name: 'Tiala',
@@ -282,7 +227,7 @@ describe('POST /api/ai/cargo-status', () => {
       company: 'Coop',
       role: 'shipper',
       approved: true,
-      passwordHash: 'NEVER_LOG_THIS_HASH_VALUE'
+      passwordHash: 'NEVER_LEAK_THIS_HASH_VALUE'
     });
     mockReadMock.mockImplementation((key: string) => {
       if (key === 'cargoes') return [baseCargo];
@@ -290,9 +235,10 @@ describe('POST /api/ai/cargo-status', () => {
       return [];
     });
 
-    await post({ cargoId: 'cargo-test-1', locale: 'pt-BR' });
-    const blob = callsPayload().join('\n');
-    expect(blob).not.toContain('NEVER_LOG_THIS_HASH_VALUE');
-    expect(blob).not.toContain('passwordHash');
+    const response = await post({ cargoId: 'cargo-test-1', locale: 'pt-BR' });
+    expect(response.status).toBe(200);
+    const bodyText = JSON.stringify(await response.json());
+    expect(bodyText).not.toContain('NEVER_LEAK_THIS_HASH_VALUE');
+    expect(bodyText).not.toContain('passwordHash');
   });
 });

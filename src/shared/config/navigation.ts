@@ -2,6 +2,7 @@ export const mainNavigation = [
   { href: '/', labelKey: 'home' },
   { href: '/dashboard', labelKey: 'dashboard' },
   { href: '/cargas', labelKey: 'cargoes' },
+  { href: '/minhas-cargas', labelKey: 'myCargoes' },
   { href: '/embarcacoes', labelKey: 'vessels' },
   { href: '/negociacoes', labelKey: 'negotiations' },
   { href: '/rastreio', labelKey: 'tracking' },

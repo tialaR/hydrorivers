@@ -1,6 +1,7 @@
 
 import { createHash } from 'node:crypto';
 import { cookies } from 'next/headers';
+import type { HydroUser } from '@/features/auth/domain/auth.types';
 import { readMock } from '@/shared/server/mock-db';
 import { invalidPayload } from '@/shared/server/api-errors';
 import { toPublicUser, verifyPassword } from '@/shared/server/auth';
@@ -35,7 +36,8 @@ export async function POST(request: Request) {
     return invalidPayload('missing-credentials');
   }
 
-  const user = readMock('users').find((item) => item.email.toLowerCase() === email);
+  const users = readMock('users') as HydroUser[];
+  const user = users.find((item) => item.email.toLowerCase() === email);
   if (!user || !verifyPassword(password, user.passwordHash)) {
     return Response.json({ error: 'invalid-login' }, { status: 401 });
   }

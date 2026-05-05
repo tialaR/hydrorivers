@@ -9,6 +9,8 @@ import { HydroIcon } from '@/shared/ui/hydro-icon/hydro-icon';
 import { Tooltip } from '@/shared/ui/tooltip/tooltip';
 import { useToast } from '@/shared/ui/toast/toast-provider';
 import type { Cargo } from '@/features/marketplace/domain/marketplace.types';
+import type { CargoViewer } from '@/features/cargo-market/utils/cargo-proposal-visibility';
+import { shouldShowCargoProposalForm } from '@/features/cargo-market/utils/cargo-proposal-visibility';
 import { CargoStatusAssistantCard } from '@/features/ai-assist/components/CargoStatusAssistantCard';
 import { translateMock } from '@/shared/i18n/mock-content';
 import styles from './cargo-detail.module.scss';
@@ -43,7 +45,7 @@ function translateDocument(t: ReturnType<typeof useTranslations>, name: string) 
   return map[name] ?? name;
 }
 
-export function CargoDetail({ cargo }: { cargo: Cargo }) {
+export function CargoDetail({ cargo, viewer }: { cargo: Cargo; viewer?: CargoViewer | null }) {
   const page = useTranslations('pages.cargoDetail');
   const common = useTranslations('common');
   const locale = useLocale();
@@ -51,6 +53,7 @@ export function CargoDetail({ cargo }: { cargo: Cargo }) {
   const [proposalCount, setProposalCount] = useState(2);
 
   const cargoType = translateCargoType(common, cargo.cargoType);
+  const showProposalForm = shouldShowCargoProposalForm(viewer ?? null, cargo);
 
   function simulateProposal() {
     setProposalCount((value) => value + 1);
@@ -154,19 +157,29 @@ export function CargoDetail({ cargo }: { cargo: Cargo }) {
         ) : null}
       </Card>
 
-      <Card className={styles.formCard}>
-        <form className={styles.form}>
-          <h3>{page('sendProposal')}</h3>
-          <label>{page('amount')}<input placeholder={cargo.targetPrice} inputMode="decimal" /></label>
-          <label>{page('estimatedTime')}<input placeholder={page('estimatedTimePlaceholder')} /></label>
-          <label>{page('vesselCompatibility')}<input placeholder={page('vesselCompatibilityPlaceholder')} /></label>
-          <label>{page('documentCommitment')}<select defaultValue="ready"><option value="ready">{page('documentReady')}</option><option value="pending">{page('documentPending')}</option></select></label>
-          <label>{page('operationPlan')}<input placeholder={page('operationPlanPlaceholder')} /></label>
-          <label>{page('contactChannel')}<input placeholder={page('contactChannelPlaceholder')} /></label>
-          <label>{page('riskNote')}<textarea placeholder={page('notesPlaceholder')} /></label>
-          <Button type="button" onClick={simulateProposal}><HydroIcon name="message" size={17} /> {page('simulateProposal')}</Button>
-        </form>
-      </Card>
+      {showProposalForm ? (
+        <Card className={styles.formCard} data-testid="cargo-proposal-form">
+          <form className={styles.form}>
+            <h3>{page('sendProposal')}</h3>
+            <label>{page('amount')}<input placeholder={cargo.targetPrice} inputMode="decimal" /></label>
+            <label>{page('estimatedTime')}<input placeholder={page('estimatedTimePlaceholder')} /></label>
+            <label>{page('vesselCompatibility')}<input placeholder={page('vesselCompatibilityPlaceholder')} /></label>
+            <label>{page('documentCommitment')}<select defaultValue="ready"><option value="ready">{page('documentReady')}</option><option value="pending">{page('documentPending')}</option></select></label>
+            <label>{page('operationPlan')}<input placeholder={page('operationPlanPlaceholder')} /></label>
+            <label>{page('contactChannel')}<input placeholder={page('contactChannelPlaceholder')} /></label>
+            <label>{page('riskNote')}<textarea placeholder={page('notesPlaceholder')} /></label>
+            <Button type="button" onClick={simulateProposal}><HydroIcon name="message" size={17} /> {page('simulateProposal')}</Button>
+          </form>
+        </Card>
+      ) : (
+        <Card className={styles.formCard} data-testid="cargo-owner-awaiting-card">
+          <div className={styles.ownerAwaiting}>
+            <HydroIcon name="cargo" size={22} />
+            <h3>{page('ownerAwaitingTitle')}</h3>
+            <p>{page('ownerAwaitingDescription')}</p>
+          </div>
+        </Card>
+      )}
     </section>
   );
 }

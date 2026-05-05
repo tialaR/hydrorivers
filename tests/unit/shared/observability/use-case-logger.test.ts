@@ -27,6 +27,21 @@ describe('use-case-logger', () => {
     expect(console.log).not.toHaveBeenCalled();
   });
 
+  it('não loga em development/test quando HYDRORIVERS_USE_CASE_LOGS não é true', async () => {
+    vi.resetModules();
+    (process.env as { NODE_ENV?: string }).NODE_ENV = 'development';
+    delete process.env.HYDRORIVERS_USE_CASE_LOGS;
+
+    const { logUseCaseEvent } = await import('@/shared/observability/use-case-logger');
+    logUseCaseEvent({
+      useCase: 'MOCK_MODE_RESET',
+      step: 'route',
+      status: 'started'
+    });
+
+    expect(console.log).not.toHaveBeenCalled();
+  });
+
   it('loga em production quando HYDRORIVERS_USE_CASE_LOGS é true', async () => {
     vi.resetModules();
     (process.env as { NODE_ENV?: string }).NODE_ENV = 'production';
@@ -51,6 +66,7 @@ describe('use-case-logger', () => {
   it('mascara ou omite chaves sensíveis no context', async () => {
     vi.resetModules();
     (process.env as { NODE_ENV?: string }).NODE_ENV = 'development';
+    process.env.HYDRORIVERS_USE_CASE_LOGS = 'true';
 
     const { logUseCaseEvent, sanitizeUseCaseLogValue } = await import('@/shared/observability/use-case-logger');
 
@@ -86,10 +102,10 @@ describe('use-case-logger', () => {
     expect(printed).toContain('[omitted]');
   });
 
-  it('aceita eventos válidos (useCase + status) e emite em ambiente não production', async () => {
+  it('aceita eventos válidos (useCase + status) quando HYDRORIVERS_USE_CASE_LOGS é true', async () => {
     vi.resetModules();
     (process.env as { NODE_ENV?: string }).NODE_ENV = 'test';
-    delete process.env.HYDRORIVERS_USE_CASE_LOGS;
+    process.env.HYDRORIVERS_USE_CASE_LOGS = 'true';
 
     const { logUseCaseEvent, USE_CASE_IDS, USE_CASE_STATUSES } = await import('@/shared/observability/use-case-logger');
 

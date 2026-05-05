@@ -7,7 +7,11 @@
 - Shipper 2: `mariana@bioamazonia.coop` / `hydro123`
 - Carrier 2: `carlos@hidroviasmadeira.com` / `hydro123`
 
-## Core scenarios
+Com `npm run dev`, prefira o [**Mock Mode QA Hub**](MOCK-MODE-QA-HUB.md) em vez de logs no terminal.
+
+## Terminal — Dev Scenario Reporter (opcional)
+
+Blocos legíveis só se `HYDRORIVERS_DEV_SCENARIO_LOGS=true` (função mantida para depuração). Guia completo: [`docs/MOCK-MODE-QA-HUB.md`](MOCK-MODE-QA-HUB.md).
 
 ### 1. Authentication
 1. Login with each valid account.

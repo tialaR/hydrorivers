@@ -34,7 +34,13 @@ Até haver código que leia `HYDRORIVERS_APP_ENV`, trate esse nome como **conven
 |----------|--------|----------------------|-----|
 | `HYDRORIVERS_APP_ENV` | **Plano** | `development` | Rótulo lógico: `development` \| `test` \| `demo` \| `production`. Nenhuma rota lê obrigatoriamente esta variável **nesta baseline**; útil para documentação e futuros guards. |
 | `HYDRORIVERS_EXPOSE_OTP_CODE` | **Implementado** | `false` | Se `=== 'true'`, o `POST /api/auth/login` inclui `otpCode` na resposta para facilitar E2E/Playwright. **Código:** `src/app/api/auth/login/route.ts`. |
+| `HYDRORIVERS_USE_CASE_LOGS` | **Implementado** | `false` | `logUseCaseEvent` só imprime quando `=== 'true'` (qualquer `NODE_ENV`). Rotas “quentes” de produto mock (ex.: Cargo Status Assistant) **não** chamam esse utilitário para não poluir o terminal; habilitar a flag só ajuda onde houver chamadas explícitas ou instrumentação temporária. |
 | `NEXT_PUBLIC_APP_URL` | **Plano** | `http://localhost:3000` | Base para URLs absolutos/redirects quando o projeto passar a consumir; **não** é exigência do MVP atual. |
+| `HYDRORIVERS_DEV_SCENARIO_LOGS` | **Implementado** | `false` | `reportDevScenario` só imprime quando `=== 'true'` (terminal). |
+| `HYDRORIVERS_DEV_SCENARIO_VERBOSE` | **Implementado** | `false` | Com reporter ligado e `=== 'true'`, secção “Mock hints” sanitizada. |
+| `HYDRORIVERS_ALLOW_QA_DIRECT_LOGIN` | **Implementado** | `true` (dev) | Em `NODE_ENV !== production`: `false` bloqueia `POST /api/auth/qa-direct-login`. Ignorado se `HYDRORIVERS_FORCE_QA_DIRECT_LOGIN=true`. |
+| `HYDRORIVERS_FORCE_MOCK_QA_UI` | **Implementado** | omitido | **Somente CI/E2E.** Mostra painel Mock mode mesmo em build `production`. Ver [`docs/MOCK-MODE-QA-HUB.md`](MOCK-MODE-QA-HUB.md). |
+| `HYDRORIVERS_FORCE_QA_DIRECT_LOGIN` | **Implementado** | omitido | **Somente CI/E2E.** Permite login direto QA em `NODE_ENV=production`. |
 | `HYDRORIVERS_ALLOW_MOCK_MODE_RESET` | **Plano** | `true` em dev | Intenção: em **production**, `false` para bloquear `POST /api/mock-mode` mesmo com admin (ou remover rota via deploy). **Ainda não lido pelo código.** |
 | `DATABASE_URL` | **Plano** | URI Postgres fictícia | Migrações futuras (`docs/DATABASE-PLANNING.md`). Ignorado pelo app mock. |
 | `BLOB_READ_WRITE_TOKEN` | **Plano** | token fake | Uploads futuros de avatar/documentos. |
@@ -50,6 +56,11 @@ Até haver código que leia `HYDRORIVERS_APP_ENV`, trate esse nome como **conven
 | Flag | Comportamento quando ativa |
 |------|----------------------------|
 | `HYDRORIVERS_EXPOSE_OTP_CODE=true` | OTP visível na API de login — **somente** para automação controlada ou laboratório. |
+| `HYDRORIVERS_USE_CASE_LOGS=true` | Ativa logs estruturados `logUseCaseEvent` no terminal **apenas nos pontos que chamam** a função (Cargo Status Assistant não usa por padrão). |
+| `HYDRORIVERS_DEV_SCENARIO_LOGS=true` | Ativa blocos `reportDevScenario` no terminal. |
+| `HYDRORIVERS_DEV_SCENARIO_VERBOSE=true` | Acrescenta secção “Mock hints” nos blocos do reporter (valores sanitizados). |
+| `HYDRORIVERS_ALLOW_QA_DIRECT_LOGIN=false` | Em ambiente não production, bloqueia login direto do QA Hub (`/api/auth/qa-direct-login`). |
+| `HYDRORIVERS_FORCE_MOCK_QA_UI=true` / `HYDRORIVERS_FORCE_QA_DIRECT_LOGIN=true` | **Apenas pipelines** (ex.: Playwright com `next build`). Nunca habilitar em produção real. Ver [`docs/MOCK-MODE-QA-HUB.md`](MOCK-MODE-QA-HUB.md). |
 | **`HYDRORIVERS_ALLOW_MOCK_MODE_RESET` (planejada)** | Quando existir wiring, deve impedir resets de dataset em hospedagens “production”. |
 
 Cenários de dados globais continuam sendo trocados via **`POST /api/mock-mode`** com corpo `{ "scenario": "…" }` (somente admin autenticado no fluxo atual) — vide [`docs/MOCK-MODE-USE-CASES.md`](MOCK-MODE-USE-CASES.md) e [`docs/API-SECURITY-AUDIT.md`](API-SECURITY-AUDIT.md).

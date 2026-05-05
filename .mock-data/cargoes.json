@@ -1,5 +1,47 @@
 [
   {
+    "id": "mock-1777953258530",
+    "ownerId": "u-shipper-1",
+    "title": "Mandioca",
+    "origin": "Belém",
+    "destination": "Salvador",
+    "volume": "10t",
+    "window": "02/06/2026",
+    "cargoType": "Mandioca",
+    "status": "open",
+    "co2Saving": "-52% CO₂",
+    "targetPrice": "6000",
+    "description": "Carga com coleta nas margnes do rio Amazonas e entrega em Belém do Pará",
+    "producer": "Cooperativa Açaí Norte",
+    "documents": [
+      "Rascunho de publicação"
+    ],
+    "productFamily": "territorialSupply",
+    "corridor": "Belém–Salvador",
+    "mainRiver": "A definir",
+    "serviceType": "Navegação interior",
+    "predictability": "medium",
+    "connectivity": "delayedSync",
+    "documentReadiness": 40,
+    "requiredDocuments": [
+      {
+        "name": "NF-e",
+        "status": "required",
+        "note": "Documento fiscal da mercadoria."
+      },
+      {
+        "name": "CT-e",
+        "status": "nextPhase",
+        "note": "Emitir na contratação do transporte."
+      },
+      {
+        "name": "Romaneio",
+        "status": "required",
+        "note": "Lista de volumes por lote."
+      }
+    ]
+  },
+  {
     "id": "cargo-001",
     "title": "Polpa de açaí congelada — cooperativa ribeirinha",
     "origin": "Belém, PA",

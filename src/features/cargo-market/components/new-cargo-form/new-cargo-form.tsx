@@ -3,6 +3,7 @@
 import { FormEvent, useState } from 'react';
 import { CalendarDays, Leaf, MapPin, Package, ShipWheel } from 'lucide-react';
 import { useTranslations } from 'next-intl';
+import { useRouter } from '@/core/i18n/navigation';
 import { Button } from '@/shared/ui/button/button';
 import { Card } from '@/shared/ui/card/card';
 import { persistCargo } from '@/features/marketplace/services/marketplace.client';
@@ -12,7 +13,7 @@ import styles from './new-cargo-form.module.scss';
 export function NewCargoForm() {
   const t = useTranslations('forms');
   const common = useTranslations('common');
-  const [submitted, setSubmitted] = useState(false);
+  const router = useRouter();
   const [pending, setPending] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -45,9 +46,8 @@ export function NewCargoForm() {
       documents: [common('draftPublication')]
     };
     try {
-      await persistCargo(cargo);
-      setSubmitted(true);
-      event.currentTarget.reset();
+      const saved = await persistCargo(cargo);
+      router.push(`/minhas-cargas?created=${encodeURIComponent(saved.id)}`);
     } catch (error) {
       const message = error instanceof Error ? error.message : '';
       setFormError(message === 'forbidden' ? t('carrierCannotPublish') : t('publishFailed'));
@@ -72,7 +72,7 @@ export function NewCargoForm() {
           </p>
         ) : null}
         <Button type="submit" className={styles.full} data-testid="new-cargo-submit" loading={pending} loadingLabel={t('loading')}>
-          {submitted ? common('published') : t('publish')}
+          {t('publish')}
         </Button>
       </form>
     </Card>

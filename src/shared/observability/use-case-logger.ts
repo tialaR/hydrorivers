@@ -1,6 +1,6 @@
 /**
- * Logs estruturados de casos de uso para desenvolvimento (terminal).
- * Em produção só emite se HYDRORIVERS_USE_CASE_LOGS === "true".
+ * Logs estruturados de casos de uso no terminal (estritamente opt-in).
+ * Emite apenas quando HYDRORIVERS_USE_CASE_LOGS === "true".
  */
 
 export const USE_CASE_IDS = [
@@ -132,9 +132,7 @@ function sanitizeError(error: UseCaseError): Record<string, unknown> {
 }
 
 function shouldEmitUseCaseLogs(): boolean {
-  if (process.env.HYDRORIVERS_USE_CASE_LOGS === 'true') return true;
-  if (process.env.NODE_ENV === 'production') return false;
-  return true;
+  return process.env.HYDRORIVERS_USE_CASE_LOGS === 'true';
 }
 
 function isValidUseCaseId(value: string): value is UseCaseId {
@@ -170,10 +168,10 @@ function formatLines(params: LogUseCaseEventParams): string {
  * Nunca inclui token, cookie, senha, authorization ou payload bruto — ver sanitização.
  */
 export function logUseCaseEvent(params: LogUseCaseEventParams): void {
-  if (!isValidUseCaseId(params.useCase) || !isValidStatus(params.status)) {
+  if (!shouldEmitUseCaseLogs()) {
     return;
   }
-  if (!shouldEmitUseCaseLogs()) {
+  if (!isValidUseCaseId(params.useCase) || !isValidStatus(params.status)) {
     return;
   }
   console.log(formatLines(params));

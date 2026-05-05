@@ -1,5 +1,5 @@
 
-import type { HydroUser, LoginPayload, LoginResult, RegisterPayload } from '../domain/auth.types';
+import type { HydroUser, LoginPayload, LoginResult, PublicHydroUser, RegisterPayload } from '../domain/auth.types';
 
 async function parseResponse<T>(response: Response): Promise<T> {
   const payload = await response.json().catch(() => ({}));
@@ -12,6 +12,48 @@ export async function getCurrentUser(): Promise<HydroUser | null> {
   if (response.status === 401) return null;
   const payload = await parseResponse<{ user: HydroUser | null }>(response);
   return payload.user;
+}
+
+/**
+ * Login direto só para QA em ambiente não production (`/api/auth/qa-direct-login`).
+ * Não usar em fluxos de produção.
+ */
+export type MockModeLoginAsResult = {
+  user: PublicHydroUser;
+  redirectTo: string;
+};
+
+/** Login direto por userId (`POST /api/mock-mode/login-as`) — só dev/mock no servidor. */
+export async function mockModeLoginAs(userId: string): Promise<MockModeLoginAsResult> {
+  const response = await fetch('/api/mock-mode/login-as', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ userId }),
+    credentials: 'include'
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error((payload as { reason?: string }).reason ?? 'mock-mode-login-as-failed');
+  }
+  const data = payload as MockModeLoginAsResult;
+  window.dispatchEvent(new CustomEvent('hydrorivers:auth-changed'));
+  return data;
+}
+
+export async function qaDirectLogin(email: string): Promise<HydroUser> {
+  const response = await fetch('/api/auth/qa-direct-login', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ email }),
+    credentials: 'include'
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error((payload as { reason?: string }).reason ?? 'qa-direct-login-failed');
+  }
+  const data = payload as { user: HydroUser };
+  window.dispatchEvent(new CustomEvent('hydrorivers:auth-changed'));
+  return data.user;
 }
 
 export async function login(payload: LoginPayload): Promise<LoginResult> {
