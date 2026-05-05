@@ -21,6 +21,7 @@ Garantir consistencia de idiomas e evitar regressao de internacionalizacao.
 
 # Orientacoes
 
+- Landing e rodape: mensagens em `pages.home.*` (hero, visualCards, benefits) e `layout.footer`; ver `docs/I18N-MESSAGE-STRUCTURE.md`.
 - Usar chaves de traducao em titulos, labels, botoes e mensagens.
 - Validar pluralizacao, interpolacao e fallback de idioma.
 - Conferir textos de erro e estados vazios em todos os fluxos criticos.

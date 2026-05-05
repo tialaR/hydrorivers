@@ -196,35 +196,39 @@
     "otpSubmit": "Validate OTP",
     "otpInvalid": "Invalid OTP code. Please check it and try again."
   },
-  "home": {
-    "eyebrow": "River freight and cabotage",
-    "title": "O marketplace que transforma rios em corredores digitais de carga.",
-    "description": "HydroRivers conecta pequenos produtores, operadores e embarcações para reduzir custo logístico, emissões e burocracia na Amazônia e na cabotagem brasileira.",
-    "primary": "Explorar cargas",
-    "secondary": "Ver impacto",
-    "pillars": {
-      "cost": {
-        "title": "Cost and sustainability",
-        "description": "Menos caminhões em longas distâncias e mais uso de rotas naturais com menor emissão."
+  "pages": {
+    "home": {
+      "hero": {
+        "eyebrow": "RIVER FREIGHT AND CABOTAGE",
+        "title": "The marketplace that turns rivers into digital freight corridors.",
+        "description": "HydroRivers connects small producers, operators and vessels to reduce logistics costs, emissions and red tape in the Amazon and Brazilian cabotage.",
+        "primary": "Explore cargoes",
+        "secondary": "View impact"
       },
-      "region": {
-        "title": "Necessidade regional",
-        "description": "Onde o rio é estrada, organizar capacidade fluvial reduz custo de vida e amplia mercado."
+      "visualCards": {
+        "aria": "Visual summary of HydroRivers operations",
+        "routeTitle": "Belém → Santarém",
+        "routeDescription": "Regional capacity matched for refrigerated cargo on an inland waterway route.",
+        "cargoTitle": "Açaí em paletes",
+        "cargoMeta": "18 t · Window May 8–12",
+        "impactValue": "-64% CO₂",
+        "impactDescription": "Potential emissions avoided by shifting long-haul trucking to water."
       },
-      "automation": {
-        "title": "Less bureaucracy",
-        "description": "Cotação, contraproposta e documentos em fluxo digital preparado para automação."
+      "benefits": {
+        "cost": {
+          "title": "Cost and sustainability",
+          "description": "Fewer trucks on long hauls and more natural routes with lower emissions."
+        },
+        "region": {
+          "title": "Regional need",
+          "description": "Where the river is the road, organizing river capacity lowers living costs and expands markets."
+        },
+        "automation": {
+          "title": "Streamlining",
+          "description": "Quotes, counter-offers and documents in a digital flow ready for automation."
+        }
       }
     },
-    "visualAria": "Visual summary of HydroRivers operations",
-    "visualRouteTitle": "Belém → Santarém",
-    "visualRouteDescription": "Regional capacity found for refrigerated cargo on a river route.",
-    "visualCargoTitle": "Açaí on pallets",
-    "visualCargoMeta": "18 t · May 08-12 window",
-    "visualImpactValue": "-64% CO₂",
-    "visualImpactDescription": "Potential avoided emissions when replacing long road haulage with waterways."
-  },
-  "pages": {
     "dashboard": {
       "eyebrow": "Operations",
       "title": "HydroRivers dashboard",
@@ -746,13 +750,14 @@
       "description": "Corridor, supply, bioeconomy and risk indicators support public decisions."
     }
   },
-  "footer": {
-    "description": "River and coastal shipping freight marketplace to reduce cost, increase predictability and make regional logistics more sustainable.",
-    "copyright": "All rights reserved.",
-    "social": "HydroRivers channels",
-    "product": {
-      "title": "Product"
-    },
+  "layout": {
+    "footer": {
+      "description": "River and coastal shipping freight marketplace to reduce cost, increase predictability and make regional logistics more sustainable.",
+      "copyrightLine": "© 2026 HydroRivers. All rights reserved.",
+      "social": "HydroRivers channels",
+      "product": {
+        "title": "Product"
+      },
     "platform": {
       "title": "Platform"
     },
@@ -782,6 +787,7 @@
         "label": "Support demo",
         "message": "Fake support: in production it would open chat or help desk."
       }
+    }
     }
   },
   "errors": {

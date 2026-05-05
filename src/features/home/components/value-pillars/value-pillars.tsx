@@ -6,7 +6,7 @@ import styles from './value-pillars.module.scss';
 const icons: HydroIconName[] = ['coin', 'leaf', 'chart'];
 
 export async function ValuePillars() {
-  const t = await getTranslations('home.pillars');
+  const t = await getTranslations('pages.home.benefits');
   const items = ['cost', 'region', 'automation'] as const;
   return (
     <section className={styles.grid}>
