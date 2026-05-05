@@ -4,21 +4,22 @@ import { useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/core/i18n/navigation';
 import { HydroIcon } from '@/shared/ui/hydro-icon/hydro-icon';
+import { intlAppPaths, localizedAppPath } from '@/shared/routing/app-routes';
 import { MockScenarioControl } from './mock-scenario-control';
 import { MockQaHubPersonas } from './mock-qa-hub';
 import styles from './mock-mode.module.scss';
 
 const cases = [
-  { id: 'cargoList', href: '/cargas', icon: 'cargo' },
-  { id: 'cargoDetail', href: '/cargas/cargo-001', icon: 'route' },
-  { id: 'vessels', href: '/embarcacoes', icon: 'ship' },
-  { id: 'vesselDetail', href: '/embarcacoes/vessel-001', icon: 'anchor' },
-  { id: 'negotiations', href: '/negociacoes', icon: 'message' },
-  { id: 'tracking', href: '/rastreio', icon: 'waves' },
-  { id: 'impact', href: '/impacto', icon: 'chart' },
-  { id: 'profile', href: '/perfil', icon: 'user' },
-  { id: 'lightMode', href: '/dashboard', icon: 'sun' },
-  { id: 'i18n', href: '/en/cargas', icon: 'globe', external: true }
+  { id: 'cargoList', href: intlAppPaths.cargos.marketplace, icon: 'cargo' },
+  { id: 'cargoDetail', href: intlAppPaths.cargos.cargoDetail('cargo-001'), icon: 'route' },
+  { id: 'vessels', href: intlAppPaths.vessels.marketplace, icon: 'ship' },
+  { id: 'vesselDetail', href: intlAppPaths.vessels.vesselDetail('vessel-001'), icon: 'anchor' },
+  { id: 'negotiations', href: intlAppPaths.negotiations.home, icon: 'message' },
+  { id: 'tracking', href: intlAppPaths.tracking.home, icon: 'waves' },
+  { id: 'impact', href: intlAppPaths.impact.home, icon: 'chart' },
+  { id: 'profile', href: intlAppPaths.auth.profile, icon: 'user' },
+  { id: 'lightMode', href: intlAppPaths.dashboard.home, icon: 'sun' },
+  { id: 'i18n', href: localizedAppPath('en', intlAppPaths.cargos.marketplace), icon: 'globe', external: true }
 ] as const;
 
 export function MockMode() {

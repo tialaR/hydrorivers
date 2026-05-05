@@ -4,6 +4,7 @@ import { PageShell } from '@/shared/ui/page-shell/page-shell';
 import { Card } from '@/shared/ui/card/card';
 import { Breadcrumb } from '@/shared/ui/breadcrumb/breadcrumb';
 import { HydroIcon } from '@/shared/ui/hydro-icon/hydro-icon';
+import { intlAppPaths } from '@/shared/routing/app-routes';
 
 const impactIds = ['cost', 'sustainability', 'regional', 'automation', 'brdomar', 'compliance', 'connectivity', 'government'] as const;
 type ImpactId = (typeof impactIds)[number];
@@ -22,7 +23,7 @@ export default async function ImpactDetailPage({ params }: { params: Promise<{ i
 
   return (
     <PageShell eyebrow={page('eyebrow')} title={t('title')} description={t('description')}>
-      <Breadcrumb items={[{ label: page('breadcrumb'), href: '/impacto' }, { label: t('title') }]} />
+      <Breadcrumb items={[{ label: page('breadcrumb'), href: intlAppPaths.impact.home }, { label: t('title') }]} />
       <Card style={{ borderWidth: 3, display: 'grid', gap: '1rem' }}>
         <span style={{ color: 'var(--brand)', display: 'inline-flex', alignItems: 'center', gap: '.5rem', fontWeight: 600 }}><HydroIcon name="leaf" /> {page('kicker')}</span>
         <p style={{ color: 'var(--muted)', fontWeight: 560, lineHeight: 1.7 }}>{page('description')}</p>

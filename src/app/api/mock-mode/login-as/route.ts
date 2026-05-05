@@ -6,14 +6,15 @@ import { cookieNames } from '@/shared/http/cookie-names';
 import { httpStatus } from '@/shared/http/http-status';
 import { readMock } from '@/shared/server/mock-db';
 import { toPublicUser } from '@/shared/server/auth';
+import { intlAppPaths } from '@/shared/routing/app-routes';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 function redirectPathForMockUser(user: HydroUser): string {
-  if (user.role === 'admin') return '/admin';
-  if (user.role === 'carrier' && !user.approved) return '/perfil';
-  return '/cargas';
+  if (user.role === 'admin') return intlAppPaths.admin.home;
+  if (user.role === 'carrier' && !user.approved) return intlAppPaths.auth.profile;
+  return intlAppPaths.cargos.marketplace;
 }
 
 /** POST /api/mock-mode/login-as — dev/mock; production bloqueado salvo HYDRORIVERS_FORCE_QA_DIRECT_LOGIN (E2E). */
