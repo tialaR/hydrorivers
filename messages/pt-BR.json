@@ -16,6 +16,11 @@
     "closeMenu": "Fechar menu",
     "mobileMenu": "Menu de navegação",
     "language": "Alterar idioma",
+    "localeOption": {
+      "pt-BR": "Português do Brasil",
+      "en": "Estados Unidos",
+      "es": "Espanhol Genérico"
+    },
     "publish": "Publicar carga",
     "profile": "Perfil",
     "primaryNavigation": "Navegação principal",
