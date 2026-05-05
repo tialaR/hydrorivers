@@ -7,7 +7,7 @@
 
 Namespaces por escopo de rota/layout (exemplos):
 
-- `pages.home.hero`, `pages.home.visualCards`, `pages.home.benefits` — landing page.
+- `pages.home.hero`, `pages.home.visualCards`, `pages.home.benefits` — landing page (`/`); componentes em `src/features/home/components/*`.
 - `layout.footer` — rodapé global (`AppFooter`, `FooterSocials`).
 - `nav`, `metadata`, etc. — demais áreas já existentes.
 
