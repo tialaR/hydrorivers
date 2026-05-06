@@ -898,6 +898,10 @@ const exact: Record<string, Localized> = {
     'en-US': 'Window and river route adjustment.',
     'es': 'Ajuste de ventana y ruta fluvial.'
   },
+  'Aguardar aceite do embarcador': {
+    'en-US': 'Waiting for shipper acceptance',
+    'es': 'Esperar aceptación del embarcador'
+  },
   'Carga criada no marketplace': {
     'en-US': 'Cargo created in marketplace',
     'es': 'Carga creada en el marketplace'

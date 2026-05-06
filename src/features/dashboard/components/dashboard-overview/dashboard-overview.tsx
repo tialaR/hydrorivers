@@ -4,6 +4,7 @@ import { getMarketplaceSummary, listCargoes, listNegotiations, listVessels } fro
 import { Card } from '@/shared/ui/card/card';
 import { HydroIcon } from '@/shared/ui/hydro-icon/hydro-icon';
 import { translateMock } from '@/shared/i18n/mock-content';
+import { formatMockBrl } from '@/shared/i18n/mock-format';
 import styles from './dashboard-overview.module.scss';
 
 export async function DashboardOverview({ locale }: { locale: string }) {
@@ -54,7 +55,7 @@ export async function DashboardOverview({ locale }: { locale: string }) {
                   {cargo.volume}
                 </small>
               </div>
-              <b>{cargo.targetPrice}</b>
+              <b>{formatMockBrl(locale, cargo.targetPrice)}</b>
             </div>
           ))}
         </Card>
@@ -86,7 +87,7 @@ export async function DashboardOverview({ locale }: { locale: string }) {
               <span>{translateMock(locale, negotiation.cargoTitle)}</span>
               <span>{negotiation.route}</span>
               <span className={styles.stage}>{common(`dealStage.${negotiation.stage}`)}</span>
-              <b>{negotiation.amount}</b>
+              <b>{formatMockBrl(locale, negotiation.amount)}</b>
             </div>
           ))}
         </div>

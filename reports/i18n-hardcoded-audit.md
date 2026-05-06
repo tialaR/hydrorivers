@@ -1,6 +1,6 @@
 # i18n Hardcoded Audit
 
-- Scanned files: 113
+- Scanned files: 114
 - Total findings: 0
 
 ## HIGH_CONFIDENCE_UI_TEXT
