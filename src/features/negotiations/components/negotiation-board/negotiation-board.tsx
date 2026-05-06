@@ -6,6 +6,7 @@ import { Card } from '@/shared/ui/card/card';
 import { HydroIcon } from '@/shared/ui/hydro-icon/hydro-icon';
 import type { DealStage, Negotiation } from '@/features/marketplace/domain/marketplace.types';
 import { translateMock } from '@/shared/i18n/mock-content';
+import { formatMockBrl, formatMockDate } from '@/shared/i18n/mock-format';
 import styles from './negotiation-board.module.scss';
 
 function progress(stage: DealStage) {
@@ -50,10 +51,10 @@ export function NegotiationBoard({ negotiations }: { negotiations: Negotiation[]
             <h2>{translateMock(locale, item.cargoTitle)}</h2>
             <p><HydroIcon name="ship" size={15} /> {item.vesselName}</p>
             {item.route ? <p><HydroIcon name="route" size={15} /> {item.route}</p> : null}
-            <strong>{item.amount}</strong>
+            <strong>{formatMockBrl(locale, item.amount)}</strong>
             <div className={styles.timeline} aria-label={t('negotiationProgress', { progress: progress(item.stage) })}><span style={{ width: `${progress(item.stage)}%` }} /></div>
             <small>
-              {translateMock(locale, item.lastUpdate)}
+              {translateMock(locale, formatMockDate(locale, item.lastUpdate))}
               {t('inlineListSeparator')}
               {translateMock(locale, item.nextStep)}
             </small>

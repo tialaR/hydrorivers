@@ -12,6 +12,7 @@
     "check:i18n": "node scripts/check-i18n.mjs",
     "check:i18n:hardcoded": "node scripts/check-hardcoded-i18n.mjs",
     "audit:i18n": "node scripts/audit-i18n-hardcoded.mjs",
+    "audit:i18n:rendered": "node scripts/audit-i18n-rendered.mjs",
     "check:onboarding": "node scripts/check-onboarding-progress.mjs",
     "test": "vitest run",
     "test:unit": "vitest run tests/unit",
