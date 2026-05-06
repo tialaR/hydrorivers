@@ -534,7 +534,7 @@
     },
     "governmentPage": {
       "eyebrow": "Valor público",
-      "title": "Panel gubernamental de logística fluvial amazónica",
+      "title": "Panel gubernamental",
       "description": "Vista demostrable para coordinar corredores, documentación, abastecimiento territorial y cadenas de sociobiodiversidad."
     },
     "government": {
@@ -545,7 +545,7 @@
       "publicValueHint": "Combina formalización, previsibilidad e impacto de abastecimiento.",
       "bioeconomyLoads": "Cargas de sociobioeconomía",
       "bioeconomyHint": "Açaí, castaña, cacao, cupuaçu, pescado y productos forestales.",
-      "documentExceptions": "Excepciones documentales",
+      "documentExceptions": "Documentos pendientes",
       "documentHint": "Ítems que requieren análisis antes de contratar.",
       "seasonalRoutes": "Rutas estacionales",
       "seasonalHint": "Corredores sensibles a creciente, bajante o baja conectividad.",
@@ -554,8 +554,8 @@
       "corridorPanelEyebrow": "Inteligencia territorial",
       "corridorPanelTitle": "Corredores, ríos y previsibilidad",
       "governmentPilot": "Piloto gov",
-      "complianceEyebrow": "Confianza operativa",
-      "complianceTitle": "Cola de documentos y excepciones",
+      "complianceEyebrow": "Cumplimiento",
+      "complianceTitle": "Cola de documentos y fiscalización",
       "actionable": "Accionable",
       "fleetEyebrow": "Capacidad regulada",
       "fleetTitle": "Embarcaciones y compatibilidad",
@@ -572,8 +572,10 @@
       "corridorHint": "Cada corredor combina río principal, perfil operativo y previsibilidad logística para apoyar decisiones públicas.",
       "predictabilityLabel": "Previsibilidad",
       "fleetHint": "Revise rápidamente el tipo de embarcación, el calado operativo y el estado documental de cada activo.",
-      "fleetStatusLabel": "Estado",
-      "workflowHint": "Vista resumida del recorrido operativo, desde el registro hasta el comprobante de entrega."
+      "fleetStatusLabel": "Estado de la flota",
+      "workflowHint": "Vista resumida del recorrido operativo, desde el registro hasta el comprobante de entrega.",
+      "dashboardSectionAria": "Panel gubernamental: indicadores, corredores, cumplimiento, flota y flujo transaccional",
+      "workflowNegotiationsBadge": "{count} negociaciones"
     }
   },
   "forms": {

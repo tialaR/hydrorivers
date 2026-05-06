@@ -10,6 +10,7 @@ export async function GovernmentDashboard() {
   const t = await getTranslations('pages.government');
   const common = await getTranslations('common');
   const locale = await getLocale();
+  const listSep = common('inlineListSeparator');
   const [cargoes, vessels, negotiations] = await Promise.all([listCargoes(), listVessels(), listNegotiations()]);
 
   const docsPending = cargoes.filter((cargo) => (cargo.documentReadiness ?? 100) < 70).length;
@@ -36,7 +37,7 @@ export async function GovernmentDashboard() {
   const corridors = Array.from(new Map(cargoes.map((cargo) => [cargo.corridor, cargo])).values()).filter((cargo) => cargo.corridor);
 
   return (
-    <section className={styles.wrap}>
+    <section className={styles.wrap} aria-label={t('dashboardSectionAria')}>
       <div className={styles.hero}>
         <div>
           <span className={styles.eyebrow}><HydroIcon name="dock" /> {t('heroEyebrow')}</span>
@@ -103,7 +104,7 @@ export async function GovernmentDashboard() {
                 <div className={styles.compliance} key={cargo.id}>
                   <div>
                     <strong>{translateMock(locale, cargo.title)}</strong>
-                    <small>{cargo.requiredDocuments?.map((doc) => `${doc.name}: ${common(`documentStatus.${doc.status}`)}`).slice(0, 2).join(' • ')}</small>
+                    <small>{cargo.requiredDocuments?.map((doc) => `${doc.name}: ${common(`documentStatus.${doc.status}`)}`).slice(0, 2).join(listSep)}</small>
                   </div>
                   <em>{common('documentReadiness', { value: cargo.documentReadiness ?? 0 })}</em>
                 </div>
@@ -141,7 +142,7 @@ export async function GovernmentDashboard() {
         <Card className={styles.panel}>
           <div className={styles.panelHeader}>
             <div><span>{t('workflowEyebrow')}</span><h3>{t('workflowTitle')}</h3></div>
-            <Badge tone="river">{negotiations.length} ops</Badge>
+            <Badge tone="river">{t('workflowNegotiationsBadge', { count: negotiations.length })}</Badge>
           </div>
           <p className={styles.panelLead}>{t('workflowHint')}</p>
           <ol className={styles.workflow}>

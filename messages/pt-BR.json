@@ -534,7 +534,7 @@
     },
     "governmentPage": {
       "eyebrow": "Valor público",
-      "title": "Painel governamental de logística fluvial amazônica",
+      "title": "Painel governamental",
       "description": "Visão demonstrável para coordenação de corredores, documentação, abastecimento territorial e cadeias de sociobiodiversidade."
     },
     "government": {
@@ -545,7 +545,7 @@
       "publicValueHint": "Sinaliza impacto combinado em formalização, previsibilidade e abastecimento.",
       "bioeconomyLoads": "Cargas de sociobioeconomia",
       "bioeconomyHint": "Açaí, castanha, cacau, cupuaçu, pescado e produtos florestais.",
-      "documentExceptions": "Exceções documentais",
+      "documentExceptions": "Documentos pendentes",
       "documentHint": "Itens que precisam de análise antes da contratação.",
       "seasonalRoutes": "Rotas sazonais",
       "seasonalHint": "Corredores sensíveis a cheia, vazante ou baixa conectividade.",
@@ -554,8 +554,8 @@
       "corridorPanelEyebrow": "Inteligência territorial",
       "corridorPanelTitle": "Corredores, rios e previsibilidade",
       "governmentPilot": "Piloto gov",
-      "complianceEyebrow": "Confiança operacional",
-      "complianceTitle": "Fila de documentos e exceções",
+      "complianceEyebrow": "Conformidade",
+      "complianceTitle": "Fila de documentos e fiscalização",
       "actionable": "Acionável",
       "fleetEyebrow": "Capacidade regulada",
       "fleetTitle": "Embarcações e compatibilidade",
@@ -572,8 +572,10 @@
       "corridorHint": "Cada corredor combina rio principal, tipo de operação e previsibilidade logística para apoiar decisões públicas.",
       "predictabilityLabel": "Previsibilidade",
       "fleetHint": "Acompanhe rapidamente o tipo de embarcação, calado operacional e situação documental de cada ativo.",
-      "fleetStatusLabel": "Situação",
-      "workflowHint": "Fluxo resumido da jornada operacional, do cadastro inicial ao comprovante de entrega."
+      "fleetStatusLabel": "Status da frota",
+      "workflowHint": "Fluxo resumido da jornada operacional, do cadastro inicial ao comprovante de entrega.",
+      "dashboardSectionAria": "Painel governamental: indicadores, corredores, conformidade, frota e fluxo transacional",
+      "workflowNegotiationsBadge": "{count} negociações"
     }
   },
   "forms": {

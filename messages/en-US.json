@@ -534,7 +534,7 @@
     },
     "governmentPage": {
       "eyebrow": "Public value",
-      "title": "Amazon waterway logistics government dashboard",
+      "title": "Government dashboard",
       "description": "Demonstrable view to coordinate corridors, documentation, territorial supply, and sociobiodiversity chains."
     },
     "government": {
@@ -545,7 +545,7 @@
       "publicValueHint": "Signals combined impact on formalization, predictability, and supply.",
       "bioeconomyLoads": "Sociobioeconomy cargoes",
       "bioeconomyHint": "Açaí, Brazil nut, cocoa, cupuaçu, fishery, and forest products.",
-      "documentExceptions": "Document exceptions",
+      "documentExceptions": "Pending documents",
       "documentHint": "Items that need review before contracting.",
       "seasonalRoutes": "Seasonal routes",
       "seasonalHint": "Corridors sensitive to flood, low water, or poor connectivity.",
@@ -554,8 +554,8 @@
       "corridorPanelEyebrow": "Territorial intelligence",
       "corridorPanelTitle": "Corridors, rivers, and predictability",
       "governmentPilot": "Gov pilot",
-      "complianceEyebrow": "Operational confidence",
-      "complianceTitle": "Document and exception queue",
+      "complianceEyebrow": "Compliance",
+      "complianceTitle": "Document queue and oversight",
       "actionable": "Actionable",
       "fleetEyebrow": "Regulated capacity",
       "fleetTitle": "Vessels and compatibility",
@@ -572,8 +572,10 @@
       "corridorHint": "Each corridor combines the main river, operation profile, and logistics predictability to support public decisions.",
       "predictabilityLabel": "Predictability",
       "fleetHint": "Quickly review vessel type, operating draft, and document status for each asset.",
-      "fleetStatusLabel": "Status",
-      "workflowHint": "Summary of the operational journey—from initial registration to proof of delivery."
+      "fleetStatusLabel": "Fleet status",
+      "workflowHint": "Summary of the operational journey—from initial registration to proof of delivery.",
+      "dashboardSectionAria": "Government dashboard: indicators, corridors, compliance, fleet, and transactional flow",
+      "workflowNegotiationsBadge": "{count} negotiations"
     }
   },
   "forms": {
