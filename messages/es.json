@@ -254,10 +254,11 @@
       "mainAriaLabel": "Perfil de cuenta, datos personales y validación"
     },
     "devOnboarding": {
-      "eyebrow": "Equipo",
-      "metaTitle": "Incorporación para desarrolladores · HydroRivers",
+      "eyebrow": "Desarrollo",
+      "metaTitle": "Onboarding para desarrolladores · HydroRivers",
       "metaDescription": "Recorrido de incorporación para desarrolladores: niveles, comandos npm y documentación esencial.",
-      "title": "Incorporación para desarrolladores",
+      "title": "Onboarding para desarrolladores",
+      "mainAriaLabel": "Onboarding para desarrolladores: niveles, comandos npm y documentación principal",
       "description": "Usa esta página como índice visual del recorrido documentado en docs/DEVELOPER-AI-ONBOARDING.md: niveles progresivos, comandos de validación y lecturas obligatorias antes de contribuir.",
       "levelsTitle": "Niveles del recorrido",
       "level0": "Nivel 0 — Configuración",
@@ -921,11 +922,12 @@
     "description": "Mercado de flete fluvial y cabotaje para corredores digitales de carga."
   },
   "mockMode": {
-    "title": "Modo de simulación (QA)",
-    "subtitle": "Acceso rápido a escenarios, cuentas y validaciones del producto.",
-    "button": "Modo simulación",
+    "triggerMark": "M",
+    "title": "Modo mock · QA",
+    "subtitle": "Entorno de prueba: escenarios, personas y validaciones rápidas del producto.",
+    "button": "Modo mock",
     "close": "Cerrar panel QA",
-    "casesTitle": "Escenarios de prueba",
+    "casesTitle": "Escenarios",
     "openCase": "Abrir caso",
     "passwordLabel": "Contraseña",
     "roles": {
@@ -934,11 +936,11 @@
       "admin": "Administrador"
     },
     "qaHub": {
-      "sectionTitle": "Centro de QA — cuentas de demostración",
-      "sectionLead": "Tarjetas para probar con datos simulados. «Usar en el inicio de sesión» rellena el formulario (flujo normal con OTP). «Iniciar sesión como este usuario» llama a POST /api/mock-mode/login-as y redirige (sin OTP). Solo visible fuera de producción o con la marca de CI.",
+      "sectionTitle": "Hub de QA — personas demo",
+      "sectionLead": "Tarjetas para probar con datos simulados. «Simular usuario en el inicio de sesión» rellena el formulario (flujo normal con OTP). «Iniciar sesión como este usuario» llama a POST /api/mock-mode/login-as y redirige (sin OTP). Solo visible fuera de producción o con la marca de CI.",
       "fieldLabels": {
         "name": "Nombre",
-        "email": "Correo",
+        "email": "Correo electrónico",
         "password": "Contraseña simulada",
         "role": "Rol",
         "approved": "Aprobado",
@@ -947,7 +949,7 @@
         "mustValidate": "Qué validar",
         "expectedResult": "Resultado esperado"
       },
-      "useOnLogin": "Usar en el inicio de sesión",
+      "useOnLogin": "Simular usuario en el inicio de sesión",
       "signInAs": "Iniciar sesión como este usuario",
       "signingIn": "Iniciando sesión…",
       "approvedYes": "sí",
@@ -1046,7 +1048,7 @@
     "scenarioControlTitle": "Escenario simulado (conjunto de datos)",
     "scenarioActive": "Activo: {label}",
     "scenarioSelectLabel": "Escenario",
-    "applyScenario": "Aplicar escenario",
+    "applyScenario": "Ejecutar escenario",
     "scenarioApplying": "Aplicando…",
     "applyScenarioError": "No se pudo aplicar el escenario.",
     "scenarioIds": {

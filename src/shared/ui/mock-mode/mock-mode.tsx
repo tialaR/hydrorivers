@@ -84,7 +84,7 @@ export function MockMode() {
         aria-expanded={open}
         aria-label={t('button')}
       >
-        <span className={styles.triggerMark}>M</span>
+        <span className={styles.triggerMark}>{t('triggerMark')}</span>
         <span>{t('button')}</span>
       </button>
     </aside>
