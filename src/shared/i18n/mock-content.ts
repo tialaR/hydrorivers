@@ -18,7 +18,7 @@ const exact: Record<string, Localized> = {
     'es': 'Pirarucú manejado refrigerado'
   },
   'Madeira de manejo com DOF': {
-    'en-US': 'Managed timber with DOF permit',
+    'en-US': 'Managed timber with DOF',
     'es': 'Madera de manejo con permiso DOF'
   },
   'Equipamentos solares para comunidade isolada': {
@@ -624,7 +624,7 @@ const exact: Record<string, Localized> = {
   },
   'Compliance revisar autorização e janela de vazante': {
     'en-US': 'Compliance to review authorization and low-water window',
-    'es': 'Compliance revisará autorización y ventana de bajante'
+    'es': 'Compliance debe revisar autorización y ventana de bajante'
   },
   'Gerar reserva e checklist de embarque': {
     'en-US': 'Generate booking and shipment checklist',

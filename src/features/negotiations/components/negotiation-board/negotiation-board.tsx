@@ -1,4 +1,4 @@
-import { useLocale, useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { Link } from '@/core/i18n/navigation';
 import { intlAppPaths } from '@/shared/routing/app-routes';
 import { Badge } from '@/shared/ui/badge/badge';
@@ -28,10 +28,14 @@ function iconForTitle(title: string) {
   return 'document';
 }
 
-export function NegotiationBoard({ negotiations }: { negotiations: Negotiation[] }) {
-  const p = useTranslations('pages.negotiations');
-  const t = useTranslations('common');
-  const locale = useLocale();
+type NegotiationBoardProps = {
+  negotiations: Negotiation[];
+  locale: string;
+};
+
+export async function NegotiationBoard({ negotiations, locale }: NegotiationBoardProps) {
+  const p = await getTranslations({ locale, namespace: 'pages.negotiations' });
+  const t = await getTranslations({ locale, namespace: 'common' });
 
   return (
     <section className={styles.board} aria-label={p('listSectionAriaLabel')}>

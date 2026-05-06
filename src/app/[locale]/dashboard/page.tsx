@@ -23,7 +23,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ loca
       ) : null}
       <DashboardOverview locale={locale} />
       <div style={{ height: '1rem' }} />
-      <NegotiationBoard negotiations={negotiations} />
+      <NegotiationBoard negotiations={negotiations} locale={locale} />
     </PageShell>
   );
 }

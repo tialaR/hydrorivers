@@ -10,7 +10,7 @@ export default async function NegotiationsPage({ params }: { params: Promise<{ l
 
   return (
     <PageShell eyebrow={t('eyebrow')} title={t('title')} description={t('description')}>
-      <NegotiationBoard negotiations={negotiations} />
+      <NegotiationBoard negotiations={negotiations} locale={locale} />
     </PageShell>
   );
 }
