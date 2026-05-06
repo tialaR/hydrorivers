@@ -1,15 +1,14 @@
 
-import { getLocale, getTranslations } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
 import { getMarketplaceSummary, listCargoes, listNegotiations, listVessels } from '@/features/marketplace/services/marketplace.service';
 import { Card } from '@/shared/ui/card/card';
 import { HydroIcon } from '@/shared/ui/hydro-icon/hydro-icon';
 import { translateMock } from '@/shared/i18n/mock-content';
 import styles from './dashboard-overview.module.scss';
 
-export async function DashboardOverview() {
-  const t = await getTranslations('pages.dashboardOverview');
-  const common = await getTranslations('common');
-  const locale = await getLocale();
+export async function DashboardOverview({ locale }: { locale: string }) {
+  const t = await getTranslations({ locale, namespace: 'pages.dashboardOverview' });
+  const common = await getTranslations({ locale, namespace: 'common' });
   const [summary, cargoes, vessels, negotiations] = await Promise.all([
     getMarketplaceSummary(), listCargoes(), listVessels(), listNegotiations()
   ]);

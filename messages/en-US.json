@@ -237,8 +237,8 @@
     },
     "dashboard": {
       "eyebrow": "Operations",
-      "title": "HydroRivers dashboard",
-      "description": "Summary of cargoes, vessels, and ongoing negotiations.",
+      "title": "HydroRivers Dashboard",
+      "description": "Summary of cargoes, vessels and negotiations in progress.",
       "myCargoesCta": "View my cargoes"
     },
     "login": {
@@ -471,7 +471,7 @@
       "averageCo2Saving": "Average CO₂ savings",
       "roadComparison": "vs. estimated road haul",
       "featuredCorridors": "Featured corridors",
-      "operation": "operations",
+      "operation": "operation",
       "capacityAndBookings": "Capacity and bookings",
       "liveMock": "live mock",
       "recentNegotiations": "Recent negotiations",

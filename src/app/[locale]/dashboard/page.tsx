@@ -7,8 +7,9 @@ import { NegotiationBoard } from '@/features/negotiations/components/negotiation
 import { listNegotiations } from '@/features/marketplace/services/marketplace.service';
 import { getSessionUser } from '@/shared/server/auth';
 
-export default async function DashboardPage() {
-  const t = await getTranslations('pages.dashboard');
+export default async function DashboardPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'pages.dashboard' });
   const negotiations = await listNegotiations();
   const user = await getSessionUser();
   const showMyCargoes = Boolean(user && (user.role === 'shipper' || user.role === 'carrier'));
@@ -20,7 +21,7 @@ export default async function DashboardPage() {
           <Link href={intlAppPaths.cargos.myCargos}>{t('myCargoesCta')}</Link>
         </p>
       ) : null}
-      <DashboardOverview />
+      <DashboardOverview locale={locale} />
       <div style={{ height: '1rem' }} />
       <NegotiationBoard negotiations={negotiations} />
     </PageShell>
