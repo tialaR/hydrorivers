@@ -1,5 +1,6 @@
 import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/core/i18n/navigation';
+import { intlAppPaths } from '@/shared/routing/app-routes';
 import { Badge } from '@/shared/ui/badge/badge';
 import { Card } from '@/shared/ui/card/card';
 import { HydroIcon } from '@/shared/ui/hydro-icon/hydro-icon';
@@ -50,7 +51,7 @@ export function CargoCard({ cargo }: { cargo: Cargo }) {
 
   return (
     <Link
-      href={`/cargas/${cargo.id}`}
+      href={intlAppPaths.cargos.cargoDetail(cargo.id)}
       className={styles.linkWrap}
       data-testid="cargo-card"
       aria-label={t('openCargo', { title: translateMock(locale, cargo.title) })}
@@ -69,7 +70,11 @@ export function CargoCard({ cargo }: { cargo: Cargo }) {
           <div className={styles.titleBlock}>
             <small className={styles.family}>{cargo.productFamily ? t(`productFamilies.${cargo.productFamily}`) : cargoType}</small>
             <h2>{translateMock(locale, cargo.title)}</h2>
-            <p>{cargo.producer ? `${cargo.producer} • ` : ''}{cargoType}{cargo.temperature ? ` • ${cargo.temperature}` : ''}</p>
+            <p>
+              {cargo.producer ? `${cargo.producer}${t('inlineListSeparator')}` : ''}
+              {cargoType}
+              {cargo.temperature ? `${t('inlineListSeparator')}${cargo.temperature}` : ''}
+            </p>
           </div>
         </div>
 

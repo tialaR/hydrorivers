@@ -108,14 +108,21 @@ export function CargoDetail({ cargo, viewer }: { cargo: Cargo; viewer?: CargoVie
           <div>
             <span className={styles.kicker}><HydroIcon name="cargo" /> {page('kicker')}</span>
             <h2>{translateMock(locale, cargo.title)}</h2>
-            <p className={styles.subtitle}>{cargo.origin} → {cargo.destination}</p>
+            <p className={styles.subtitle}>
+              {cargo.origin}
+              {common('routeArrow')}
+              {cargo.destination}
+            </p>
           </div>
           <Badge tone="success"><HydroIcon name="leaf" size={14} /> {cargo.co2Saving}</Badge>
         </div>
 
         <div className={styles.routeSpotlight}>
           <div className={styles.routeTopline}>
-            <strong><HydroIcon name="route" size={18} /> {cargo.corridor ?? `${cargo.origin} → ${cargo.destination}`}</strong>
+            <strong>
+              <HydroIcon name="route" size={18} />{' '}
+              {cargo.corridor ?? `${cargo.origin}${common('routeArrow')}${cargo.destination}`}
+            </strong>
             {cargo.mainRiver ? <span><HydroIcon name="waves" size={16} /> {common('river')}: {cargo.mainRiver}</span> : null}
           </div>
           <div className={styles.routeFlow}>
@@ -147,10 +154,22 @@ export function CargoDetail({ cargo, viewer }: { cargo: Cargo; viewer?: CargoVie
         {cargo.description ? <p className={styles.description}>{translateMock(locale, cargo.description)}</p> : null}
 
         <div className={styles.contextGrid}>
-          <div><small>{common('corridor')}</small><strong>{cargo.corridor ?? `${cargo.origin} → ${cargo.destination}`}</strong></div>
-          <div><small>{common('river')}</small><strong>{cargo.mainRiver ?? '—'}</strong></div>
-          <div><small>{common('etaConfidence')}</small><strong>{cargo.etaConfidence ? translateMock(locale, cargo.etaConfidence) : '—'}</strong></div>
-          <div><small>{common('connectivityLabel')}</small><strong>{cargo.connectivity ? common(`connectivity.${cargo.connectivity}`) : '—'}</strong></div>
+          <div>
+            <small>{common('corridor')}</small>
+            <strong>{cargo.corridor ?? `${cargo.origin}${common('routeArrow')}${cargo.destination}`}</strong>
+          </div>
+          <div>
+            <small>{common('river')}</small>
+            <strong>{cargo.mainRiver ?? common('emptyValue')}</strong>
+          </div>
+          <div>
+            <small>{common('etaConfidence')}</small>
+            <strong>{cargo.etaConfidence ? translateMock(locale, cargo.etaConfidence) : common('emptyValue')}</strong>
+          </div>
+          <div>
+            <small>{common('connectivityLabel')}</small>
+            <strong>{cargo.connectivity ? common(`connectivity.${cargo.connectivity}`) : common('emptyValue')}</strong>
+          </div>
           <div><small>{page('originContext')}</small><strong>{cargo.originContext ? translateMock(locale, cargo.originContext) : page('originFallback')}</strong></div>
           <div><small>{page('proposalCount')}</small><strong>{proposalCount} {page('proposalUnit')}</strong></div>
         </div>
