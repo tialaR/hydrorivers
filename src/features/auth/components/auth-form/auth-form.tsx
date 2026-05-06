@@ -137,6 +137,9 @@ export function AuthForm({ mode }: { mode: Mode }) {
     } catch (nextError) {
       const code = nextError instanceof Error ? nextError.message : 'request-failed';
       if (code === 'invalid-otp') setError(t('otpInvalid'));
+      else if (code === 'invalid-login') setError(t('invalidCredentials'));
+      else if (code === 'email-already-registered') setError(t('emailAlreadyRegistered'));
+      else if (code === 'invalid-payload') setError(t('requiredFields'));
       else setError(t('error'));
     } finally {
       setPending(false);
@@ -177,7 +180,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
               </label>
               <label className={styles.field}>
                 <span>{t('password')}</span>
-                <div><LockKeyhole size={18} /><input name="password" type="password" required placeholder="••••••••" minLength={6} value={password} onChange={(event) => { setPassword(event.target.value); if (otpStage) resetOtpStage(); }} disabled={otpStage} /></div>
+                <div><LockKeyhole size={18} /><input name="password" type="password" required placeholder={t('passwordPlaceholder')} minLength={6} value={password} onChange={(event) => { setPassword(event.target.value); if (otpStage) resetOtpStage(); }} disabled={otpStage} /></div>
               </label>
 
               {otpStage ? (
@@ -208,7 +211,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
               </label>
               <label className={styles.field}>
                 <span>{t('password')}</span>
-                <div><LockKeyhole size={18} /><input name="password" type="password" required placeholder="••••••••" minLength={6} /></div>
+                <div><LockKeyhole size={18} /><input name="password" type="password" required placeholder={t('passwordPlaceholder')} minLength={6} /></div>
               </label>
             </>
           )}

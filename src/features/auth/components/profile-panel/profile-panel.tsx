@@ -64,6 +64,7 @@ function getInitials(name: string) {
 
 export function ProfilePanel() {
   const t = useTranslations('pages.profile');
+  const perfil = useTranslations('pages.perfil');
   const auth = useTranslations('auth');
   const { user, ready } = useAuthSession();
   const [draftByUser, setDraftByUser] = useState<Record<string, ProfileFormState>>({});
@@ -176,15 +177,26 @@ export function ProfilePanel() {
   }
 
   if (!ready) {
-    return <main className={styles.shell}><p className={styles.eyebrow}>{t('eyebrow')}</p><h1>{t('loading')}</h1></main>;
+    return (
+      <main className={styles.shell} aria-label={perfil('mainAriaLabel')}>
+        <p className={styles.eyebrow}>{t('eyebrow')}</p>
+        <h1>{t('loading')}</h1>
+      </main>
+    );
   }
 
   if (!user) {
-    return <main className={styles.shell}><p className={styles.eyebrow}>{t('eyebrow')}</p><h1>{t('loginRequired')}</h1><span>{t('loginRequiredDescription')}</span></main>;
+    return (
+      <main className={styles.shell} aria-label={perfil('mainAriaLabel')}>
+        <p className={styles.eyebrow}>{t('eyebrow')}</p>
+        <h1>{t('loginRequired')}</h1>
+        <span>{t('loginRequiredDescription')}</span>
+      </main>
+    );
   }
 
   return (
-    <main className={styles.shell}>
+    <main className={styles.shell} aria-label={perfil('mainAriaLabel')}>
       <p className={styles.eyebrow}>{t('eyebrow')}</p><h1>{t('title')}</h1><span>{t('description')}</span>
       <section className={styles.grid}>
         <Card className={styles.identity}>
@@ -200,7 +212,7 @@ export function ProfilePanel() {
           <div className={styles.row}><CheckCircle2 /><div><small>{t('manualValidation')}</small><strong>{user.approved ? t('readyForPilot') : t('awaitingReview')}</strong></div></div>
         </Card>
         <Card className={styles.formCard}>
-          <h2>{auth('profile')}</h2>
+          <h2>{t('personalDetails')}</h2>
           <form className={styles.form} onSubmit={onSubmit}>
             <label><span>{auth('name')}</span><input name="name" value={profile.name} onChange={(event) => updateField('name', event.target.value)} /></label>
             <label><span>{auth('email')}</span><input name="email" type="email" value={profile.email} onChange={(event) => updateField('email', event.target.value)} /></label>
