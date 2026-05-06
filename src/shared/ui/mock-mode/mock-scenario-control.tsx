@@ -26,6 +26,7 @@ async function readActiveScenario(): Promise<{ active: string | null; scenarioId
 
 export function MockScenarioControl() {
   const t = useTranslations('mockMode');
+  const c = useTranslations('common');
   const { user, ready } = useAuthSession();
   const [activeScenario, setActiveScenario] = useState<string | null>(null);
   const [selectedScenario, setSelectedScenario] = useState<MockScenarioId>(mockScenarioIds[0]);
@@ -85,7 +86,7 @@ export function MockScenarioControl() {
       ? t(`scenarioIds.${activeScenario as MockScenarioId}`)
       : activeScenario
         ? activeScenario
-        : '—';
+        : c('emptyValue');
 
   return (
     <section className={styles.section} data-testid="mock-scenario-section" aria-label={t('scenarioControlTitle')}>

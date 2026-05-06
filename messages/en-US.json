@@ -254,10 +254,11 @@
       "mainAriaLabel": "Account profile, personal details, and validation status"
     },
     "devOnboarding": {
-      "eyebrow": "Team",
-      "metaTitle": "Developer Onboarding · HydroRivers",
+      "eyebrow": "Development",
+      "metaTitle": "Developer onboarding · HydroRivers",
       "metaDescription": "Developer onboarding path: levels, npm commands, and essential documentation.",
-      "title": "Developer Onboarding",
+      "title": "Developer onboarding",
+      "mainAriaLabel": "Developer onboarding: levels, npm commands, and key documentation",
       "description": "Use this page as a visual index for the journey documented in docs/DEVELOPER-AI-ONBOARDING.md: progressive levels, validation commands, and required reading before contributing.",
       "levelsTitle": "Progressive levels",
       "level0": "Level 0 — Setup",
@@ -921,11 +922,12 @@
     "description": "River and cabotage freight marketplace for digital cargo corridors."
   },
   "mockMode": {
-    "title": "Mock mode QA",
-    "subtitle": "Quick access to scenarios, accounts, and product validations.",
+    "triggerMark": "M",
+    "title": "Mock mode · QA",
+    "subtitle": "Test environment: scenarios, personas, and quick product validations.",
     "button": "Mock mode",
     "close": "Close QA panel",
-    "casesTitle": "Test scenarios",
+    "casesTitle": "Scenarios",
     "openCase": "Open case",
     "passwordLabel": "Password",
     "roles": {
@@ -934,8 +936,8 @@
       "admin": "Administrator"
     },
     "qaHub": {
-      "sectionTitle": "QA Hub — demo accounts",
-      "sectionLead": "Cards for testing on mock data. “Use on login” fills the form (normal flow with OTP). “Sign in as this user” calls POST /api/mock-mode/login-as and redirects (no OTP). Visible only outside production or with a CI flag.",
+      "sectionTitle": "QA hub — demo personas",
+      "sectionLead": "Cards for testing on mock data. “Simulate user on login” fills the form (normal flow with OTP). “Sign in as this user” calls POST /api/mock-mode/login-as and redirects (no OTP). Visible only outside production or with a CI flag.",
       "fieldLabels": {
         "name": "Name",
         "email": "Email",
@@ -947,7 +949,7 @@
         "mustValidate": "What to validate",
         "expectedResult": "Expected result"
       },
-      "useOnLogin": "Use on login",
+      "useOnLogin": "Simulate user on login",
       "signInAs": "Sign in as this user",
       "signingIn": "Signing in…",
       "approvedYes": "yes",
@@ -1046,7 +1048,7 @@
     "scenarioControlTitle": "Mock scenario (dataset)",
     "scenarioActive": "Active: {label}",
     "scenarioSelectLabel": "Scenario",
-    "applyScenario": "Apply scenario",
+    "applyScenario": "Run scenario",
     "scenarioApplying": "Applying…",
     "applyScenarioError": "Could not apply the scenario.",
     "scenarioIds": {

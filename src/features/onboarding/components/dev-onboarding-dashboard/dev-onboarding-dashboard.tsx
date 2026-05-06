@@ -35,7 +35,7 @@ export async function DevOnboardingDashboard() {
 
   return (
     <PageShell eyebrow={t('eyebrow')} title={t('title')} description={t('description')}>
-      <div className={styles.grid}>
+      <div className={styles.grid} aria-label={t('mainAriaLabel')}>
         <Card>
           <h2 className={styles.cardTitle}>{t('levelsTitle')}</h2>
           <ol className={styles.levels}>

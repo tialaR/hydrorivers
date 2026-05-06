@@ -254,10 +254,11 @@
       "mainAriaLabel": "Perfil da conta, dados pessoais e validação"
     },
     "devOnboarding": {
-      "eyebrow": "Equipe",
-      "metaTitle": "Developer Onboarding · HydroRivers",
+      "eyebrow": "Desenvolvimento",
+      "metaTitle": "Onboarding para desenvolvedores · HydroRivers",
       "metaDescription": "Jornada de onboarding para desenvolvedores: níveis, comandos npm e documentação essencial.",
-      "title": "Developer Onboarding",
+      "title": "Onboarding para desenvolvedores",
+      "mainAriaLabel": "Onboarding para desenvolvedores: níveis, comandos npm e documentação principal",
       "description": "Use esta página como índice visual da jornada documentada em docs/DEVELOPER-AI-ONBOARDING.md: níveis progressivos, comandos de validação e leituras obrigatórias antes de contribuir.",
       "levelsTitle": "Jornada em níveis",
       "level0": "Nível 0 — Setup",
@@ -921,11 +922,12 @@
     "description": "Marketplace de frete fluvial e cabotagem para corredores digitais de carga."
   },
   "mockMode": {
-    "title": "Mock mode QA",
-    "subtitle": "Acesso rápido para cenários, contas e validações do produto.",
-    "button": "Mock mode",
+    "triggerMark": "M",
+    "title": "Modo mock · QA",
+    "subtitle": "Ambiente de teste: cenários, personas e validações rápidas do produto.",
+    "button": "Modo mock",
     "close": "Fechar painel QA",
-    "casesTitle": "Cenários de teste",
+    "casesTitle": "Cenários",
     "openCase": "Abrir caso",
     "passwordLabel": "Senha",
     "roles": {
@@ -934,8 +936,8 @@
       "admin": "Administrador"
     },
     "qaHub": {
-      "sectionTitle": "QA Hub — contas demo",
-      "sectionLead": "Cartões para testes em dados mock. “Usar no login” preenche o formulário (fluxo normal com OTP). “Entrar como este usuário” chama POST /api/mock-mode/login-as e redireciona (sem OTP). Visível só fora de production ou com flag de CI.",
+      "sectionTitle": "Hub de QA — personas demo",
+      "sectionLead": "Cartões para testes em dados mock. “Simular usuário no login” preenche o formulário (fluxo normal com OTP). “Entrar como este usuário” chama POST /api/mock-mode/login-as e redireciona (sem OTP). Visível só fora de production ou com flag de CI.",
       "fieldLabels": {
         "name": "Nome",
         "email": "E-mail",
@@ -947,7 +949,7 @@
         "mustValidate": "O que deve ser validado",
         "expectedResult": "Resultado esperado"
       },
-      "useOnLogin": "Usar no login",
+      "useOnLogin": "Simular usuário no login",
       "signInAs": "Entrar como este usuário",
       "signingIn": "Entrando…",
       "approvedYes": "sim",
@@ -1046,7 +1048,7 @@
     "scenarioControlTitle": "Cenário mock (dataset)",
     "scenarioActive": "Ativo: {label}",
     "scenarioSelectLabel": "Cenário",
-    "applyScenario": "Aplicar cenário",
+    "applyScenario": "Executar cenário",
     "scenarioApplying": "Aplicando…",
     "applyScenarioError": "Não foi possível aplicar o cenário.",
     "scenarioIds": {
