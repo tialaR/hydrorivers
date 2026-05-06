@@ -5,9 +5,13 @@ import { HydroIcon } from '@/shared/ui/hydro-icon/hydro-icon';
 import { intlAppPaths } from '@/shared/routing/app-routes';
 import styles from './hydro-hero.module.scss';
 
-export async function HydroHero() {
-  const tHero = await getTranslations('pages.home.hero');
-  const tVisual = await getTranslations('pages.home.visualCards');
+type HydroHeroProps = {
+  locale: string;
+};
+
+export async function HydroHero({ locale }: HydroHeroProps) {
+  const tHero = await getTranslations({ locale, namespace: 'pages.home.hero' });
+  const tVisual = await getTranslations({ locale, namespace: 'pages.home.visualCards' });
   return (
     <section className={styles.hero}>
       <div className={styles.copy}>

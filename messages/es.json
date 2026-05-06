@@ -206,10 +206,10 @@
     "home": {
       "hero": {
         "eyebrow": "FLETE FLUVIAL Y CABOTAJE",
-        "title": "El mercado digital que convierte los ríos en corredores digitales de carga.",
-        "description": "HydroRivers conecta a pequeños productores, operadores y embarcaciones para reducir costos logísticos, emisiones y burocracia en la Amazonía y el cabotaje en Brasil.",
+        "title": "El marketplace que transforma ríos en corredores digitales de carga.",
+        "description": "HydroRivers conecta pequeños productores, operadores y embarcaciones para reducir costos logísticos, emisiones y burocracia en la Amazonía y el cabotaje brasileño.",
         "primary": "Explorar cargas",
-        "secondary": "Ver el impacto"
+        "secondary": "Ver impacto"
       },
       "visualCards": {
         "aria": "Resumen visual de la operación HydroRivers",
@@ -230,8 +230,8 @@
           "description": "Donde el río es carretera, organizar capacidad fluvial reduce el costo de vida y amplía mercados."
         },
         "automation": {
-          "title": "Desburocratización",
-          "description": "Cotización, contraoferta y documentos en un flujo digital preparado para automatización."
+          "title": "Menos burocracia",
+          "description": "Cotización, contrapropuestas y documentos en un flujo digital preparado para automatización."
         }
       }
     },
