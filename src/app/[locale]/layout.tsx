@@ -15,6 +15,23 @@ import { isMockQaUiEnabled } from '@/shared/qa/mock-qa-ui-env';
 
 const geist = Geist({ subsets: ['latin'], display: 'swap', variable: '--font-sans' });
 
+const themeInitScript = `
+(function () {
+  try {
+    var stored = localStorage.getItem('hydrorivers.theme');
+    var prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+    var theme = stored === 'light' || stored === 'dark' ? stored : (prefersLight ? 'light' : 'dark');
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
+  } catch (_) {
+    document.documentElement.classList.add('dark');
+    document.documentElement.dataset.theme = 'dark';
+    document.documentElement.style.colorScheme = 'dark';
+  }
+})();
+`;
+
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'metadata' });
@@ -43,6 +60,9 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} className={geist.variable} suppressHydrationWarning data-scroll-behavior="smooth">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body suppressHydrationWarning>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeProvider>
