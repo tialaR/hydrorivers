@@ -442,8 +442,7 @@
       "metricTrendOpenCargoes": "+18%",
       "metricTrendVessels": "+7%",
       "metricTrendNegotiations": "+12%",
-      "sectionAriaLabel": "Visão geral do painel com métricas, corredores, frota e negociações recentes",
-      "routeArrow": " → "
+      "sectionAriaLabel": "Visão geral do painel com métricas, corredores, frota e negociações recentes"
     },
     "cargoDetail": {
       "kicker": "Oportunidade aquaviária",
@@ -597,6 +596,8 @@
     "next": "Próximo",
     "breadcrumbHome": "Início",
     "inlineListSeparator": " • ",
+    "routeArrow": " → ",
+    "emptyValue": "—",
     "searchPlaceholder": "açaí, Manaus, reefer",
     "activeFilters": "Filtros ativos",
     "chipSearch": "Busca: {value}",

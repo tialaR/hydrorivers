@@ -46,7 +46,7 @@ export async function DashboardOverview() {
               <div>
                 <strong>
                   {cargo.origin}
-                  {t('routeArrow')}
+                  {common('routeArrow')}
                   {cargo.destination}
                 </strong>
                 <small>
