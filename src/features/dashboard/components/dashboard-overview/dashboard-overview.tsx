@@ -22,7 +22,7 @@ export async function DashboardOverview() {
   ] as const;
 
   return (
-    <section className={styles.wrap}>
+    <section className={styles.wrap} aria-label={t('sectionAriaLabel')}>
       <div className={styles.grid}>
         {stats.map((item) => (
           <Card key={item.label} className={`${styles.metric} ${styles[item.tone]}`}>
@@ -43,7 +43,18 @@ export async function DashboardOverview() {
           {cargoes.slice(0, 6).map((cargo) => (
             <div className={styles.row} key={cargo.id}>
               <span className={styles.routeIcon}><HydroIcon name="route" size={18} /></span>
-              <div><strong>{cargo.origin} → {cargo.destination}</strong><small>{translateMock(locale, cargo.title)} • {cargo.volume}</small></div>
+              <div>
+                <strong>
+                  {cargo.origin}
+                  {t('routeArrow')}
+                  {cargo.destination}
+                </strong>
+                <small>
+                  {translateMock(locale, cargo.title)}
+                  {common('inlineListSeparator')}
+                  {cargo.volume}
+                </small>
+              </div>
               <b>{cargo.targetPrice}</b>
             </div>
           ))}
@@ -53,7 +64,14 @@ export async function DashboardOverview() {
           {vessels.slice(0, 4).map((vessel) => (
             <div className={styles.row} key={vessel.id}>
               <span className={styles.shipIcon}><HydroIcon name="ship" size={18} /></span>
-              <div><strong>{vessel.name}</strong><small>{vessel.route} • {vessel.capacity}</small></div>
+              <div>
+                <strong>{vessel.name}</strong>
+                <small>
+                  {vessel.route}
+                  {common('inlineListSeparator')}
+                  {vessel.capacity}
+                </small>
+              </div>
               <b>{common(`vesselStatus.${vessel.status}`)}</b>
             </div>
           ))}

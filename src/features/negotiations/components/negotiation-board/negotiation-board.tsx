@@ -32,7 +32,7 @@ export function NegotiationBoard({ negotiations }: { negotiations: Negotiation[]
   const locale = useLocale();
 
   return (
-    <section className={styles.board}>
+    <section className={styles.board} aria-label={t('negotiationCardsSectionAria')}>
       {negotiations.map((item) => (
         <Link
           key={item.id}
@@ -51,7 +51,11 @@ export function NegotiationBoard({ negotiations }: { negotiations: Negotiation[]
             {item.route ? <p><HydroIcon name="route" size={15} /> {item.route}</p> : null}
             <strong>{item.amount}</strong>
             <div className={styles.timeline} aria-label={t('negotiationProgress', { progress: progress(item.stage) })}><span style={{ width: `${progress(item.stage)}%` }} /></div>
-            <small>{translateMock(locale, item.lastUpdate)} • {translateMock(locale, item.nextStep)}</small>
+            <small>
+              {translateMock(locale, item.lastUpdate)}
+              {t('inlineListSeparator')}
+              {translateMock(locale, item.nextStep)}
+            </small>
           </Card>
         </Link>
       ))}
