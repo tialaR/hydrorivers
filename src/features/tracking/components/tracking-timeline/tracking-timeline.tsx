@@ -38,6 +38,7 @@ function iconForOperationalKind(kind: OperationalTrackingEventKind): HydroIconNa
 
 export function TrackingTimeline() {
   const t = useTranslations('pages.tracking');
+  const c = useTranslations('common');
   const locale = useLocale();
   const [code, setCode] = useState('HYD-2026-00124');
   const [searched, setSearched] = useState(true);
@@ -48,7 +49,7 @@ export function TrackingTimeline() {
   }, []);
 
   return (
-    <section className={styles.grid}>
+    <section className={styles.grid} aria-label={t('listSectionAriaLabel')}>
       <Card className={styles.search}>
         <label>
           <span>{t('trackingCode')}</span>
@@ -99,7 +100,7 @@ export function TrackingTimeline() {
                   <li
                     className={`${styles.event} ${styles[event.status]}`}
                     key={event.id}
-                    aria-label={`${kind}: ${headline}`}
+                    aria-label={t('timelineEventAria', { title: headline })}
                   >
                     <span className={styles.rail} aria-hidden="true" />
                     <span className={styles.icon}>
@@ -117,7 +118,12 @@ export function TrackingTimeline() {
                       <p>{translateMock(locale, event.description)}</p>
                       <small>
                         <HydroIcon name="dock" size={14} /> {event.location}
-                        {event.evidence ? ` • ${translateMock(locale, event.evidence)}` : ''}
+                        {event.evidence ? (
+                          <>
+                            {c('inlineListSeparator')}
+                            {translateMock(locale, event.evidence)}
+                          </>
+                        ) : null}
                       </small>
                     </div>
                   </li>
