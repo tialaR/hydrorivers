@@ -350,9 +350,11 @@
     },
     "impact": {
       "eyebrow": "Valor",
-      "title": "Impacto económico y ambiental",
+      "title": "Impacto",
       "description": "Por qué HydroRivers genera más valor para productores, transportistas y comunidades.",
-      "storyTitle": "Historia de impacto",
+      "listSectionAriaLabel": "Indicadores de impacto, métricas por tarjeta y resumen narrativo",
+      "openImpactCard": "Ver detalles: {title}",
+      "storyTitle": "Resumen",
       "storyDescription": "Resumen narrativo de los beneficios ambientales, regulatorios y socioeconómicos generados por las operaciones fluviales priorizadas."
     },
     "profile": {
@@ -743,34 +745,42 @@
   },
   "impactCards": {
     "cost": {
+      "metric": "-28%",
       "title": "Reducción de costo logístico",
       "description": "Cabotaje y rutas fluviales reducen dependencia vial y mejoran la ocupación."
     },
     "sustainability": {
+      "metric": "-38% CO₂ evitado",
       "title": "Menos CO₂ por tonelada",
       "description": "Las rutas acuáticas evitan emisiones y apoyan embarcaciones más eficientes."
     },
     "regional": {
+      "metric": "+12 rutas optimizadas",
       "title": "Amazonía conectada",
       "description": "Donde el río es carretera, el flete digital impulsa productores y comunidades."
     },
     "automation": {
+      "metric": "72% listo",
       "title": "Menos burocracia",
       "description": "Cotización, reserva, documentos y rastreo se vuelven un flujo auditable."
     },
     "brdomar": {
+      "metric": "BR do Mar",
       "title": "Alineado con BR do Mar",
       "description": "Incrementa la competitividad, la flota y la integración multimodal."
     },
     "compliance": {
+      "metric": "DOF/NF-e/CT-e",
       "title": "Confianza documental",
       "description": "Documentos obligatorios, condicionales y de próxima fase quedan claros antes de contratar."
     },
     "connectivity": {
+      "metric": "offline-first",
       "title": "Operación con baja conectividad",
       "description": "Los eventos pueden registrarse en campo y sincronizarse cuando vuelva la señal."
     },
     "government": {
+      "metric": "piloto Gov",
       "title": "Valor gubernamental",
       "description": "Indicadores de corredor, abastecimiento, bioeconomía y riesgo apoyan decisiones públicas."
     }
