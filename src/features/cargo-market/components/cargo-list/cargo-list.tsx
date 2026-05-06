@@ -39,6 +39,7 @@ function normalize(value: string) {
 export function CargoList({ cargoes }: { cargoes: Cargo[] }) {
   const t = useTranslations('common');
   const f = useTranslations('forms');
+  const p = useTranslations('pages.cargoes');
   const [items, setItems] = useState(cargoes);
   const [filters, setFilters] = useState<FilterState>(emptyFilters);
   const [page, setPage] = useState<number>(cargoConstants.defaultPage);
@@ -279,7 +280,7 @@ export function CargoList({ cargoes }: { cargoes: Cargo[] }) {
 
   function renderOptionGroup(key: FilterKey, values: string[]) {
     return (
-      <div className={styles.optionGrid} role="listbox" aria-label={key}>
+      <div className={styles.optionGrid} role="listbox" aria-label={p(`filterGroupAria.${key}`)}>
         <button
           type="button"
           className={!filters[key] ? styles.optionButtonActive : styles.optionButton}
@@ -432,7 +433,7 @@ export function CargoList({ cargoes }: { cargoes: Cargo[] }) {
   ) : null;
 
   return (
-    <section className={styles.layout}>
+    <section className={styles.layout} aria-label={p('listSectionAriaLabel')}>
       <aside className={styles.filters} aria-label={t('filter')}>
         <h2><HydroIcon name="filter" size={20} />{t('filter')}</h2>
         <div className={styles.desktopFilterBody}>{renderFilterControls()}</div>

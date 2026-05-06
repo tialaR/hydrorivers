@@ -274,7 +274,17 @@
       "eyebrow": "Marketplace",
       "title": "Available cargoes",
       "description": "Inland and cabotage cargoes ready to receive proposals.",
-      "loadingList": "Loading available cargoes…"
+      "loadingList": "Loading available cargoes…",
+      "listSectionAriaLabel": "Marketplace cargo list with filters and pagination",
+      "filterGroupAria": {
+        "query": "Text search options",
+        "corridor": "Waterway corridor options",
+        "origin": "Origin options",
+        "destination": "Destination options",
+        "type": "Cargo type options",
+        "family": "Product family options",
+        "document": "Required document options"
+      }
     },
     "newCargo": {
       "eyebrow": "Publishing",
