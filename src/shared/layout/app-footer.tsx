@@ -1,4 +1,4 @@
-import { getLocale, getTranslations } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
 import { Link } from '@/core/i18n/navigation';
 import { intlAppPaths } from '@/shared/routing/app-routes';
 import { HydroIcon } from '@/shared/ui/hydro-icon/hydro-icon';
@@ -36,8 +36,7 @@ const columns = [
   { key: 'company', links: [['/impacto/brdomar', 'brdomar'], ['/impacto/sustainability', 'sustainability'], ['/impacto/regional', 'regional'], ['/impacto/automation', 'automation']] }
 ] as const;
 
-export async function AppFooter() {
-  const locale = await getLocale();
+export async function AppFooter({ locale }: { locale: string }) {
   const t = await getTranslations({ locale, namespace: 'layout.footer' });
   const nav = await getTranslations({ locale, namespace: 'nav' });
   const impact = await getTranslations({ locale, namespace: 'impactCards' });

@@ -74,7 +74,7 @@ export default async function LocaleLayout({
             <ToastProvider>
               <AppHeader />
               {children}
-              <AppFooter />
+              <AppFooter locale={locale} />
               {isMockQaUiEnabled() ? <MockMode /> : null}
               <Analytics />
             </ToastProvider>
