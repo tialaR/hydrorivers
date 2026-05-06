@@ -43,7 +43,7 @@ const exact: Record<string, Localized> = {
     'es': 'Navegación interior longitudinal'
   },
   'Operação regional fracionada': {
-    'en-US': 'Regional less-than-load operation',
+    'en-US': 'Regional split-load operation',
     'es': 'Operación regional fraccionada'
   },
   'Operação regional refrigerada': {
