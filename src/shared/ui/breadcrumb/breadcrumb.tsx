@@ -9,12 +9,13 @@ export type BreadcrumbItem = {
   href?: string;
 };
 
-export async function Breadcrumb({ items }: { items: BreadcrumbItem[] }) {
-  const t = await getTranslations('common');
+/** `locale` is required so next-intl `Link` prefixes hrefs correctly in Server Components (avoids falling back to defaultLocale for generated URLs). */
+export async function Breadcrumb({ items, locale }: { items: BreadcrumbItem[]; locale: string }) {
+  const t = await getTranslations({ locale, namespace: 'common' });
 
   return (
     <nav className={styles.breadcrumb} aria-label={t('breadcrumb')}>
-      <Link href={intlAppPaths.home} className={styles.home} aria-label={t('breadcrumbHome')}>
+      <Link locale={locale} href={intlAppPaths.home} className={styles.home} aria-label={t('breadcrumbHome')}>
         <HydroIcon name="dock" size={16} />
       </Link>
       {items.map((item, index) => {
@@ -22,7 +23,13 @@ export async function Breadcrumb({ items }: { items: BreadcrumbItem[] }) {
         return (
           <span className={styles.item} key={`${item.label}-${index}`}>
             <HydroIcon name="route" size={13} />
-            {item.href && !isLast ? <Link href={item.href}>{item.label}</Link> : <span aria-current={isLast ? 'page' : undefined}>{item.label}</span>}
+            {item.href && !isLast ? (
+              <Link locale={locale} href={item.href}>
+                {item.label}
+              </Link>
+            ) : (
+              <span aria-current={isLast ? 'page' : undefined}>{item.label}</span>
+            )}
           </span>
         );
       })}

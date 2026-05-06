@@ -24,7 +24,7 @@ export default async function CargoDetailPage({ params }: { params: Promise<{ id
 
   return (
     <PageShell eyebrow={t('eyebrow')} title={title} description={routeDescription}>
-      <Breadcrumb items={[{ label: nav('cargoes'), href: intlAppPaths.cargos.marketplace }, { label: title }]} />
+      <Breadcrumb locale={locale} items={[{ label: nav('cargoes'), href: intlAppPaths.cargos.marketplace }, { label: title }]} />
       <CargoDetailLoader id={id} initialCargo={cargo} viewer={viewer} />
     </PageShell>
   );

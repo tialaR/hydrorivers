@@ -19,8 +19,12 @@ export async function HydroHero({ locale }: HydroHeroProps) {
         <h1>{tHero('title')}</h1>
         <span>{tHero('description')}</span>
         <div className={styles.actions}>
-          <Link href={intlAppPaths.cargos.marketplace}><Button><HydroIcon name="ship" size={18} /> {tHero('primary')}</Button></Link>
-          <Link href={intlAppPaths.impact.home}><Button variant="secondary"><HydroIcon name="leaf" size={18} /> {tHero('secondary')}</Button></Link>
+          <Link locale={locale} href={intlAppPaths.cargos.marketplace}>
+            <Button><HydroIcon name="ship" size={18} /> {tHero('primary')}</Button>
+          </Link>
+          <Link locale={locale} href={intlAppPaths.impact.home}>
+            <Button variant="secondary"><HydroIcon name="leaf" size={18} /> {tHero('secondary')}</Button>
+          </Link>
         </div>
       </div>
       <aside className={styles.visual} aria-label={tVisual('aria')}>

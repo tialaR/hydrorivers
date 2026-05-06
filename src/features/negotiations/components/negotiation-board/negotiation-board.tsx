@@ -42,6 +42,7 @@ export async function NegotiationBoard({ negotiations, locale }: NegotiationBoar
       {negotiations.map((item) => (
         <Link
           key={item.id}
+          locale={locale}
           href={intlAppPaths.negotiations.negotiationDetail(item.id)}
           className={styles.linkWrap}
           data-testid="negotiation-card"

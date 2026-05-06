@@ -17,7 +17,12 @@ export async function VesselCard({ vessel, locale }: VesselCardProps) {
   const t = await getTranslations({ locale, namespace: 'common' });
 
   return (
-    <Link href={intlAppPaths.vessels.vesselDetail(vessel.id)} className={styles.linkWrap} aria-label={t('openVessel', { name: vessel.name })}>
+    <Link
+      locale={locale}
+      href={intlAppPaths.vessels.vesselDetail(vessel.id)}
+      className={styles.linkWrap}
+      aria-label={t('openVessel', { name: vessel.name })}
+    >
       <Card className={styles.card}>
         <div className={styles.media} style={{ backgroundImage: `linear-gradient(rgba(0,0,0,.08), rgba(0,0,0,.54)), url(${vessel.imageUrl})` }}>
           <Badge tone={vessel.status === 'available' ? 'success' : vessel.status === 'maintenance' ? 'warning' : 'river'}>{t(`vesselStatus.${vessel.status}`)}</Badge>

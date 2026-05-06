@@ -18,7 +18,9 @@ export default async function DashboardPage({ params }: { params: Promise<{ loca
     <PageShell eyebrow={t('eyebrow')} title={t('title')} description={t('description')}>
       {showMyCargoes ? (
         <p style={{ marginBottom: '1rem' }}>
-          <Link href={intlAppPaths.cargos.myCargos}>{t('myCargoesCta')}</Link>
+          <Link locale={locale} href={intlAppPaths.cargos.myCargos}>
+            {t('myCargoesCta')}
+          </Link>
         </p>
       ) : null}
       <DashboardOverview locale={locale} />

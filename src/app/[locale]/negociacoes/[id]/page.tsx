@@ -18,7 +18,7 @@ export default async function NegotiationDetailPage({ params }: { params: Promis
 
   return (
     <PageShell eyebrow={t('eyebrow')} title={title} description={negotiation.vesselName}>
-      <Breadcrumb items={[{ label: nav('negotiations'), href: intlAppPaths.negotiations.home }, { label: title }]} />
+      <Breadcrumb locale={locale} items={[{ label: nav('negotiations'), href: intlAppPaths.negotiations.home }, { label: title }]} />
       <NegotiationDetail negotiation={negotiation} locale={locale} />
     </PageShell>
   );

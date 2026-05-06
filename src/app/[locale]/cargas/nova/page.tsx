@@ -21,6 +21,7 @@ export default async function NewCargoPage({ params }: NewCargoPageProps) {
       description={t('description')}
     >
       <Breadcrumb
+        locale={locale}
         items={[
           { label: nav('cargoes'), href: intlAppPaths.cargos.marketplace },
           { label: t('breadcrumbCurrent') }
