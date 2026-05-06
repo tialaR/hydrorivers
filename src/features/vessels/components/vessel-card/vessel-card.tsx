@@ -1,4 +1,4 @@
-import { useLocale, useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { Link } from '@/core/i18n/navigation';
 import { intlAppPaths } from '@/shared/routing/app-routes';
 import { Badge } from '@/shared/ui/badge/badge';
@@ -8,9 +8,13 @@ import type { Vessel } from '@/features/marketplace/domain/marketplace.types';
 import { translateMock } from '@/shared/i18n/mock-content';
 import styles from './vessel-card.module.scss';
 
-export function VesselCard({ vessel }: { vessel: Vessel }) {
-  const t = useTranslations('common');
-  const locale = useLocale();
+type VesselCardProps = {
+  vessel: Vessel;
+  locale: string;
+};
+
+export async function VesselCard({ vessel, locale }: VesselCardProps) {
+  const t = await getTranslations({ locale, namespace: 'common' });
 
   return (
     <Link href={intlAppPaths.vessels.vesselDetail(vessel.id)} className={styles.linkWrap} aria-label={t('openVessel', { name: vessel.name })}>

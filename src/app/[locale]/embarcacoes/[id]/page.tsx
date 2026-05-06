@@ -16,7 +16,7 @@ export default async function VesselDetailPage({ params }: { params: Promise<{ i
   return (
     <PageShell eyebrow={t('eyebrow')} title={vessel.name} description={vessel.route}>
       <Breadcrumb items={[{ label: t('breadcrumb'), href: intlAppPaths.vessels.marketplace }, { label: vessel.name }]} />
-      <VesselDetail vessel={vessel} />
+      <VesselDetail vessel={vessel} locale={locale} />
     </PageShell>
   );
 }
