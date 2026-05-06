@@ -6,12 +6,12 @@ import { VesselDetail } from '@/features/vessels/components/vessel-detail/vessel
 import { getVesselById } from '@/features/marketplace/services/marketplace.service';
 import { intlAppPaths } from '@/shared/routing/app-routes';
 
-export default async function VesselDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
+export default async function VesselDetailPage({ params }: { params: Promise<{ id: string; locale: string }> }) {
+  const { id, locale } = await params;
   const vessel = await getVesselById(id);
   if (!vessel) notFound();
 
-  const t = await getTranslations('pages.vesselDetail');
+  const t = await getTranslations({ locale, namespace: 'pages.vesselDetail' });
 
   return (
     <PageShell eyebrow={t('eyebrow')} title={vessel.name} description={vessel.route}>
