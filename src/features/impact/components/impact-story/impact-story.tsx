@@ -6,11 +6,11 @@ import { intlAppPaths } from '@/shared/routing/app-routes';
 import { impactCards } from '../../data/impact.mock';
 import styles from './impact-story.module.scss';
 
-export async function ImpactStory() {
-  const page = await getTranslations('pages.impact');
+export async function ImpactStory({ locale }: { locale: string }) {
+  const page = await getTranslations({ locale, namespace: 'pages.impact' });
   const cards = await Promise.all(
     impactCards.map(async (card) => {
-      const t = await getTranslations(`impactCards.${card.id}`);
+      const t = await getTranslations({ locale, namespace: `impactCards.${card.id}` });
       return {
         ...card,
         title: t('title'),

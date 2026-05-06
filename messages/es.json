@@ -368,13 +368,13 @@
       "unauthorizedDescription": "Este panel está disponible solo para usuarios administradores."
     },
     "impact": {
-      "eyebrow": "Valor",
+      "eyebrow": "VALOR",
       "title": "Impacto",
       "description": "Por qué HydroRivers genera más valor para productores, transportistas y comunidades.",
       "listSectionAriaLabel": "Indicadores de impacto, métricas por tarjeta y resumen narrativo",
       "openImpactCard": "Ver detalles: {title}",
       "storyTitle": "Resumen",
-      "storyDescription": "Resumen narrativo de los beneficios ambientales, regulatorios y socioeconómicos generados por las operaciones fluviales priorizadas."
+      "storyDescription": "Resumen narrativo de las ganancias ambientales, regulatorias y socioeconómicas generadas por operaciones fluviales priorizadas."
     },
     "profile": {
       "eyebrow": "Cuenta",
@@ -794,7 +794,7 @@
     "compliance": {
       "metric": "DOF/NF-e/CT-e",
       "title": "Confianza documental",
-      "description": "Documentos obligatorios, condicionales y de próxima fase quedan claros antes de contratar."
+      "description": "Los documentos obligatorios, condicionales y próximos pasos quedan claros antes de la contratación."
     },
     "connectivity": {
       "metric": "offline-first",
@@ -802,7 +802,7 @@
       "description": "Los eventos pueden registrarse en campo y sincronizarse cuando vuelva la señal."
     },
     "government": {
-      "metric": "piloto Gov",
+      "metric": "Piloto Gov",
       "title": "Valor gubernamental",
       "description": "Indicadores de corredor, abastecimiento, bioeconomía y riesgo apoyan decisiones públicas."
     }

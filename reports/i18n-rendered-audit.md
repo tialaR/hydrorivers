@@ -2,7 +2,7 @@
 
 - Base URL: http://localhost:3000
 - Rotas auditadas: 20
-- Achados: 36
+- Achados: 23
 
 ## Findings
 
@@ -62,61 +62,9 @@
 - texto encontrado: `Menos burocracia`
 - trecho ao redor: `ado con BR do Mar Menos CO₂ por tonelada Amazonía conectada Menos burocracia © 2026 HydroRivers. Todos los derechos reservados. M Modo m`
 
-- rota: `/en-US/impacto`
-- texto encontrado: `operação`
-- trecho ao redor: `óxima fase ficam claros antes da contratação. offline-first Operação com baixa conectividade Eventos podem ser registrados em ca`
-
-- rota: `/en-US/impacto`
-- texto encontrado: `embarcações`
-- trecho ao redor: `CO₂ por tonelada Rotas aquaviárias evitam emissões e apoiam embarcações mais eficientes. +12 rotas otimizadas Amazônia conectada On`
-
-- rota: `/en-US/impacto`
-- texto encontrado: `Cotação`
-- trecho ao redor: `vanca produtores e comunidades. 72% pronto Menos burocracia Cotação, reserva, documentos e rastreio viram um fluxo operacional`
-
-- rota: `/en-US/impacto`
-- texto encontrado: `Impacto`
-- trecho ao redor: `🇺🇸 Publish cargo Impact Active operational context Valor Impacto Por que HydroRivers gera mais valor para produtores, transp`
-
-- rota: `/en-US/impacto`
-- texto encontrado: `Por que HydroRivers gera mais valor`
-- trecho ao redor: `blish cargo Impact Active operational context Valor Impacto Por que HydroRivers gera mais valor para produtores, transportadores e comunidades. -28% Reduçã`
-
-- rota: `/en-US/impacto`
-- texto encontrado: `Redução de custo logístico`
-- trecho ao redor: `valor para produtores, transportadores e comunidades. -28% Redução de custo logístico Cabotagem e rios organizados reduzem dependência rodoviária`
-
-- rota: `/en-US/impacto`
-- texto encontrado: `Menos CO₂ por tonelada`
-- trecho ao redor: `ependência rodoviária e melhoram ocupação. -38% CO₂ evitado Menos CO₂ por tonelada Rotas aquaviárias evitam emissões e apoiam embarcações mais`
-
-- rota: `/en-US/impacto`
-- texto encontrado: `Rotas otimizadas`
-- trecho ao redor: `s evitam emissões e apoiam embarcações mais eficientes. +12 rotas otimizadas Amazônia conectada Onde o rio é estrada, frete digital alav`
-
-- rota: `/en-US/impacto`
-- texto encontrado: `pronto`
-- trecho ao redor: `trada, frete digital alavanca produtores e comunidades. 72% pronto Menos burocracia Cotação, reserva, documentos e rastreio vi`
-
-- rota: `/en-US/impacto`
-- texto encontrado: `Menos burocracia`
-- trecho ao redor: `frete digital alavanca produtores e comunidades. 72% pronto Menos burocracia Cotação, reserva, documentos e rastreio viram um fluxo oper`
-
-- rota: `/en-US/impacto`
-- texto encontrado: `Aderência ao BR do Mar`
-- trecho ao redor: `e rastreio viram um fluxo operacional auditável. BR do Mar Aderência ao BR do Mar Amplia competitividade, frota e integração modal para cabot`
-
-- rota: `/es/impacto`
-- texto encontrado: `Embarcações`
-- trecho ao redor: `CO₂ por tonelada Rotas aquaviárias evitam emissões e apoiam embarcações mais eficientes. +12 rotas otimizadas Amazônia conectada On`
-
-- rota: `/es/impacto`
-- texto encontrado: `Redução de custo`
-- trecho ao redor: `valor para produtores, transportadores e comunidades. -28% Redução de custo logístico Cabotagem e rios organizados reduzem dependência`
-
 - rota: `/es/impacto`
 - texto encontrado: `Menos burocracia`
-- trecho ao redor: `frete digital alavanca produtores e comunidades. 72% pronto Menos burocracia Cotação, reserva, documentos e rastreio viram um fluxo oper`
+- trecho ao redor: `flete digital impulsa productores y comunidades. 72% listo Menos burocracia Cotización, reserva, documentos y rastreo se vuelven un flu`
 
 - rota: `/es/impacto`
 - texto encontrado: `Menos burocracia`
