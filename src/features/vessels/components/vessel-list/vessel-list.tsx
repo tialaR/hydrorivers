@@ -3,8 +3,8 @@ import type { Vessel } from '@/features/marketplace/domain/marketplace.types';
 import { VesselCard } from '../vessel-card/vessel-card';
 import styles from './vessel-list.module.scss';
 
-export async function VesselList({ vessels }: { vessels: Vessel[] }) {
-  const t = await getTranslations('pages.vessels');
+export async function VesselList({ vessels, locale }: { vessels: Vessel[]; locale: string }) {
+  const t = await getTranslations({ locale, namespace: 'pages.vessels' });
   return (
     <section className={styles.grid} aria-label={t('listSectionAriaLabel')}>
       {vessels.map((vessel) => (
