@@ -519,7 +519,7 @@ const exact: Record<string, Localized> = {
     'es': 'Embarcación regional refrigerada'
   },
   'Empurrador + barcaça': {
-    'en-US': 'Pusher + barge',
+    'en-US': 'Pusher tug + barge',
     'es': 'Empujador + barcaza'
   },
   'Multiuso de cabotagem': {

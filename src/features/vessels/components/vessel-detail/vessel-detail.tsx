@@ -1,14 +1,18 @@
 
-import { useLocale, useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { Card } from '@/shared/ui/card/card';
 import { HydroIcon } from '@/shared/ui/hydro-icon/hydro-icon';
 import type { Vessel } from '@/features/marketplace/domain/marketplace.types';
 import { translateMock } from '@/shared/i18n/mock-content';
 import styles from './vessel-detail.module.scss';
 
-export function VesselDetail({ vessel }: { vessel: Vessel }) {
-  const t = useTranslations('common');
-  const locale = useLocale();
+type VesselDetailProps = {
+  vessel: Vessel;
+  locale: string;
+};
+
+export async function VesselDetail({ vessel, locale }: VesselDetailProps) {
+  const t = await getTranslations({ locale, namespace: 'common' });
 
   const stats = [
     { label: t('capacity'), value: vessel.capacity, icon: 'cargo', tone: styles.capacity },

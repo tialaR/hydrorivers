@@ -8,7 +8,7 @@ export async function VesselList({ vessels, locale }: { vessels: Vessel[]; local
   return (
     <section className={styles.grid} aria-label={t('listSectionAriaLabel')}>
       {vessels.map((vessel) => (
-        <VesselCard key={vessel.id} vessel={vessel} />
+        <VesselCard key={vessel.id} vessel={vessel} locale={locale} />
       ))}
     </section>
   );
