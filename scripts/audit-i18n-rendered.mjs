@@ -8,6 +8,7 @@ const BASE_URL = 'http://localhost:3000';
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const REPORT_PATH = join(ROOT, 'reports', 'i18n-rendered-audit.md');
 
+/** Ordem explícita solicitada: home, nova carga, impacto, embarcações, negociações, dashboard, cargas, minhas-cargas, rastreio, governo */
 const ROUTES = [
   '/en-US',
   '/es',
@@ -15,99 +16,129 @@ const ROUTES = [
   '/es/cargas/nova',
   '/en-US/impacto',
   '/es/impacto',
+  '/en-US/embarcacoes',
+  '/es/embarcacoes',
+  '/en-US/negociacoes',
+  '/es/negociacoes',
   '/en-US/dashboard',
   '/es/dashboard',
   '/en-US/cargas',
   '/es/cargas',
   '/en-US/minhas-cargas',
   '/es/minhas-cargas',
-  '/en-US/embarcacoes',
-  '/es/embarcacoes',
-  '/en-US/negociacoes',
-  '/es/negociacoes',
   '/en-US/rastreio',
   '/es/rastreio',
   '/en-US/governo',
   '/es/governo'
 ];
 
+/**
+ * Textos claramente em português que não deveriam aparecer em páginas /en-US.
+ * Frases mais longas primeiro reduzem ruído ao exibir contexto; a busca ainda é por substring normalizada.
+ */
 const PROHIBITED_TERMS_EN_US = [
+  'Simule a abertura de uma carga para receber cotações de embarcações aptas.',
+  'Aguardar aceite do embarcador',
+  'Equipamentos solares para comunidades ribeirinhas',
+  'Medicamentos refrigerados para abastecimento territorial',
+  'O marketplace que transforma rios em corredores digitais de carga',
+  'Por que HydroRivers gera mais valor',
+  'Redução de custo logístico',
+  'Operação com baixa conectividade',
+  'autorização e janela de vazante',
+  'Anexar laudo sanitário',
+  'Embarcação regional refrigerada',
+  'Baixa conectividade pendente',
+  'Checklist digital pronto',
+  'Baixa conectividade pronta',
+  'Comboio de barcaças',
+  'Empurrador + barcaça',
+  'Necessidade regional',
+  'Custo e sustentabilidade',
+  'Aderência ao BR do Mar',
+  'Confiança documental',
+  'Rotas otimizadas',
+  'Menos CO₂ por tonelada',
+  'Menos burocracia',
+  'Desburocratização',
+  'FRETE FLUVIAL E CABOTAGEM',
+  'Publicar nova carga',
+  'Explorar cargas',
+  'Ver impacto',
+  'Documento verificado',
   'Painel HydroRivers',
   'Resumo das cargas',
-  'Cargas abertas',
   'Embarcações disponíveis',
   'Negociações ativas',
-  'Economia média',
   'Corredores em destaque',
-  'operação',
+  'Economia média',
+  'Polpa de açaí congelada',
+  'Castanha beneficiada',
+  'Farinha de mandioca',
+  'Polpa de açaí',
+  'rastreabilidade',
+  'cadeia fria',
   'cargas abertas',
   'embarcações',
   'negociações',
-  'Ver detalhes',
   'Nova carga',
   'Minhas cargas',
+  'Ver detalhes',
   'Entrar',
   'Sair',
   'Salvar',
   'Cancelar',
-  'Polpa de açaí',
-  'Farinha de mandioca',
-  'Castanha beneficiada',
-  'cadeia fria',
-  'rastreabilidade',
   'Disponível',
-  'Em rota',
   'Em manutenção',
-  'Comboio de barcaças',
-  'Embarcação regional refrigerada',
-  'Empurrador + barcaça',
-  'Calado',
-  'Documento verificado',
-  'Baixa conectividade pronta',
-  'Checklist digital pronto',
+  'Em rota',
+  'Em revisão',
+  'Checklist pendente',
   'Proprietário',
-  'Contrato',
+  'Calado',
   'Cotação',
   'Contraproposta',
-  'Aguardar aceite do embarcador',
-  'Anexar laudo sanitário',
-  'autorização e janela de vazante',
-  'Impacto',
-  'Por que HydroRivers gera mais valor',
-  'Redução de custo logístico',
-  'Menos CO₂ por tonelada',
-  'Rotas otimizadas',
-  'pronto',
-  'Menos burocracia',
-  'Aderência ao BR do Mar',
-  'Publicar nova carga',
-  'Simule a abertura',
+  'Contrato',
+  'Hoje',
+  'Ontem',
+  'piloto Gov',
   'PUBLICAÇÃO',
-  'O marketplace que transforma rios em corredores digitais de carga',
-  'Frete fluvial e cabotagem',
-  'Explorar cargas',
-  'Ver impacto',
-  'Custo e sustentabilidade',
-  'Necessidade regional',
-  'Desburocratização'
+  'Simule a abertura',
+  'Impacto',
+  'Resumo',
+  'operação',
+  'pronto'
 ];
 
+/**
+ * Em /es: marcar trechos claramente em português. Não incluir palavras que também são espanhol válido
+ * (ex.: impacto, carga(s), documento(s), perfil, publicar, operación) como termos isolados.
+ */
 const PROHIBITED_TERMS_ES = [
-  'Embarcação',
-  'Embarcações',
-  'Disponível',
-  'Em rota',
-  'Em manutenção',
+  'Simule a abertura de uma carga para receber cotações de embarcações aptas.',
+  'Aguardar aceite do embarcador',
+  'Baixa conectividade pendente',
   'Baixa conectividade pronta',
   'Checklist digital pronto',
-  'Proprietário',
-  'Aguardar aceite',
-  'Anexar laudo',
-  'Publicar nova carga',
-  'Simule a abertura',
+  'Checklist pendente',
+  'Embarcação regional refrigerada',
+  'Empurrador + barcaça',
+  'Comboio de barcaças',
+  'Anexar laudo sanitário',
+  'autorização e janela de vazante',
   'Redução de custo',
   'Desburocratização',
-  'Menos burocracia'
+  'Menos burocracia',
+  'Publicar nova carga',
+  'Simule a abertura',
+  'Embarcações',
+  'Embarcação',
+  'Disponível',
+  'Em manutenção',
+  'Em rota',
+  'Em revisão',
+  'Proprietário',
+  'Aguardar aceite',
+  'Anexar laudo'
 ];
 
 const IGNORE_TERMS = new Set([
@@ -131,10 +162,6 @@ const IGNORE_TERMS = new Set([
   'POD',
   'TEU'
 ]);
-
-function escapeRegExp(input) {
-  return input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
 
 function normalizeWhitespace(input) {
   return input.replace(/\s+/g, ' ').trim();
@@ -160,18 +187,33 @@ function isIgnoredMatch(text) {
   return IGNORE_TERMS.has(text);
 }
 
+/** Remove duplicatas preservando ordem (termos mais longos já estão primeiro na lista fonte). */
+function uniqueTerms(terms, locale) {
+  const seen = new Set();
+  const out = [];
+  for (const t of terms) {
+    const key = t.toLocaleLowerCase(locale);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(t);
+  }
+  return out;
+}
+
 function findMatches(route, text) {
   const findings = [];
-  const lowerText = text.toLocaleLowerCase('pt-BR');
-  const prohibitedTerms = route.startsWith('/en-US')
+  const localeForCompare = route.startsWith('/en-US') ? 'en-US' : route.startsWith('/es') ? 'es' : 'pt-BR';
+  const prohibitedTermsRaw = route.startsWith('/en-US')
     ? PROHIBITED_TERMS_EN_US
     : route.startsWith('/es')
       ? PROHIBITED_TERMS_ES
       : [];
+  const prohibitedTerms = uniqueTerms(prohibitedTermsRaw, localeForCompare);
+  const lowerText = text.toLocaleLowerCase(localeForCompare);
 
   for (const term of prohibitedTerms) {
     if (isIgnoredMatch(term)) continue;
-    const lowerTerm = term.toLocaleLowerCase('pt-BR');
+    const lowerTerm = term.toLocaleLowerCase(localeForCompare);
     let index = lowerText.indexOf(lowerTerm);
 
     while (index !== -1) {
@@ -190,15 +232,41 @@ function findMatches(route, text) {
   return findings;
 }
 
+function summarizeByRoute(findings) {
+  /** @type {Map<string, number>} */
+  const map = new Map();
+  for (const f of findings) {
+    map.set(f.route, (map.get(f.route) ?? 0) + 1);
+  }
+  return [...map.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+}
+
 function renderReport(findings, failures) {
+  const byRoute = summarizeByRoute(findings);
+  const affectedRoutes = [...new Set(findings.map((f) => f.route))].sort();
+
   const lines = [
     '# i18n Rendered HTML Audit',
     '',
     `- Base URL: ${BASE_URL}`,
     `- Rotas auditadas: ${ROUTES.length}`,
     `- Achados: ${findings.length}`,
+    `- Rotas com achados: ${affectedRoutes.length}`,
     ''
   ];
+
+  if (affectedRoutes.length > 0) {
+    lines.push('## Resumo por rota', '');
+    for (const [r, count] of byRoute) {
+      lines.push(`- \`${r}\`: ${count} ocorrência(s) listada(s)`);
+    }
+    lines.push('');
+    lines.push('### Rotas afetadas (lista única)', '');
+    for (const r of affectedRoutes) {
+      lines.push(`- \`${r}\``);
+    }
+    lines.push('');
+  }
 
   if (failures.length > 0) {
     lines.push('## Route Fetch Failures', '');
@@ -266,8 +334,17 @@ async function main() {
   const report = renderReport(findings, failures);
   writeFileSync(REPORT_PATH, report, 'utf8');
 
+  const affectedRoutes = [...new Set(findings.map((f) => f.route))].sort();
+
   console.log(`Relatório gerado em: ${REPORT_PATH.replace(`${ROOT}/`, '')}`);
   console.log(`Achados: ${findings.length}`);
+  console.log(`Rotas com achados: ${affectedRoutes.length}`);
+  if (affectedRoutes.length > 0) {
+    console.log('Rotas afetadas:');
+    for (const r of affectedRoutes) {
+      console.log(`  - ${r}`);
+    }
+  }
   if (failures.length > 0) console.log(`Falhas de fetch: ${failures.length}`);
 
   if (findings.length > 0) process.exit(1);

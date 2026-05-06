@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useSyncExternalStore } from 'react';
 import { useTranslations } from 'next-intl';
+import { cookieNames } from '@/shared/http/cookie-names';
 import { HydroIcon } from '@/shared/ui/hydro-icon/hydro-icon';
 import styles from './theme-toggle.module.scss';
 
@@ -9,16 +10,11 @@ type Theme = 'light' | 'dark';
 
 function resolveTheme(): Theme {
   if (typeof window === 'undefined') return 'dark';
-  const stored = window.localStorage.getItem('hydrorivers.theme');
+  const fromDom = document.documentElement.dataset.theme;
+  if (fromDom === 'light' || fromDom === 'dark') return fromDom;
+  const stored = window.localStorage.getItem(cookieNames.theme);
   if (stored === 'light' || stored === 'dark') return stored;
   return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-}
-
-function applyTheme(theme: Theme) {
-  document.documentElement.classList.toggle('dark', theme === 'dark');
-  document.documentElement.dataset.theme = theme;
-  window.localStorage.setItem('hydrorivers.theme', theme);
-  window.dispatchEvent(new CustomEvent('hydrorivers:theme-change', { detail: theme }));
 }
 
 export function ThemeToggle() {
@@ -31,11 +27,19 @@ export function ThemeToggle() {
   );
 
   useEffect(() => {
-    applyTheme(theme);
-  }, [theme]);
+    const onThemeChange = (event: Event) => {
+      const nextTheme = (event as CustomEvent<Theme>).detail;
+      if (nextTheme === 'light' || nextTheme === 'dark') {
+        setTheme(nextTheme);
+      }
+    };
+    window.addEventListener('hydrorivers:theme-change', onThemeChange);
+    return () => window.removeEventListener('hydrorivers:theme-change', onThemeChange);
+  }, []);
 
   function toggleTheme() {
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
+    window.dispatchEvent(new CustomEvent('hydrorivers:theme-change', { detail: nextTheme }));
     setTheme(nextTheme);
   }
 

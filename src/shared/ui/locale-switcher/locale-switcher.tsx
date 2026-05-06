@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { usePathname, useRouter } from '@/core/i18n/navigation';
 import type { AppLocale } from '@/core/i18n/routing';
+import { cookieNames } from '@/shared/http/cookie-names';
 import styles from './locale-switcher.module.scss';
 
 const SUPPORTED_LOCALES: AppLocale[] = ['pt-BR', 'en-US', 'es'];
@@ -20,7 +21,7 @@ const LOCALE_VISUAL: Record<AppLocale, { flag: string; code: string }> = {
 function persistLocalePreference(nextLocale: AppLocale) {
   try {
     window.localStorage.setItem('hydrorivers.locale', nextLocale);
-    document.cookie = `NEXT_LOCALE=${nextLocale}; path=/; max-age=31536000; samesite=lax`;
+    document.cookie = `${cookieNames.locale}=${nextLocale}; path=/; max-age=31536000; SameSite=Lax`;
   } catch {
     /* ignore storage / cookie failures */
   }
