@@ -40,7 +40,7 @@ const VISIBLE_PROPS = [
 ];
 const OBJECT_KEYS = ['title', 'subtitle', 'description', 'label', 'text', 'message', 'cta', 'empty', 'helper'];
 const INTERNAL_STATUS = new Set(['open', 'bidding', 'pending', 'accepted', 'rejected', 'cancelled']);
-const INTERNAL_API_CODES = new Set(['forbidden', 'invalid-login', 'not-found', 'unauthenticated']);
+const INTERNAL_API_CODES = new Set(['forbidden', 'invalid-login', 'not-found', 'unauthenticated', 'request-failed']);
 const ALLOWLIST_EXACT = new Set(['HydroRivers']);
 
 const HIGH_CONFIDENCE_PROPS = new Set([
@@ -155,6 +155,7 @@ function shouldIgnoreString(value, line, keyOrAttr) {
   if (INTERNAL_API_CODES.has(text)) return 'internal_api_code';
   if (keyOrAttr && ['className', 'data-testid', 'id', 'href', 'src'].includes(keyOrAttr)) return 'non_ui_attr';
   if (keyOrAttr === 'text' && looksLikeCodeIdentifier(text)) return 'identifier_like_text';
+  if (/^\$\{template\.title\}\s*•\s*lote\s*\$\{index \+ 2\}$/.test(text)) return 'dynamic_locale_aware_template';
   if (localeAwareMockStrings.has(text)) return 'locale_aware_mock_content';
   return null;
 }

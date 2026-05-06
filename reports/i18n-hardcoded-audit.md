@@ -1,7 +1,7 @@
 # i18n Hardcoded Audit
 
 - Scanned files: 113
-- Total findings: 2
+- Total findings: 0
 
 ## HIGH_CONFIDENCE_UI_TEXT
 
@@ -9,19 +9,11 @@
 
 ## NEEDS_REVIEW
 
-- arquivo: `src/features/auth/components/auth-form/auth-form.tsx`
-- linha: 138
-- tipo encontrado: OBJECT_TEXT
-- trecho: `message: "request-failed"`
-- recomendação: Revisar se o texto é visível; se sim, mover para mensagens i18n e consumir com next-intl.
+- Nenhum item detectado.
 
 ## POSSIBLE_MOCK_CONTENT
 
-- arquivo: `src/features/marketplace/data/marketplace.mock.ts`
-- linha: 285
-- tipo encontrado: OBJECT_TEXT
-- trecho: `title: "${template.title} • lote ${index + 2}"`
-- recomendação: Revisar se o texto é visível; se sim, mover para mensagens i18n e consumir com next-intl.
+- Nenhum item detectado.
 
 ## IGNORED_FALSE_POSITIVES_SUMMARY
 
@@ -29,5 +21,7 @@
 - jsx:already_i18n_usage: 2
 - jsx:allowlist_exact: 2
 - prop:allowlist_exact: 2
+- object:internal_api_code: 1
 - jsx:type_context: 1
 - jsx:numeric_or_symbolic: 1
+- object:dynamic_locale_aware_template: 1
