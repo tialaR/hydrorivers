@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Geist } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server';
@@ -11,6 +12,8 @@ import { ThemeProvider } from '@/shared/providers/theme-provider';
 import { ToastProvider } from '@/shared/ui/toast/toast-provider';
 import { MockMode } from '@/shared/ui/mock-mode/mock-mode';
 import { isMockQaUiEnabled } from '@/shared/qa/mock-qa-ui-env';
+
+const geist = Geist({ subsets: ['latin'], display: 'swap', variable: '--font-sans' });
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -39,8 +42,8 @@ export default async function LocaleLayout({
   const messages = await getMessages({ locale });
 
   return (
-    <html lang={locale}>
-      <body>
+    <html lang={locale} className={geist.variable} suppressHydrationWarning data-scroll-behavior="smooth">
+      <body suppressHydrationWarning>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeProvider>
             <ToastProvider>

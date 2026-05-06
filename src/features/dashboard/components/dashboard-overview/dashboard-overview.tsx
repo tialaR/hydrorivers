@@ -15,10 +15,10 @@ export async function DashboardOverview() {
   ]);
 
   const stats = [
-    { icon: 'cargo' as const, label: t('openCargoes'), value: summary.openCargoes, hint: t('activeMarketplace'), trend: '+18%', tone: 'cargoTone' },
-    { icon: 'ship' as const, label: t('availableVessels'), value: summary.availableVessels, hint: t('riverRoutes'), trend: '+7%', tone: 'shipTone' },
-    { icon: 'document' as const, label: t('activeNegotiations'), value: summary.activeNegotiations, hint: t('quotesAndBookings'), trend: '+12%', tone: 'dealTone' },
-    { icon: 'leaf' as const, label: t('averageCo2Saving'), value: summary.averageSaving, hint: t('roadComparison'), trend: 'BR do Mar', tone: 'impactTone' }
+    { icon: 'cargo' as const, label: t('openCargoes'), value: summary.openCargoes, hint: t('activeMarketplace'), trend: t('metricTrendOpenCargoes'), tone: 'cargoTone' },
+    { icon: 'ship' as const, label: t('availableVessels'), value: summary.availableVessels, hint: t('riverRoutes'), trend: t('metricTrendVessels'), tone: 'shipTone' },
+    { icon: 'document' as const, label: t('activeNegotiations'), value: summary.activeNegotiations, hint: t('quotesAndBookings'), trend: t('metricTrendNegotiations'), tone: 'dealTone' },
+    { icon: 'leaf' as const, label: t('averageCo2Saving'), value: summary.averageSaving, hint: t('roadComparison'), trend: common('brDoMar'), tone: 'impactTone' }
   ] as const;
 
   return (
