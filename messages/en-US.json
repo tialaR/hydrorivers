@@ -438,7 +438,10 @@
       "capacityAndBookings": "Capacity and bookings",
       "liveMock": "live mock",
       "recentNegotiations": "Recent negotiations",
-      "activeCount": "{count} active"
+      "activeCount": "{count} active",
+      "metricTrendOpenCargoes": "+18%",
+      "metricTrendVessels": "+7%",
+      "metricTrendNegotiations": "+12%"
     },
     "cargoDetail": {
       "kicker": "Waterway opportunity",

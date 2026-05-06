@@ -1,5 +1,6 @@
 import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/core/i18n/navigation';
+import { intlAppPaths } from '@/shared/routing/app-routes';
 import { Badge } from '@/shared/ui/badge/badge';
 import { Card } from '@/shared/ui/card/card';
 import { HydroIcon } from '@/shared/ui/hydro-icon/hydro-icon';
@@ -35,7 +36,7 @@ export function NegotiationBoard({ negotiations }: { negotiations: Negotiation[]
       {negotiations.map((item) => (
         <Link
           key={item.id}
-          href={`/negociacoes/${item.id}`}
+          href={intlAppPaths.negotiations.negotiationDetail(item.id)}
           className={styles.linkWrap}
           data-testid="negotiation-card"
           aria-label={t('openNegotiation', { title: translateMock(locale, item.cargoTitle) })}

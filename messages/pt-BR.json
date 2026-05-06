@@ -438,7 +438,10 @@
       "capacityAndBookings": "Capacidade e reservas",
       "liveMock": "mock vivo",
       "recentNegotiations": "Negociações recentes",
-      "activeCount": "{count} ativas"
+      "activeCount": "{count} ativas",
+      "metricTrendOpenCargoes": "+18%",
+      "metricTrendVessels": "+7%",
+      "metricTrendNegotiations": "+12%"
     },
     "cargoDetail": {
       "kicker": "Oportunidade aquaviária",

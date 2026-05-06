@@ -53,7 +53,8 @@ export const intlAppPaths = {
     home: intlSegments.admin
   },
   negotiations: {
-    home: intlSegments.negociacoes
+    home: intlSegments.negociacoes,
+    negotiationDetail: (negotiationId: string) => `${intlSegments.negociacoes}/${negotiationId}`
   },
   tracking: {
     home: intlSegments.rastreio
@@ -105,7 +106,9 @@ export const appRoutes = {
     home: (locale: AppLocale) => localizedAppPath(locale, intlAppPaths.admin.home)
   },
   negotiations: {
-    home: (locale: AppLocale) => localizedAppPath(locale, intlAppPaths.negotiations.home)
+    home: (locale: AppLocale) => localizedAppPath(locale, intlAppPaths.negotiations.home),
+    negotiationDetail: (locale: AppLocale, negotiationId: string) =>
+      localizedAppPath(locale, intlAppPaths.negotiations.negotiationDetail(negotiationId))
   },
   tracking: {
     home: (locale: AppLocale) => localizedAppPath(locale, intlAppPaths.tracking.home)
