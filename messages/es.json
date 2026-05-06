@@ -230,7 +230,7 @@
           "description": "Donde el río es carretera, organizar capacidad fluvial reduce el costo de vida y amplía mercados."
         },
         "automation": {
-          "title": "Menos burocracia",
+          "title": "Menor burocracia",
           "description": "Cotización, contrapropuestas y documentos en un flujo digital preparado para automatización."
         }
       }
@@ -783,7 +783,7 @@
     },
     "automation": {
       "metric": "72% listo",
-      "title": "Menos burocracia",
+      "title": "Menor burocracia",
       "description": "Cotización, reserva, documentos y rastreo se vuelven un flujo auditable."
     },
     "brdomar": {
