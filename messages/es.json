@@ -145,12 +145,12 @@
     }
   },
   "auth": {
-    "login": "Entrar",
+    "login": "Iniciar sesión",
     "signup": "Crear cuenta",
     "logout": "Cerrar sesión",
     "profile": "Perfil",
     "loginEyebrow": "Acceso seguro",
-    "loginTitle": "Entrar en la operación HydroRivers",
+    "loginTitle": "Inicia sesión en la operación HydroRivers",
     "loginDescription": "Accede a cargas, propuestas, reservas y rastreo en una experiencia digital para ríos y cabotaje.",
     "registerEyebrow": "Nueva cuenta",
     "registerTitle": "Registra tu operación fluvial",
