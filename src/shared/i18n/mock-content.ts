@@ -1007,6 +1007,10 @@ const exact: Record<string, Localized> = {
     'en-US': 'Cocoa and cupuaçu in a bioeconomy chain',
     'es': 'Cacao y cupuaçu en cadena de bioeconomía'
   },
+  'Cacau e cupuaçu em cadeia de bioeconomia • lote 7': {
+    'en-US': 'Cocoa and cupuaçu in a bioeconomy chain • batch 7',
+    'es': 'Cacao y cupuaçu en una cadena de bioeconomía • lote 7'
+  },
   'Equipamentos solares para comunidades ribeirinhas': {
     'en-US': 'Solar equipment for riverside communities',
     'es': 'Equipos solares para comunidades ribereñas'

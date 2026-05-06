@@ -361,7 +361,7 @@
       "progressLabel": "{progress}% concluído"
     },
     "admin": {
-      "eyebrow": "Backoffice",
+      "eyebrow": "BACKOFFICE",
       "title": "Painel administrativo",
       "description": "Aprovação, suporte, auditoria e visão operacional do piloto.",
       "unauthorizedTitle": "Acesso restrito",
@@ -499,7 +499,7 @@
       "simulateProposal": "Simular proposta",
       "notFoundTitle": "Carga não encontrada no mock local.",
       "notFoundDescription": "Volte para a listagem e publique novamente.",
-      "eyebrow": "Carga",
+      "eyebrow": "CARGA",
       "fallbackTitle": "Carga salva no mock",
       "fallbackDescription": "Detalhe carregado pelo mock local",
       "documentKicker": "Confiança documental",

@@ -361,11 +361,11 @@
       "progressLabel": "{progress}% completado"
     },
     "admin": {
-      "eyebrow": "Administración",
+      "eyebrow": "BACKOFFICE",
       "title": "Panel administrativo",
-      "description": "Aprobación, soporte, auditoría y vista operativa del piloto.",
+      "description": "Aprobación, soporte, auditoría y visión operativa del piloto.",
       "unauthorizedTitle": "Acceso restringido",
-      "unauthorizedDescription": "Este panel está disponible solo para usuarios administradores."
+      "unauthorizedDescription": "Este panel es exclusivo para usuarios administradores."
     },
     "impact": {
       "eyebrow": "VALOR",
@@ -499,7 +499,7 @@
       "simulateProposal": "Simular propuesta",
       "notFoundTitle": "Carga no encontrada en la simulación local.",
       "notFoundDescription": "Vuelve a la lista y publica nuevamente.",
-      "eyebrow": "Carga",
+      "eyebrow": "CARGA",
       "fallbackTitle": "Carga guardada en la simulación",
       "fallbackDescription": "Detalle cargado desde la simulación local",
       "documentKicker": "Confianza documental",
