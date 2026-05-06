@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Geist } from 'next/font/google';
-import Script from 'next/script';
+import { cookies } from 'next/headers';
 import { Analytics } from '@vercel/analytics/next';
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server';
@@ -9,29 +9,17 @@ import { routing } from '@/core/i18n/routing';
 import '../globals.scss';
 import { AppHeader } from '@/shared/layout/app-header/app-header';
 import { AppFooter } from '@/shared/layout/app-footer';
-import { ThemeProvider } from '@/shared/providers/theme-provider';
+import { type Theme, ThemeProvider } from '@/shared/providers/theme-provider';
+import { cookieNames } from '@/shared/http/cookie-names';
 import { ToastProvider } from '@/shared/ui/toast/toast-provider';
 import { MockMode } from '@/shared/ui/mock-mode/mock-mode';
 import { isMockQaUiEnabled } from '@/shared/qa/mock-qa-ui-env';
 
 const geist = Geist({ subsets: ['latin'], display: 'swap', variable: '--font-sans' });
 
-const themeInitScript = `
-(function () {
-  try {
-    var stored = localStorage.getItem('hydrorivers.theme');
-    var prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
-    var theme = stored === 'light' || stored === 'dark' ? stored : (prefersLight ? 'light' : 'dark');
-    document.documentElement.classList.toggle('dark', theme === 'dark');
-    document.documentElement.dataset.theme = theme;
-    document.documentElement.style.colorScheme = theme;
-  } catch (_) {
-    document.documentElement.classList.add('dark');
-    document.documentElement.dataset.theme = 'dark';
-    document.documentElement.style.colorScheme = 'dark';
-  }
-})();
-`;
+function resolveServerTheme(themeCookieValue: string | undefined): Theme {
+  return themeCookieValue === 'light' || themeCookieValue === 'dark' ? themeCookieValue : 'dark';
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
@@ -58,19 +46,22 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
 
   const messages = await getMessages({ locale });
+  const cookieStore = await cookies();
+  const initialTheme = resolveServerTheme(cookieStore.get(cookieNames.theme)?.value);
+  const htmlClassName = `${geist.variable}${initialTheme === 'dark' ? ' dark' : ''}`;
 
   return (
-    <html lang={locale} className={geist.variable} suppressHydrationWarning data-scroll-behavior="smooth">
-      <head>
-        <Script
-          id="hydrorivers-theme-init"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{ __html: themeInitScript }}
-        />
-      </head>
+    <html
+      lang={locale}
+      className={htmlClassName}
+      suppressHydrationWarning
+      data-scroll-behavior="smooth"
+      data-theme={initialTheme}
+      style={{ colorScheme: initialTheme }}
+    >
       <body suppressHydrationWarning>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <ThemeProvider>
+          <ThemeProvider initialTheme={initialTheme}>
             <ToastProvider>
               <AppHeader />
               {children}
