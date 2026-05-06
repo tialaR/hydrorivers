@@ -23,7 +23,10 @@ export default async function ImpactDetailPage({ params }: { params: Promise<{ i
 
   return (
     <PageShell eyebrow={page('eyebrow')} title={t('title')} description={t('description')}>
-      <Breadcrumb items={[{ label: page('breadcrumb'), href: intlAppPaths.impact.home }, { label: t('title') }]} />
+      <Breadcrumb
+        locale={locale}
+        items={[{ label: page('breadcrumb'), href: intlAppPaths.impact.home }, { label: t('title') }]}
+      />
       <Card style={{ borderWidth: 3, display: 'grid', gap: '1rem' }}>
         <span style={{ color: 'var(--brand)', display: 'inline-flex', alignItems: 'center', gap: '.5rem', fontWeight: 600 }}><HydroIcon name="leaf" /> {page('kicker')}</span>
         <p style={{ color: 'var(--muted)', fontWeight: 560, lineHeight: 1.7 }}>{page('description')}</p>

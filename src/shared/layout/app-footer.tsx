@@ -33,7 +33,15 @@ const columns = [
       [intlAppPaths.tracking.home, 'tracking']
     ]
   },
-  { key: 'company', links: [['/impacto/brdomar', 'brdomar'], ['/impacto/sustainability', 'sustainability'], ['/impacto/regional', 'regional'], ['/impacto/automation', 'automation']] }
+  {
+    key: 'company',
+    links: [
+      [intlAppPaths.impact.impactDetail('brdomar'), 'brdomar'],
+      [intlAppPaths.impact.impactDetail('sustainability'), 'sustainability'],
+      [intlAppPaths.impact.impactDetail('regional'), 'regional'],
+      [intlAppPaths.impact.impactDetail('automation'), 'automation']
+    ]
+  }
 ] as const;
 
 export async function AppFooter({ locale }: { locale: string }) {
@@ -56,7 +64,11 @@ export async function AppFooter({ locale }: { locale: string }) {
         {columns.map((column) => (
           <nav key={column.key} className={styles.column} aria-label={t(`${column.key}.title` as never)}>
             <h2>{t(`${column.key}.title` as never)}</h2>
-            {column.links.map(([href, label]) => <Link key={href} href={href}>{getLabel(label)}</Link>)}
+            {column.links.map(([href, label]) => (
+              <Link key={href} locale={locale} href={href}>
+                {getLabel(label)}
+              </Link>
+            ))}
           </nav>
         ))}
       </div>

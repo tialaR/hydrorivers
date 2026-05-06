@@ -25,6 +25,7 @@ export async function ImpactStory({ locale }: { locale: string }) {
       {cards.map((card) => (
         <Link
           key={card.id}
+          locale={locale}
           href={intlAppPaths.impact.impactDetail(card.id)}
           className={styles.linkWrap}
           aria-label={page('openImpactCard', { title: card.title })}

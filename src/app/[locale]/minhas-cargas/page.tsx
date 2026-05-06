@@ -40,7 +40,10 @@ export default async function MinhasCargasPage({
 
   return (
     <PageShell eyebrow={t('eyebrow')} title={t('title')} description={t('description')}>
-      <Breadcrumb items={[{ label: nav('dashboard'), href: intlAppPaths.dashboard.home }, { label: t('breadcrumbCurrent') }]} />
+      <Breadcrumb
+        locale={locale}
+        items={[{ label: nav('dashboard'), href: intlAppPaths.dashboard.home }, { label: t('breadcrumbCurrent') }]}
+      />
       <MyCargoesList cargoes={mine} createdCargoId={createdCargoId} />
     </PageShell>
   );
