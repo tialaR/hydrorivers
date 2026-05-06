@@ -274,7 +274,17 @@
       "eyebrow": "Marketplace",
       "title": "Cargas disponíveis",
       "description": "Cargas fluviais e de cabotagem prontas para receber propostas.",
-      "loadingList": "Carregando cargas disponíveis…"
+      "loadingList": "Carregando cargas disponíveis…",
+      "listSectionAriaLabel": "Lista de cargas do marketplace com filtros e paginação",
+      "filterGroupAria": {
+        "query": "Opções de busca por texto",
+        "corridor": "Opções de corredor hidroviário",
+        "origin": "Opções de origem",
+        "destination": "Opções de destino",
+        "type": "Opções de tipo de carga",
+        "family": "Opções de família produtiva",
+        "document": "Opções de documento exigido"
+      }
     },
     "newCargo": {
       "eyebrow": "Publicação",
