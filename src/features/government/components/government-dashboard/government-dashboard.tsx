@@ -1,4 +1,4 @@
-import { getLocale, getTranslations } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
 import { listCargoes, listNegotiations, listVessels } from '@/features/marketplace/services/marketplace.service';
 import { Card } from '@/shared/ui/card/card';
 import { Badge } from '@/shared/ui/badge/badge';
@@ -6,10 +6,9 @@ import { HydroIcon } from '@/shared/ui/hydro-icon/hydro-icon';
 import { translateMock } from '@/shared/i18n/mock-content';
 import styles from './government-dashboard.module.scss';
 
-export async function GovernmentDashboard() {
-  const t = await getTranslations('pages.government');
-  const common = await getTranslations('common');
-  const locale = await getLocale();
+export async function GovernmentDashboard({ locale }: { locale: string }) {
+  const t = await getTranslations({ locale, namespace: 'pages.government' });
+  const common = await getTranslations({ locale, namespace: 'common' });
   const listSep = common('inlineListSeparator');
   const [cargoes, vessels, negotiations] = await Promise.all([listCargoes(), listVessels(), listNegotiations()]);
 

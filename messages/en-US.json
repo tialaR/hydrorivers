@@ -570,11 +570,11 @@
         "boarding": "Loading checklist and operational evidence",
         "pod": "Tracking, delayed sync, and POD"
       },
-      "corridorHint": "Each corridor combines the main river, operation profile, and logistics predictability to support public decisions.",
+      "corridorHint": "Each corridor combines main river, operation type and logistics predictability to support public decisions.",
       "predictabilityLabel": "Predictability",
-      "fleetHint": "Quickly review vessel type, operating draft, and document status for each asset.",
+      "fleetHint": "Quickly track vessel type, operating draft, and document status for each asset.",
       "fleetStatusLabel": "Fleet status",
-      "workflowHint": "Summary of the operational journey—from initial registration to proof of delivery.",
+      "workflowHint": "Summary flow of the operational journey, from initial registration to proof of delivery.",
       "dashboardSectionAria": "Government dashboard: indicators, corridors, compliance, fleet, and transactional flow",
       "workflowNegotiationsBadge": "{count} negotiations"
     }
