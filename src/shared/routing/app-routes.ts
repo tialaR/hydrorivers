@@ -64,7 +64,8 @@ export const intlAppPaths = {
     vesselDetail: (vesselId: string) => `${intlSegments.embarcacoes}/${vesselId}`
   },
   impact: {
-    home: intlSegments.impacto
+    home: intlSegments.impacto,
+    impactDetail: (impactId: string) => `${intlSegments.impacto}/${impactId}`
   },
   government: {
     home: intlSegments.governo

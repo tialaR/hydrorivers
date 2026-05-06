@@ -350,9 +350,11 @@
     },
     "impact": {
       "eyebrow": "Value",
-      "title": "Economic and environmental impact",
+      "title": "Impact",
       "description": "Why HydroRivers creates more value for producers, carriers, and communities.",
-      "storyTitle": "Impact story",
+      "listSectionAriaLabel": "Impact indicators, per-card metrics, and narrative summary",
+      "openImpactCard": "View details: {title}",
+      "storyTitle": "Summary",
       "storyDescription": "Narrative summary of environmental, regulatory, and socioeconomic gains from prioritized waterway operations."
     },
     "profile": {
@@ -743,34 +745,42 @@
   },
   "impactCards": {
     "cost": {
+      "metric": "-28%",
       "title": "Lower logistics cost",
       "description": "Organized cabotage and rivers reduce reliance on trucking and improve utilization."
     },
     "sustainability": {
+      "metric": "-38% CO₂ avoided",
       "title": "Less CO₂ per ton",
       "description": "Waterway routes curb emissions and support more efficient vessels."
     },
     "regional": {
+      "metric": "+12 optimized routes",
       "title": "Connected Amazon",
       "description": "Where the river is the road, digital freight lifts producers and communities."
     },
     "automation": {
+      "metric": "72% ready",
       "title": "Less bureaucracy",
       "description": "Quoting, booking, documents, and tracking become one auditable operational flow."
     },
     "brdomar": {
+      "metric": "BR do Mar",
       "title": "BR do Mar alignment",
       "description": "Expands competitiveness, fleet, and modal integration for Brazilian cabotage."
     },
     "compliance": {
+      "metric": "DOF/NF-e/CT-e",
       "title": "Document confidence",
       "description": "Required, conditional, and next-phase documents are clear before contracting."
     },
     "connectivity": {
+      "metric": "offline-first",
       "title": "Low-connectivity operations",
       "description": "Events can be captured in the field and synced when signal returns."
     },
     "government": {
+      "metric": "Gov pilot",
       "title": "Public-sector value",
       "description": "Corridor, supply, bioeconomy, and risk indicators support public decisions."
     }
