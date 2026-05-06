@@ -13,12 +13,12 @@ function isImpactId(value: string): value is ImpactId {
   return impactIds.includes(value as ImpactId);
 }
 
-export default async function ImpactDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
+export default async function ImpactDetailPage({ params }: { params: Promise<{ id: string; locale: string }> }) {
+  const { id, locale } = await params;
   if (!isImpactId(id)) notFound();
 
-  const t = await getTranslations(`impactCards.${id}`);
-  const page = await getTranslations('pages.impactDetail');
+  const t = await getTranslations({ locale, namespace: `impactCards.${id}` });
+  const page = await getTranslations({ locale, namespace: 'pages.impactDetail' });
   const details = page.raw(`details.${id}`) as string[];
 
   return (
