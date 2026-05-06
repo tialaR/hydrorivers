@@ -311,7 +311,8 @@
     "negotiations": {
       "eyebrow": "Comercial",
       "title": "Negociaciones",
-      "description": "Flujo de cotizaciones, contraofertas, contratos y embarques."
+      "description": "Flujo de cotizaciones, contraofertas, contratos y embarques.",
+      "listSectionAriaLabel": "Lista de negociaciones del flujo comercial"
     },
     "tracking": {
       "eyebrow": "Rastreo por eventos",
@@ -500,6 +501,7 @@
     "negotiationDetail": {
       "terms": "Términos de la negociación",
       "parties": "Partes",
+      "partyListJoiner": " × ",
       "payment": "Pago",
       "insurance": "Seguro",
       "nextStep": "Próximo paso",

@@ -311,7 +311,8 @@
     "negotiations": {
       "eyebrow": "Commercial",
       "title": "Negotiations",
-      "description": "Pipeline of quotes, counteroffers, contracts, and shipments."
+      "description": "Pipeline of quotes, counteroffers, contracts, and shipments.",
+      "listSectionAriaLabel": "List of negotiations in the commercial pipeline"
     },
     "tracking": {
       "eyebrow": "Event-based tracking",
@@ -500,6 +501,7 @@
     "negotiationDetail": {
       "terms": "Negotiation terms",
       "parties": "Parties",
+      "partyListJoiner": " × ",
       "payment": "Payment",
       "insurance": "Insurance",
       "nextStep": "Next step",
