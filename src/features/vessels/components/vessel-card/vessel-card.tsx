@@ -1,5 +1,6 @@
 import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/core/i18n/navigation';
+import { intlAppPaths } from '@/shared/routing/app-routes';
 import { Badge } from '@/shared/ui/badge/badge';
 import { Card } from '@/shared/ui/card/card';
 import { HydroIcon } from '@/shared/ui/hydro-icon/hydro-icon';
@@ -12,7 +13,7 @@ export function VesselCard({ vessel }: { vessel: Vessel }) {
   const locale = useLocale();
 
   return (
-    <Link href={`/embarcacoes/${vessel.id}`} className={styles.linkWrap} aria-label={t('openVessel', { name: vessel.name })}>
+    <Link href={intlAppPaths.vessels.vesselDetail(vessel.id)} className={styles.linkWrap} aria-label={t('openVessel', { name: vessel.name })}>
       <Card className={styles.card}>
         <div className={styles.media} style={{ backgroundImage: `linear-gradient(rgba(0,0,0,.08), rgba(0,0,0,.54)), url(${vessel.imageUrl})` }}>
           <Badge tone={vessel.status === 'available' ? 'success' : vessel.status === 'maintenance' ? 'warning' : 'river'}>{t(`vesselStatus.${vessel.status}`)}</Badge>
@@ -29,11 +30,11 @@ export function VesselCard({ vessel }: { vessel: Vessel }) {
             {vessel.draft ? <span><HydroIcon name="anchor" size={16} />{t('draft')} {vessel.draft}</span> : null}
           </div>
           <div className={styles.readiness}>
-            <span className={vessel.documentStatus === 'verified' ? styles.ok : styles.warn}><HydroIcon name="document" size={15} /> {vessel.documentStatus ? t(`vesselDocumentStatus.${vessel.documentStatus}`) : '—'}</span>
+            <span className={vessel.documentStatus === 'verified' ? styles.ok : styles.warn}><HydroIcon name="document" size={15} /> {vessel.documentStatus ? t(`vesselDocumentStatus.${vessel.documentStatus}`) : t('emptyValue')}</span>
             <span className={vessel.lowConnectivityReady ? styles.ok : styles.warn}><HydroIcon name="globe" size={15} /> {vessel.lowConnectivityReady ? t('lowConnectivityReady') : t('lowConnectivityPending')}</span>
             <span className={vessel.checklistReady ? styles.ok : styles.warn}><HydroIcon name="check" size={15} /> {vessel.checklistReady ? t('checklistReady') : t('checklistPending')}</span>
           </div>
-          <small>{t('operator')}: {vessel.owner}</small>
+          <small>{t('vesselOwner')}: {vessel.owner}</small>
         </div>
       </Card>
     </Link>

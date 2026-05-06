@@ -305,7 +305,8 @@
     "vessels": {
       "eyebrow": "Fleet",
       "title": "Available vessels",
-      "description": "Regional capacity for inland routes, cabotage, and riverside last mile."
+      "description": "Regional capacity for inland routes, cabotage, and riverside last mile.",
+      "listSectionAriaLabel": "List of vessels available on the marketplace"
     },
     "negotiations": {
       "eyebrow": "Commercial",
@@ -621,17 +622,18 @@
     "closeFilters": "Close filters",
     "showResults": "Show {count} results",
     "operator": "Operator",
+    "vesselOwner": "Owner",
     "openVessel": "Open vessel {name}",
     "draft": "Draft",
     "greenScore": "Green score",
-    "documentsAndOperation": "Documents and operations",
+    "documentsAndOperation": "Certifications",
     "availableResources": "Available resources",
     "flag": "Flag",
     "lastInspection": "Last inspection",
     "vesselStatus": {
       "available": "Available",
       "route": "En route",
-      "maintenance": "Maintenance"
+      "maintenance": "Under maintenance"
     },
     "mockUser": "HydroRivers user",
     "draftPublication": "Draft posting",
@@ -684,7 +686,7 @@
       "ok": "Validated"
     },
     "vesselDocumentStatus": {
-      "verified": "In good standing",
+      "verified": "Document verified",
       "pending": "Pending",
       "review": "Under review"
     },

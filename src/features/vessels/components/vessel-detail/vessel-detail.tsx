@@ -42,7 +42,11 @@ export function VesselDetail({ vessel }: { vessel: Vessel }) {
         <h3>{t('availableResources')}</h3>
         <div className={styles.chips}>{vessel.amenities?.map((item) => <span key={item}><HydroIcon name="check" size={15} />{translateMock(locale, item)}</span>)}</div>
         <p>
-          {t('operator')}: <strong>{vessel.owner}</strong> • {t('flag')}: <strong>{vessel.flag}</strong> • {t('lastInspection')}: <strong>{vessel.lastInspection}</strong>
+          {t('vesselOwner')}: <strong>{vessel.owner}</strong>
+          {t('inlineListSeparator')}
+          {t('flag')}: <strong>{vessel.flag}</strong>
+          {t('inlineListSeparator')}
+          {t('lastInspection')}: <strong>{vessel.lastInspection}</strong>
         </p>
       </Card>
     </section>
