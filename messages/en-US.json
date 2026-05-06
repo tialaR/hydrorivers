@@ -361,11 +361,11 @@
       "progressLabel": "{progress}% complete"
     },
     "admin": {
-      "eyebrow": "Back office",
-      "title": "Admin dashboard",
-      "description": "Approval, support, auditing, and operational view of the pilot.",
+      "eyebrow": "BACKOFFICE",
+      "title": "Admin panel",
+      "description": "Approval, support, auditing and operational visibility for the pilot.",
       "unauthorizedTitle": "Restricted access",
-      "unauthorizedDescription": "This dashboard is only for administrator accounts."
+      "unauthorizedDescription": "This panel is exclusive to administrator users."
     },
     "impact": {
       "eyebrow": "VALUE",
@@ -499,7 +499,7 @@
       "simulateProposal": "Simulate proposal",
       "notFoundTitle": "Cargo not found in local mock.",
       "notFoundDescription": "Return to the list and publish again.",
-      "eyebrow": "Cargo",
+      "eyebrow": "CARGO",
       "fallbackTitle": "Cargo saved in mock",
       "fallbackDescription": "Detail loaded from local mock",
       "documentKicker": "Document confidence",

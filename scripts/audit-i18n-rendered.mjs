@@ -1,12 +1,65 @@
 #!/usr/bin/env node
 
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const BASE_URL = 'http://localhost:3000';
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const REPORT_PATH = join(ROOT, 'reports', 'i18n-rendered-audit.md');
+
+const MARKETPLACE_MOCK_PATH = join(ROOT, 'src', 'features', 'marketplace', 'data', 'marketplace.mock.ts');
+const IMPACT_MOCK_PATH = join(ROOT, 'src', 'features', 'impact', 'data', 'impact.mock.ts');
+
+/**
+ * Extrai o primeiro id de um array mock (ex.: id: 'cargo-001') sem executar TypeScript.
+ */
+function firstIdInMockFile(filePath, entityPrefix) {
+  const text = readFileSync(filePath, 'utf8');
+  const re = new RegExp(`\\bid:\\s*'(${entityPrefix}-[^']+)'`, 'g');
+  const m = re.exec(text);
+  if (!m) {
+    throw new Error(`audit-i18n-rendered: não encontrou id '${entityPrefix}-*' em ${filePath}`);
+  }
+  return m[1];
+}
+
+/**
+ * Slug de detalhe de impacto: no app é o id do card (ex. regional = "Amazonía conectada" em es).
+ * Nota: a rota /impacto/amazonia-conectada não existe no código; o segmento válido é /impacto/regional.
+ */
+function impactDetailSlugFromMock() {
+  const text = readFileSync(IMPACT_MOCK_PATH, 'utf8');
+  /** Card “regional” / Amazonía conectada (es) usa icon 'route'. */
+  const m = text.match(/\{\s*id:\s*'([^']+)',\s*icon:\s*'route'\s*\}/);
+  if (m) return m[1];
+  const fallback = text.match(/\{\s*id:\s*'([^']+)',\s*icon:/);
+  if (fallback) return fallback[1];
+  throw new Error(`audit-i18n-rendered: não encontrou id de card em ${IMPACT_MOCK_PATH}`);
+}
+
+const MOCK_IDS = {
+  cargo: firstIdInMockFile(MARKETPLACE_MOCK_PATH, 'cargo'),
+  /** Segunda carga no mock (bioeconomia / título longo) para auditar detalhe real adicional. */
+  cargoBio: 'cargo-006',
+  vessel: firstIdInMockFile(MARKETPLACE_MOCK_PATH, 'vessel'),
+  negotiation: firstIdInMockFile(MARKETPLACE_MOCK_PATH, 'neg'),
+  impactDetail: impactDetailSlugFromMock()
+};
+
+/** Rotas de detalhe derivadas dos mocks (mesmos ids em en-US e es). */
+const DETAIL_ROUTES = [
+  `/en-US/impacto/${MOCK_IDS.impactDetail}`,
+  `/es/impacto/${MOCK_IDS.impactDetail}`,
+  `/en-US/cargas/${MOCK_IDS.cargo}`,
+  `/es/cargas/${MOCK_IDS.cargo}`,
+  `/en-US/cargas/${MOCK_IDS.cargoBio}`,
+  `/es/cargas/${MOCK_IDS.cargoBio}`,
+  `/en-US/embarcacoes/${MOCK_IDS.vessel}`,
+  `/es/embarcacoes/${MOCK_IDS.vessel}`,
+  `/en-US/negociacoes/${MOCK_IDS.negotiation}`,
+  `/es/negociacoes/${MOCK_IDS.negotiation}`
+];
 
 /** Ordem explícita solicitada: home, nova carga, impacto, embarcações, negociações, dashboard, cargas, minhas-cargas, rastreio, governo */
 const ROUTES = [
@@ -16,6 +69,7 @@ const ROUTES = [
   '/es/cargas/nova',
   '/en-US/impacto',
   '/es/impacto',
+  ...DETAIL_ROUTES,
   '/en-US/embarcacoes',
   '/es/embarcacoes',
   '/en-US/negociacoes',
@@ -106,7 +160,16 @@ const PROHIBITED_TERMS_EN_US = [
   'Impacto',
   'Resumo',
   'operação',
-  'pronto'
+  'pronto',
+  'CARGA',
+  'Cargas',
+  'Cacau e cupuaçu',
+  'cadeia de bioeconomia',
+  'lote',
+  'Embarcação',
+  'Negociação',
+  'Amazônia conectada',
+  'Onde o rio é estrada'
 ];
 
 /**
@@ -138,7 +201,10 @@ const PROHIBITED_TERMS_ES = [
   'Em revisão',
   'Proprietário',
   'Aguardar aceite',
-  'Anexar laudo'
+  'Anexar laudo',
+  'cadeia de bioeconomia',
+  'Cacau e cupuaçu',
+  'Onde o rio é estrada'
 ];
 
 const IGNORE_TERMS = new Set([
@@ -200,6 +266,12 @@ function uniqueTerms(terms, locale) {
   return out;
 }
 
+/** Evita que termos curtos (ex.: `CARGA`) casem dentro de palavras maiores (ex.: `Cargas`, `Cargoes`). */
+function isAlphanumericChar(ch) {
+  if (!ch) return false;
+  return /[\p{L}\p{N}]/u.test(ch);
+}
+
 function findMatches(route, text) {
   const findings = [];
   const localeForCompare = route.startsWith('/en-US') ? 'en-US' : route.startsWith('/es') ? 'es' : 'pt-BR';
@@ -217,6 +289,13 @@ function findMatches(route, text) {
     let index = lowerText.indexOf(lowerTerm);
 
     while (index !== -1) {
+      const before = index === 0 ? '' : lowerText[index - 1];
+      const afterIdx = index + lowerTerm.length;
+      const after = afterIdx >= lowerText.length ? '' : lowerText[afterIdx];
+      if (isAlphanumericChar(before) || isAlphanumericChar(after)) {
+        index = lowerText.indexOf(lowerTerm, index + lowerTerm.length);
+        continue;
+      }
       const start = Math.max(0, index - 60);
       const end = Math.min(text.length, index + term.length + 60);
       const around = normalizeWhitespace(text.slice(start, end));
@@ -252,6 +331,12 @@ function renderReport(findings, failures) {
     `- Rotas auditadas: ${ROUTES.length}`,
     `- Achados: ${findings.length}`,
     `- Rotas com achados: ${affectedRoutes.length}`,
+    '',
+    '## Detalhes auditados (ids dos mocks)',
+    '',
+    `- Impacto: \`/impacto/${MOCK_IDS.impactDetail}\` (slug real no app; o card es “Amazonía conectada” usa este id — **não** existe \`/impacto/amazonia-conectada\` neste repositório).`,
+    `- Carga: \`${MOCK_IDS.cargo}\` (e bioeconomia \`${MOCK_IDS.cargoBio}\`) · Embarcação: \`${MOCK_IDS.vessel}\` · Negociação: \`${MOCK_IDS.negotiation}\``,
+    `- Rotas de detalhe incluídas: ${DETAIL_ROUTES.length} (${DETAIL_ROUTES.map((r) => `\`${r}\``).join(', ')})`,
     ''
   ];
 
@@ -337,6 +422,9 @@ async function main() {
   const affectedRoutes = [...new Set(findings.map((f) => f.route))].sort();
 
   console.log(`Relatório gerado em: ${REPORT_PATH.replace(`${ROOT}/`, '')}`);
+  console.log(
+    `Detalhe (mocks): impacto=${MOCK_IDS.impactDetail}, cargo=${MOCK_IDS.cargo}, cargoBio=${MOCK_IDS.cargoBio}, vessel=${MOCK_IDS.vessel}, neg=${MOCK_IDS.negotiation}`
+  );
   console.log(`Achados: ${findings.length}`);
   console.log(`Rotas com achados: ${affectedRoutes.length}`);
   if (affectedRoutes.length > 0) {

@@ -1,4 +1,4 @@
-import { getTranslations } from 'next-intl/server';
+import { getLocale, getTranslations } from 'next-intl/server';
 import styles from './page-shell.module.scss';
 
 type PageShellProps = {
@@ -7,15 +7,18 @@ type PageShellProps = {
   title?: string;
   description?: string;
   namespace?: string;
+  /** Quando definido, garante `getTranslations` alinhado ao segmento `[locale]` (evita fallback para pt-BR no servidor). */
+  locale?: string;
 };
 
-export async function PageShell({ children, eyebrow, title, description, namespace }: PageShellProps) {
+export async function PageShell({ children, eyebrow, title, description, namespace, locale }: PageShellProps) {
   let resolvedEyebrow = eyebrow;
   let resolvedTitle = title;
   let resolvedDescription = description;
 
   if (namespace && (!title || !description || !eyebrow)) {
-    const t = await getTranslations(namespace);
+    const effectiveLocale = locale ?? (await getLocale());
+    const t = await getTranslations({ locale: effectiveLocale, namespace });
     resolvedEyebrow = resolvedEyebrow ?? t('eyebrow');
     resolvedTitle = resolvedTitle ?? t('title');
     resolvedDescription = resolvedDescription ?? t('description');

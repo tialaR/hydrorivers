@@ -141,7 +141,7 @@ export const cargoes: Cargo[] = [
   },
   {
     id: 'cargo-006',
-    title: 'Cacau e cupuaçu em cadeia de bioeconomia',
+    title: 'Cacau e cupuaçu em cadeia de bioeconomia • lote 7',
     origin: 'Itacoatiara, AM',
     destination: 'Vila do Conde, PA',
     volume: '100 m³',

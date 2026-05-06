@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { getLocale, getTranslations } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
 import { PageShell } from '@/shared/ui/page-shell/page-shell';
 import { Breadcrumb } from '@/shared/ui/breadcrumb/breadcrumb';
 import { CargoDetailLoader } from '@/features/cargo-market/components/cargo-detail/cargo-detail-loader';
@@ -8,17 +8,16 @@ import { getSessionUser } from '@/shared/server/auth';
 import { intlAppPaths } from '@/shared/routing/app-routes';
 import { translateMock } from '@/shared/i18n/mock-content';
 
-export default async function CargoDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
+export default async function CargoDetailPage({ params }: { params: Promise<{ id: string; locale: string }> }) {
+  const { id, locale } = await params;
   const cargo = await getCargoById(id);
   if (!cargo) notFound();
 
   const user = await getSessionUser();
   const viewer = user ? { id: user.id, role: user.role, approved: user.approved } : null;
-  const locale = await getLocale();
-  const t = await getTranslations('pages.cargoDetail');
-  const nav = await getTranslations('nav');
-  const common = await getTranslations('common');
+  const t = await getTranslations({ locale, namespace: 'pages.cargoDetail' });
+  const nav = await getTranslations({ locale, namespace: 'nav' });
+  const common = await getTranslations({ locale, namespace: 'common' });
   const title = translateMock(locale, cargo.title);
   const routeDescription = `${cargo.origin}${common('routeArrow')}${cargo.destination}`;
 
