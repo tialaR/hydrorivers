@@ -161,8 +161,14 @@
     "shipper": "Embarcador",
     "carrier": "Transportista",
     "admin": "Admin",
-    "email": "Correo",
+    "email": "Correo electrónico",
     "password": "Contraseña",
+    "passwordPlaceholder": "••••••••",
+    "invalidCredentials": "Credenciales inválidas. Revísalas e inténtalo de nuevo.",
+    "emailAlreadyRegistered": "Este correo ya está registrado. Inicia sesión o usa otra dirección.",
+    "requiredFields": "Completa los campos obligatorios e inténtalo de nuevo.",
+    "sessionEnded": "Sesión finalizada",
+    "logoutRedirecting": "Redirigiendo…",
     "loading": "Procesando...",
     "error": "No fue posible completar. Inténtalo de nuevo.",
     "sideEyebrow": "MVP operativo",
@@ -172,8 +178,8 @@
     "sideThree": "Base lista para aprobación manual, auditoría y offline-first.",
     "saved": "Datos guardados en la simulación",
     "avatar": "Foto de avatar",
-    "avatarHelp": "Elige una foto JPEG/JPG. La imagen será optimizada y guardada en la simulación solo al hacer clic en Guardar datos.",
-    "saveProfile": "Guardar datos",
+    "avatarHelp": "Elige una foto JPEG/JPG. La imagen será optimizada y guardada en la simulación solo al hacer clic en Actualizar perfil.",
+    "saveProfile": "Actualizar perfil",
     "namePlaceholder": "Tiala Rocha",
     "companyPlaceholder": "Cooperativa Açaí Norte",
     "emailPlaceholder": "tiala@hydrorivers.com",
@@ -234,6 +240,18 @@
       "title": "Panel HydroRivers",
       "description": "Resumen de cargas, embarcaciones y negociaciones en curso.",
       "myCargoesCta": "Ver mis cargas"
+    },
+    "login": {
+      "loading": "Cargando acceso…"
+    },
+    "cadastro": {
+      "loading": "Cargando registro…"
+    },
+    "logout": {
+      "mainAriaLabel": "Cierre de sesión y redirección"
+    },
+    "perfil": {
+      "mainAriaLabel": "Perfil de cuenta, datos personales y validación"
     },
     "devOnboarding": {
       "eyebrow": "Equipo",
@@ -361,6 +379,7 @@
       "eyebrow": "Cuenta",
       "title": "Mi perfil",
       "description": "Preferencias, empresa, rol operativo y estado de aprobación.",
+      "personalDetails": "Datos personales",
       "loading": "Cargando perfil",
       "loginRequired": "Inicia sesión para acceder a tu perfil",
       "loginRequiredDescription": "Usa tu cuenta HydroRivers para editar datos de la empresa y operación.",

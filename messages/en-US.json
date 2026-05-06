@@ -163,6 +163,12 @@
     "admin": "Admin",
     "email": "Email",
     "password": "Password",
+    "passwordPlaceholder": "••••••••",
+    "invalidCredentials": "Invalid credentials. Check and try again.",
+    "emailAlreadyRegistered": "This email is already registered. Sign in or use another address.",
+    "requiredFields": "Fill in the required fields and try again.",
+    "sessionEnded": "Session ended",
+    "logoutRedirecting": "Redirecting…",
     "loading": "Processing...",
     "error": "Could not complete the action. Please try again.",
     "sideEyebrow": "Operational MVP",
@@ -172,8 +178,8 @@
     "sideThree": "Foundation ready for manual approval, auditing, and offline-first use.",
     "saved": "Data saved in mock",
     "avatar": "Avatar photo",
-    "avatarHelp": "Choose a JPEG/JPG photo. The image is optimized and saved in the mock only when you click Save profile.",
-    "saveProfile": "Save profile",
+    "avatarHelp": "Choose a JPEG/JPG photo. The image is optimized and saved in the mock only when you click Update profile.",
+    "saveProfile": "Update profile",
     "namePlaceholder": "Tiala Rocha",
     "companyPlaceholder": "Cooperativa Açaí Norte",
     "emailPlaceholder": "tiala@hydrorivers.com",
@@ -234,6 +240,18 @@
       "title": "HydroRivers dashboard",
       "description": "Summary of cargoes, vessels, and ongoing negotiations.",
       "myCargoesCta": "View my cargoes"
+    },
+    "login": {
+      "loading": "Loading sign-in…"
+    },
+    "cadastro": {
+      "loading": "Loading sign-up…"
+    },
+    "logout": {
+      "mainAriaLabel": "Signing out and redirecting"
+    },
+    "perfil": {
+      "mainAriaLabel": "Account profile, personal details, and validation status"
     },
     "devOnboarding": {
       "eyebrow": "Team",
@@ -361,6 +379,7 @@
       "eyebrow": "Account",
       "title": "My profile",
       "description": "Preferences, company, operational role, and approval status.",
+      "personalDetails": "Personal details",
       "loading": "Loading profile",
       "loginRequired": "Sign in to access your profile",
       "loginRequiredDescription": "Use your HydroRivers account to edit company data and operational status.",

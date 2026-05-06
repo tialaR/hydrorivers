@@ -163,6 +163,12 @@
     "admin": "Admin",
     "email": "E-mail",
     "password": "Senha",
+    "passwordPlaceholder": "••••••••",
+    "invalidCredentials": "Credenciais inválidas. Verifique e tente novamente.",
+    "emailAlreadyRegistered": "Este e-mail já está cadastrado. Entre ou use outro endereço.",
+    "requiredFields": "Preencha os campos obrigatórios e tente novamente.",
+    "sessionEnded": "Sessão encerrada",
+    "logoutRedirecting": "Redirecionando…",
     "loading": "Processando...",
     "error": "Não foi possível concluir. Tente novamente.",
     "sideEyebrow": "MVP operacional",
@@ -172,8 +178,8 @@
     "sideThree": "Base pronta para aprovação manual, auditoria e offline-first.",
     "saved": "Dados salvos no mock",
     "avatar": "Foto do avatar",
-    "avatarHelp": "Escolha uma foto JPEG/JPG. A imagem será otimizada e salva no mock somente ao clicar em Salvar dados.",
-    "saveProfile": "Salvar dados",
+    "avatarHelp": "Escolha uma foto JPEG/JPG. A imagem será otimizada e salva no mock somente ao clicar em Atualizar perfil.",
+    "saveProfile": "Atualizar perfil",
     "namePlaceholder": "Tiala Rocha",
     "companyPlaceholder": "Cooperativa Açaí Norte",
     "emailPlaceholder": "tiala@hydrorivers.com",
@@ -184,17 +190,17 @@
     "avatarTooLarge": "A imagem deve ter até 1,5 MB.",
     "avatarReadError": "Não foi possível ler essa foto. Tente outro JPEG.",
     "avatarSaveError": "Não foi possível salvar a foto. Tente novamente.",
-    "otpEyebrow": "validacao otp",
-    "otpTitle": "Validar codigo OTP",
-    "otpDescription": "Use o codigo exibido abaixo para validar o login mock. O codigo fica pronto para copiar e colar.",
-    "otpCodeLabel": "Codigo OTP mock",
-    "otpCodeHelp": "Copie o codigo acima e cole no campo abaixo para concluir a autenticacao.",
-    "otpPlaceholder": "Digite o codigo de 6 digitos",
-    "copyOtp": "Copiar codigo",
+    "otpEyebrow": "Validação OTP",
+    "otpTitle": "Validar código OTP",
+    "otpDescription": "Use o código exibido abaixo para validar o login mock. O código fica pronto para copiar e colar.",
+    "otpCodeLabel": "Código OTP (mock)",
+    "otpCodeHelp": "Copie o código acima e cole no campo abaixo para concluir a autenticação.",
+    "otpPlaceholder": "Digite o código de 6 dígitos",
+    "copyOtp": "Copiar código",
     "copied": "Copiado",
     "changeCredentials": "Alterar credenciais",
     "otpSubmit": "Validar OTP",
-    "otpInvalid": "Codigo OTP invalido. Confira e tente novamente."
+    "otpInvalid": "Código OTP inválido. Confira e tente novamente."
   },
   "pages": {
     "home": {
@@ -234,6 +240,18 @@
       "title": "Painel HydroRivers",
       "description": "Resumo das cargas, embarcações e negociações em andamento.",
       "myCargoesCta": "Ver minhas cargas"
+    },
+    "login": {
+      "loading": "Carregando acesso…"
+    },
+    "cadastro": {
+      "loading": "Carregando cadastro…"
+    },
+    "logout": {
+      "mainAriaLabel": "Encerramento de sessão e redirecionamento"
+    },
+    "perfil": {
+      "mainAriaLabel": "Perfil da conta, dados pessoais e validação"
     },
     "devOnboarding": {
       "eyebrow": "Equipe",
@@ -361,6 +379,7 @@
       "eyebrow": "Conta",
       "title": "Meu perfil",
       "description": "Preferências, empresa, papel operacional e status de aprovação.",
+      "personalDetails": "Dados pessoais",
       "loading": "Carregando perfil",
       "loginRequired": "Entre para acessar seu perfil",
       "loginRequiredDescription": "Use sua conta HydroRivers para editar dados da empresa e status operacional.",
