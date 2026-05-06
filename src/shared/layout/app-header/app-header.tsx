@@ -3,14 +3,16 @@
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type CSSProperties, type PointerEvent as ReactPointerEvent } from 'react';
 import { createPortal } from 'react-dom';
 import Image from 'next/image';
+import { LogOut } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useAuthSession } from '@/features/auth/hooks/use-auth-session';
-import { Link, usePathname } from '@/core/i18n/navigation';
+import { Link, usePathname, useRouter } from '@/core/i18n/navigation';
 import { mainNavigation } from '@/shared/config/navigation';
 import { intlAppPaths } from '@/shared/routing/app-routes';
 import { ThemeToggle } from '@/shared/ui/theme-toggle/theme-toggle';
 import { LocaleSwitcher } from '@/shared/ui/locale-switcher/locale-switcher';
 import { AuthActions } from '@/features/auth/components/auth-actions/auth-actions';
+import { logout } from '@/features/auth/services/auth.client';
 import { HydroIcon } from '@/shared/ui/hydro-icon/hydro-icon';
 import styles from './app-header.module.scss';
 
@@ -49,6 +51,8 @@ function resolveActiveHref(pathname: string) {
 
 export function AppHeader() {
   const t = useTranslations('nav');
+  const ta = useTranslations('auth');
+  const router = useRouter();
   const pathname = usePathname();
   const [sheetState, setSheetState] = useState<MenuSheetState>('closed');
   const [sheetSnap, setSheetSnap] = useState<MenuSheetSnap>('full');
@@ -61,7 +65,7 @@ export function AppHeader() {
   const dragDeltaRef = useRef(0);
   const dragPointerRef = useRef<number | null>(null);
   const lockedScrollYRef = useRef(0);
-  const { user } = useAuthSession();
+  const { user, ready } = useAuthSession();
   const desktopNavigation = useMemo(
     () =>
       mainNavigation
@@ -236,74 +240,144 @@ export function AppHeader() {
     if (sheetVisible) requestCloseSheet();
   };
 
+  const mobileNavItems = useMemo(
+    () =>
+      mainNavigation.filter(
+        (item) =>
+          (item.href !== intlAppPaths.admin.home || user?.role === 'admin') &&
+          (item.href !== intlAppPaths.cargos.myCargos || Boolean(user && (user.role === 'shipper' || user.role === 'carrier')))
+      ),
+    [user]
+  );
+
   const sheetInlineStyle = {
     '--sheet-drag-offset': `${dragOffset}px`
   } as CSSProperties;
 
   const mobileMenuSheet = sheetVisible ? (
-    <div
-      className={styles.sheetOverlay}
-      data-state={sheetState}
-      role="presentation"
-    >
+    <>
+      <div
+        className={styles.sheetOverlay}
+        data-state={sheetState}
+        role="presentation"
+        aria-hidden
+        onClick={() => requestCloseSheet()}
+      />
       <aside
         className={styles.sheet}
         aria-hidden={!sheetVisible}
         role="dialog"
         aria-modal="true"
-        aria-label={t('mobileMenu')}
+        aria-label={t('mobileMenuTitle')}
         data-state={sheetState}
         data-snap={sheetSnap}
         data-dragging={dragging}
         style={sheetInlineStyle}
         onClick={(event) => event.stopPropagation()}
       >
-        <div
-          className={styles.sheetDragZone}
-          onPointerDown={handleSheetDragStart}
-          onPointerMove={handleSheetDragMove}
-          onPointerUp={handleSheetDragEnd}
-          onPointerCancel={handleSheetDragEnd}
-        >
-          <div className={styles.sheetHandle} aria-hidden="true" />
-          <div className={styles.sheetHeader}>
-            <div className={styles.sheetBrand}>
-              <span className={styles.sheetBrandMark}><HydroIcon name="river" size={22} /></span>
-              <div><strong>HydroRivers</strong><small>{t('mobileMenu')}</small></div>
+        <div className={styles.sheetInner}>
+          <div
+            className={styles.sheetDragZone}
+            onPointerDown={handleSheetDragStart}
+            onPointerMove={handleSheetDragMove}
+            onPointerUp={handleSheetDragEnd}
+            onPointerCancel={handleSheetDragEnd}
+          >
+            <div className={styles.sheetHandle} aria-hidden />
+            <div className={styles.sheetHeaderRow}>
+              <div className={styles.sheetBrand}>
+                <span className={styles.sheetBrandMark} aria-hidden>
+                  <HydroIcon name="river" size={22} />
+                </span>
+                <div className={styles.mobileMenuBrandText}>
+                  <strong>HydroRivers</strong>
+                  <p className={styles.mobileMenuTitle}>{t('mobileMenuTitle')}</p>
+                </div>
+              </div>
+              <button type="button" className={styles.mobileMenuClose} onClick={() => requestCloseSheet()} aria-label={t('closeMenu')}>
+                <HydroIcon name="close" />
+              </button>
             </div>
-            <button type="button" onClick={() => requestCloseSheet()} aria-label={t('closeMenu')}><HydroIcon name="close" /></button>
-          </div>
-        </div>
-
-        <div className={styles.sheetScroll}>
-          <div className={styles.sheetAccount}>
-            {user ? (
-              <Link href={intlAppPaths.auth.profile} onClick={() => requestCloseSheet()} className={styles.accountCard}>
-                <span className={styles.accountAvatar}>{user.avatarUrl ? <Image src={user.avatarUrl} alt="" width={40} height={40} unoptimized /> : initials(user.name)}</span>
-                <span><strong>{user.name}</strong><small>{user.company}</small></span>
-              </Link>
-            ) : <AuthActions />}
           </div>
 
-          <div className={styles.sheetTools}>
-            <LocaleSwitcher />
-            <ThemeToggle />
-          </div>
-          <nav className={styles.sheetNav}>
-            {mainNavigation.filter((item) => item.href !== intlAppPaths.admin.home || user?.role === 'admin').map((item) => (
-              <Link onClick={() => requestCloseSheet()} key={item.href} href={item.href} className={item.href === activeHref ? styles.sheetActive : undefined}>
-                <span>{t(item.labelKey)}</span><HydroIcon name={item.href === intlAppPaths.cargos.marketplace ? 'cargo' : item.href === intlAppPaths.vessels.marketplace ? 'ship' : item.href === intlAppPaths.tracking.home ? 'map' : 'route'} size={16} />
-              </Link>
-            ))}
+          <section className={styles.mobileMenuQuick} aria-label={t('quickActions')}>
+            <h2 className={styles.visuallyHidden}>{t('quickActions')}</h2>
+
+            <div className={`${styles.quickRow} ${styles.quickAccountRow}`}>
+              <span className={styles.quickLabel} id="mobile-quick-account">
+                {t('account')}
+              </span>
+              <div className={styles.quickAccountControls} aria-labelledby="mobile-quick-account">
+                {!ready ? (
+                  <span className={styles.quickAuthSkeleton} aria-hidden />
+                ) : !user ? (
+                  <>
+                    <Link href={intlAppPaths.auth.login} onClick={() => requestCloseSheet()} className={`${styles.quickLink} ${styles.quickLinkMuted}`}>
+                      {t('login')}
+                    </Link>
+                    <Link href={intlAppPaths.auth.register} onClick={() => requestCloseSheet()} className={`${styles.quickLink} ${styles.quickLinkPrimary}`}>
+                      {t('signup')}
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Link href={intlAppPaths.auth.profile} onClick={() => requestCloseSheet()} className={`${styles.quickLink} ${styles.quickLinkMuted}`}>
+                      {t('profile')}
+                    </Link>
+                    <button
+                      type="button"
+                      className={styles.quickLogout}
+                      onClick={async () => {
+                        await logout();
+                        requestCloseSheet();
+                        router.push(intlAppPaths.home);
+                      }}
+                      aria-label={ta('logout')}
+                    >
+                      <LogOut size={16} aria-hidden />
+                      <span>{ta('logout')}</span>
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          </section>
+
+          <nav className={styles.sheetScrollArea} aria-label={t('primaryNavigation')}>
+            <div className={styles.sheetNav}>
+              {mobileNavItems.map((item) => (
+                <Link
+                  onClick={() => requestCloseSheet()}
+                  key={item.href}
+                  href={item.href}
+                  className={item.href === activeHref ? styles.sheetActive : undefined}
+                >
+                  <span>{t(item.labelKey)}</span>
+                  <HydroIcon
+                    name={
+                      item.href === intlAppPaths.cargos.marketplace
+                        ? 'cargo'
+                        : item.href === intlAppPaths.vessels.marketplace
+                          ? 'ship'
+                          : item.href === intlAppPaths.tracking.home
+                            ? 'map'
+                            : 'route'
+                    }
+                    size={16}
+                  />
+                </Link>
+              ))}
+            </div>
           </nav>
-        </div>
 
-        <div className={styles.sheetActions}>
-          <Link href={intlAppPaths.cargos.publishCargo} onClick={() => requestCloseSheet()} className={styles.sheetCta}>{t('cta')}</Link>
-          <Link href={user ? intlAppPaths.auth.profile : intlAppPaths.auth.register} onClick={() => requestCloseSheet()} className={styles.sheetGhost}>{user ? t('profile') : t('signup')}</Link>
+          <div className={styles.sheetFooter}>
+            <Link href={intlAppPaths.cargos.publishCargo} onClick={() => requestCloseSheet()} className={styles.sheetCta}>
+              {t('cta')}
+            </Link>
+          </div>
         </div>
       </aside>
-    </div>
+    </>
   ) : null;
 
   return (
@@ -352,15 +426,24 @@ export function AppHeader() {
             </Link>
           ) : null}
           <Link href={intlAppPaths.cargos.publishCargo} className={styles.cta}>{t('cta')}</Link>
-          <button
-            className={styles.menuButton}
-            onClick={openSheet}
-            aria-label={t('openMenu')}
-            aria-haspopup="dialog"
-            aria-expanded={sheetVisible}
-          >
-            <HydroIcon name="menu" />
-          </button>
+          <div className={styles.mobileActions}>
+            <div className={styles.mobileTool}>
+              <LocaleSwitcher dropdownPortal />
+            </div>
+            <div className={styles.mobileTool}>
+              <ThemeToggle />
+            </div>
+            <button
+              type="button"
+              className={styles.menuButton}
+              onClick={openSheet}
+              aria-label={t('openMenu')}
+              aria-haspopup="dialog"
+              aria-expanded={sheetVisible}
+            >
+              <HydroIcon name="menu" />
+            </button>
+          </div>
         </div>
       </div>
 
