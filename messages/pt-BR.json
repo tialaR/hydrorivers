@@ -305,7 +305,8 @@
     "vessels": {
       "eyebrow": "Frota",
       "title": "Embarcações disponíveis",
-      "description": "Capacidade regional para rotas fluviais, cabotagem e última milha ribeirinha."
+      "description": "Capacidade regional para rotas fluviais, cabotagem e última milha ribeirinha.",
+      "listSectionAriaLabel": "Lista de embarcações disponíveis no marketplace"
     },
     "negotiations": {
       "eyebrow": "Comercial",
@@ -621,17 +622,18 @@
     "closeFilters": "Fechar filtros",
     "showResults": "Mostrar {count} resultados",
     "operator": "Operador",
+    "vesselOwner": "Proprietário",
     "openVessel": "Abrir embarcação {name}",
     "draft": "Calado",
     "greenScore": "Score verde",
-    "documentsAndOperation": "Documentos e operação",
+    "documentsAndOperation": "Certificações",
     "availableResources": "Recursos disponíveis",
     "flag": "Bandeira",
     "lastInspection": "Última inspeção",
     "vesselStatus": {
       "available": "Disponível",
       "route": "Em rota",
-      "maintenance": "Manutenção"
+      "maintenance": "Em manutenção"
     },
     "mockUser": "Usuário HydroRivers",
     "draftPublication": "Rascunho de publicação",
@@ -684,7 +686,7 @@
       "ok": "Validado"
     },
     "vesselDocumentStatus": {
-      "verified": "Regular",
+      "verified": "Documento verificado",
       "pending": "Pendente",
       "review": "Em revisão"
     },
