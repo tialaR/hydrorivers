@@ -588,7 +588,7 @@ const exact: Record<string, Localized> = {
   },
   'Contraproposta': {
     'en-US': 'Counteroffer',
-    'es': 'Contraoferta'
+    'es': 'Contrapropuesta'
   },
   'Contrato': {
     'en-US': 'Contract',
