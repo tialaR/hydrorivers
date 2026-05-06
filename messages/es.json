@@ -330,7 +330,7 @@
     "negotiations": {
       "eyebrow": "Comercial",
       "title": "Negociaciones",
-      "description": "Flujo de cotizaciones, contraofertas, contratos y embarques.",
+      "description": "Pipeline de cotizaciones, contrapropuestas, contratos y embarques.",
       "listSectionAriaLabel": "Lista de negociaciones del flujo comercial"
     },
     "tracking": {
@@ -744,7 +744,7 @@
     "negotiationCardsSectionAria": "Tarjetas de negociaciones",
     "dealStage": {
       "quote": "Cotización",
-      "counteroffer": "Contraoferta",
+      "counteroffer": "Contrapropuesta",
       "contract": "Contrato",
       "boarding": "Embarque",
       "delivered": "Entregado"

@@ -3,6 +3,7 @@ import { Card } from '@/shared/ui/card/card';
 import { HydroIcon } from '@/shared/ui/hydro-icon/hydro-icon';
 import type { Negotiation } from '@/features/marketplace/domain/marketplace.types';
 import { translateMock } from '@/shared/i18n/mock-content';
+import { formatMockBrl, formatMockDate } from '@/shared/i18n/mock-format';
 import styles from './negotiation-detail.module.scss';
 
 export function NegotiationDetail({ negotiation }: { negotiation: Negotiation }) {
@@ -20,7 +21,7 @@ export function NegotiationDetail({ negotiation }: { negotiation: Negotiation })
           {common('inlineListSeparator')}
           {negotiation.vesselName}
         </p>
-        <strong>{negotiation.amount}</strong>
+        <strong>{formatMockBrl(locale, negotiation.amount)}</strong>
       </Card>
       <Card className={styles.panel}>
         <h3>{t('terms')}</h3>
@@ -37,7 +38,7 @@ export function NegotiationDetail({ negotiation }: { negotiation: Negotiation })
       </Card>
       <Card className={styles.panel}>
         <h3>{t('history')}</h3>
-        <ol className={styles.steps}>{negotiation.history?.map((event) => <li key={event.title}><span className={styles.dot}><HydroIcon name="check" size={15} /></span><div><strong>{translateMock(locale, event.title)}</strong><p>{translateMock(locale, event.description)}</p></div><time>{translateMock(locale, event.date)}</time></li>)}</ol>
+        <ol className={styles.steps}>{negotiation.history?.map((event) => <li key={event.title}><span className={styles.dot}><HydroIcon name="check" size={15} /></span><div><strong>{translateMock(locale, event.title)}</strong><p>{translateMock(locale, event.description)}</p></div><time>{translateMock(locale, formatMockDate(locale, event.date))}</time></li>)}</ol>
       </Card>
     </section>
   );
