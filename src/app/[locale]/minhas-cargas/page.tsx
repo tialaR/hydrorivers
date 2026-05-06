@@ -20,8 +20,8 @@ export default async function MinhasCargasPage({
   const [{ locale }, sp] = await Promise.all([params, searchParams]);
   const loc = locale as AppLocale;
   const user = await getSessionUser();
-  const t = await getTranslations('pages.minhasCargas');
-  const nav = await getTranslations('nav');
+  const t = await getTranslations({ locale, namespace: 'pages.minhasCargas' });
+  const nav = await getTranslations({ locale, namespace: 'nav' });
 
   if (!user) {
     redirect(appRoutes.auth.login(loc, appRoutes.cargos.myCargos(loc)));
