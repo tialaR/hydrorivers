@@ -898,6 +898,46 @@ const exact: Record<string, Localized> = {
     'en-US': 'Window and river route adjustment.',
     'es': 'Ajuste de ventana y ruta fluvial.'
   },
+  'Carga criada no marketplace': {
+    'en-US': 'Cargo created in marketplace',
+    'es': 'Carga creada en el marketplace'
+  },
+  'Demanda registrada no corredor Belém–Santarém com janela operacional.': {
+    'en-US': 'Demand recorded on the Belém–Santarém corridor with an operational window.',
+    'es': 'Demanda registrada en el corredor Belém–Santarém con ventana operativa.'
+  },
+  'Proposta enviada ao armador': {
+    'en-US': 'Proposal sent to carrier',
+    'es': 'Propuesta enviada al transportista'
+  },
+  'Valores e SLA enviados para negociação da viagem refrigerada.': {
+    'en-US': 'Rates and SLA sent for refrigerated voyage negotiation.',
+    'es': 'Valores y SLA enviados para la negociación del viaje refrigerado.'
+  },
+  'Negociação aceita': {
+    'en-US': 'Negotiation accepted',
+    'es': 'Negociación aceptada'
+  },
+  'Armador aceitou termos operacionais e janela de embarque.': {
+    'en-US': 'Carrier accepted operational terms and shipment window.',
+    'es': 'El transportista aceptó los términos operativos y la ventana de embarque.'
+  },
+  'Documentação pendente registrada': {
+    'en-US': 'Pending documentation registered',
+    'es': 'Documentación pendiente registrada'
+  },
+  'NF-e condicional e manifesto em análise antes do boarding.': {
+    'en-US': 'Conditional NF-e and manifest under review before boarding.',
+    'es': 'NF-e condicional y manifiesto en revisión antes del embarque.'
+  },
+  'Entrega concluída no destino': {
+    'en-US': 'Delivery completed at destination',
+    'es': 'Entrega completada en destino'
+  },
+  'Volumes conferidos no berço de Santarém; aguardando formalização do POD.': {
+    'en-US': 'Volumes checked at Santarém berth; awaiting POD formalization.',
+    'es': 'Volúmenes verificados en el muelle de Santarém; esperando formalización del POD.'
+  },
   'Documentos validados': {
     'en-US': 'Documents validated',
     'es': 'Documentos validados'
