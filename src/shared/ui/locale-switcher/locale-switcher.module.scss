@@ -72,6 +72,16 @@
   box-shadow: 0 26px 72px rgba(0, 0, 0, 0.28);
 }
 
+/* Portaled menu: above sticky header + bottom sheet, aligned to trigger, viewport-safe width */
+.panelPortal {
+  position: fixed;
+  z-index: 12000;
+  left: auto;
+  transform: none;
+  max-width: calc(100vw - 24px);
+  box-sizing: border-box;
+}
+
 .menuItem,
 .menuItemActive {
   display: flex;

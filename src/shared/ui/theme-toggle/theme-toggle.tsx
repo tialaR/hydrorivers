@@ -39,6 +39,12 @@ export function ThemeToggle() {
 
   function toggleTheme() {
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
+    try {
+      window.localStorage.setItem(cookieNames.theme, nextTheme);
+      document.cookie = `${cookieNames.theme}=${nextTheme}; path=/; max-age=31536000; SameSite=Lax`;
+    } catch {
+      /* ignore */
+    }
     window.dispatchEvent(new CustomEvent('hydrorivers:theme-change', { detail: nextTheme }));
     setTheme(nextTheme);
   }

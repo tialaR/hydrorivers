@@ -24,6 +24,14 @@ type SheetSnap = 'half' | 'full';
 
 const emptyFilters: FilterState = { query: '', corridor: '', origin: '', destination: '', type: '', family: '', document: '' };
 
+const allAccordionSectionsClosed: Record<string, boolean> = {
+  corridor: false,
+  origin: false,
+  destination: false,
+  cargo: false,
+  compliance: false
+};
+
 function uniqueOptions(values: string[]) {
   return Array.from(new Set(values.filter(Boolean))).sort((a, b) => a.localeCompare(b));
 }
@@ -47,13 +55,7 @@ export function CargoList({ cargoes }: { cargoes: Cargo[] }) {
   const [sheetSnap, setSheetSnap] = useState<SheetSnap>('half');
   const [dragOffset, setDragOffset] = useState(0);
   const [dragging, setDragging] = useState(false);
-  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
-    corridor: true,
-    origin: false,
-    destination: false,
-    cargo: true,
-    compliance: false
-  });
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>(() => ({ ...allAccordionSectionsClosed }));
 
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dragStartYRef = useRef<number | null>(null);
@@ -181,6 +183,7 @@ export function CargoList({ cargoes }: { cargoes: Cargo[] }) {
     setDragOffset(0);
     setDragging(false);
     setSheetSnap('full');
+    setOpenSections({ ...allAccordionSectionsClosed });
     setSheetState('open');
   }
 

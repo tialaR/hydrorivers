@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useId, useRef, useState } from 'react';
-import type { KeyboardEvent as ReactKeyboardEvent } from 'react';
+import { useEffect, useId, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
+import type { KeyboardEvent as ReactKeyboardEvent, RefObject } from 'react';
+import { createPortal } from 'react-dom';
 import { useSearchParams } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
 import { usePathname, useRouter } from '@/core/i18n/navigation';
@@ -27,7 +28,45 @@ function persistLocalePreference(nextLocale: AppLocale) {
   }
 }
 
-export function LocaleSwitcher() {
+type LocaleSwitcherProps = {
+  /**
+   * Render the menu in `document.body` with `position: fixed` so it is not clipped
+   * by overflow/stacking (e.g. mobile header + bottom sheet).
+   */
+  dropdownPortal?: boolean;
+};
+
+function useSyncPortalMenuPosition(
+  open: boolean,
+  enabled: boolean,
+  triggerRef: RefObject<HTMLButtonElement | null>
+) {
+  const [style, setStyle] = useState<{ top: number; right: number }>({ top: 0, right: 12 });
+
+  useLayoutEffect(() => {
+    if (!open || !enabled || typeof window === 'undefined') return undefined;
+
+    const update = () => {
+      const el = triggerRef.current;
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      const right = Math.max(12, window.innerWidth - r.right);
+      setStyle({ top: r.bottom + 8, right });
+    };
+
+    update();
+    window.addEventListener('resize', update);
+    window.addEventListener('scroll', update, true);
+    return () => {
+      window.removeEventListener('resize', update);
+      window.removeEventListener('scroll', update, true);
+    };
+  }, [open, enabled, triggerRef]);
+
+  return style;
+}
+
+export function LocaleSwitcher({ dropdownPortal = false }: LocaleSwitcherProps) {
   const locale = useLocale() as AppLocale;
   const router = useRouter();
   const pathname = usePathname();
@@ -35,8 +74,15 @@ export function LocaleSwitcher() {
   const t = useTranslations('nav');
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuId = useId();
+  const portalPos = useSyncPortalMenuPosition(open, dropdownPortal, triggerRef);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
 
   const changeLocale = (nextLocale: AppLocale) => {
     if (nextLocale === locale) {
@@ -56,7 +102,10 @@ export function LocaleSwitcher() {
     if (!open) return undefined;
 
     const onPointerDown = (event: PointerEvent) => {
-      if (!rootRef.current?.contains(event.target as Node)) setOpen(false);
+      const target = event.target as Node;
+      const insideTriggerOrRoot = rootRef.current?.contains(target);
+      const insidePanel = panelRef.current?.contains(target);
+      if (!insideTriggerOrRoot && !insidePanel) setOpen(false);
     };
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -77,7 +126,7 @@ export function LocaleSwitcher() {
   const currentIndex = SUPPORTED_LOCALES.indexOf(locale);
 
   function focusMenuItem(index: number) {
-    const menu = rootRef.current?.querySelector('[role="menu"]');
+    const menu = panelRef.current;
     const items = menu?.querySelectorAll<HTMLButtonElement>('[role="menuitem"]');
     if (!items?.length) return;
     const next = (index + items.length) % items.length;
@@ -99,6 +148,42 @@ export function LocaleSwitcher() {
       focusMenuItem(SUPPORTED_LOCALES.length - 1);
     }
   }
+
+  const menuPanel = open ? (
+    <div
+      ref={panelRef}
+      id={menuId}
+      className={`${styles.panel} ${dropdownPortal ? styles.panelPortal : ''}`}
+      style={
+        dropdownPortal
+          ? { top: portalPos.top, right: portalPos.right }
+          : undefined
+      }
+      role="menu"
+      aria-label={t('language')}
+      onKeyDown={onMenuKeyDown}
+    >
+      {SUPPORTED_LOCALES.map((value) => {
+        const item = LOCALE_VISUAL[value];
+        const selected = value === locale;
+        return (
+          <button
+            key={value}
+            type="button"
+            role="menuitem"
+            className={selected ? styles.menuItemActive : styles.menuItem}
+            aria-current={selected ? 'true' : undefined}
+            onClick={() => changeLocale(value)}
+          >
+            <span className={styles.menuFlag} aria-hidden>
+              {item.flag}
+            </span>
+            <span>{item.code}</span>
+          </button>
+        );
+      })}
+    </div>
+  ) : null;
 
   return (
     <div className={styles.root} ref={rootRef}>
@@ -126,35 +211,11 @@ export function LocaleSwitcher() {
           {visual.flag}
         </span>
       </button>
-      {open ? (
-        <div
-          id={menuId}
-          className={styles.panel}
-          role="menu"
-          aria-label={t('language')}
-          onKeyDown={onMenuKeyDown}
-        >
-          {SUPPORTED_LOCALES.map((value) => {
-            const item = LOCALE_VISUAL[value];
-            const selected = value === locale;
-            return (
-              <button
-                key={value}
-                type="button"
-                role="menuitem"
-                className={selected ? styles.menuItemActive : styles.menuItem}
-                aria-current={selected ? 'true' : undefined}
-                onClick={() => changeLocale(value)}
-              >
-                <span className={styles.menuFlag} aria-hidden>
-                  {item.flag}
-                </span>
-                <span>{item.code}</span>
-              </button>
-            );
-          })}
-        </div>
-      ) : null}
+      {open && dropdownPortal && mounted
+        ? createPortal(menuPanel, document.body)
+        : open && !dropdownPortal
+          ? menuPanel
+          : null}
     </div>
   );
 }
