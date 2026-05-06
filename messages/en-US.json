@@ -297,6 +297,7 @@
       "title": "My cargoes",
       "description": "Cargoes linked to your role (published by you or with a negotiation/proposal in the mock). To see the full marketplace, use Cargoes.",
       "breadcrumbCurrent": "My cargoes",
+      "listSectionAriaLabel": "Your account-linked cargoes, with a recent publish notice when applicable",
       "createdBanner": "Cargo published and saved in the mock. It appears here and in the marketplace.",
       "emptyTitle": "No linked cargoes",
       "emptyDescription": "Publish a cargo or join a negotiation in the mock to see it in this list."
