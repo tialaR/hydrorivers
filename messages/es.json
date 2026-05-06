@@ -297,6 +297,7 @@
       "title": "Mis cargas",
       "description": "Cargas vinculadas a tu rol (publicadas por ti o con negociación o propuesta en la simulación). Para ver todo el mercado, usa Cargas.",
       "breadcrumbCurrent": "Mis cargas",
+      "listSectionAriaLabel": "Tus cargas vinculadas a la cuenta, con aviso de publicación reciente cuando aplique",
       "createdBanner": "Carga publicada y guardada en la simulación. Aparece aquí y en el mercado.",
       "emptyTitle": "Sin cargas vinculadas",
       "emptyDescription": "Publica una carga o participa en una negociación en la simulación para verla aquí."

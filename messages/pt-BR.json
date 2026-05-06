@@ -297,6 +297,7 @@
       "title": "Minhas cargas",
       "description": "Cargas vinculadas ao seu papel (publicadas por você ou com negociação/proposta no mock). Para ver todo o marketplace, use Cargas.",
       "breadcrumbCurrent": "Minhas cargas",
+      "listSectionAriaLabel": "Suas cargas vinculadas à conta, com aviso de publicação recente quando aplicável",
       "createdBanner": "Carga publicada e salva no mock. Ela aparece aqui e no marketplace.",
       "emptyTitle": "Nenhuma carga vinculada",
       "emptyDescription": "Publique uma carga ou participe de uma negociação no mock para vê-la nesta lista."

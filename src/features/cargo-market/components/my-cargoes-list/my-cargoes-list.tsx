@@ -32,7 +32,7 @@ export function MyCargoesList({
   const shownIds = new Set(items.map((c) => c.id));
 
   return (
-    <>
+    <section aria-label={t('listSectionAriaLabel')}>
       {createdCargoId && shownIds.has(createdCargoId) ? (
         <Card className={styles.createdBanner} role="status" data-testid="minhas-cargas-created-banner">
           <HydroIcon name="cargo" size={22} />
@@ -52,6 +52,6 @@ export function MyCargoesList({
           <p>{t('emptyDescription')}</p>
         </div>
       )}
-    </>
+    </section>
   );
 }
