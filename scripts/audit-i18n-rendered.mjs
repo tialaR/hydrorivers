@@ -9,6 +9,12 @@ const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const REPORT_PATH = join(ROOT, 'reports', 'i18n-rendered-audit.md');
 
 const ROUTES = [
+  '/en-US',
+  '/es',
+  '/en-US/cargas/nova',
+  '/es/cargas/nova',
+  '/en-US/impacto',
+  '/es/impacto',
   '/en-US/dashboard',
   '/es/dashboard',
   '/en-US/cargas',
@@ -25,7 +31,7 @@ const ROUTES = [
   '/es/governo'
 ];
 
-const PROHIBITED_TERMS = [
+const PROHIBITED_TERMS_EN_US = [
   'Painel HydroRivers',
   'Resumo das cargas',
   'Cargas abertas',
@@ -48,7 +54,60 @@ const PROHIBITED_TERMS = [
   'Farinha de mandioca',
   'Castanha beneficiada',
   'cadeia fria',
-  'rastreabilidade'
+  'rastreabilidade',
+  'Disponível',
+  'Em rota',
+  'Em manutenção',
+  'Comboio de barcaças',
+  'Embarcação regional refrigerada',
+  'Empurrador + barcaça',
+  'Calado',
+  'Documento verificado',
+  'Baixa conectividade pronta',
+  'Checklist digital pronto',
+  'Proprietário',
+  'Contrato',
+  'Cotação',
+  'Contraproposta',
+  'Aguardar aceite do embarcador',
+  'Anexar laudo sanitário',
+  'autorização e janela de vazante',
+  'Impacto',
+  'Por que HydroRivers gera mais valor',
+  'Redução de custo logístico',
+  'Menos CO₂ por tonelada',
+  'Rotas otimizadas',
+  'pronto',
+  'Menos burocracia',
+  'Aderência ao BR do Mar',
+  'Publicar nova carga',
+  'Simule a abertura',
+  'PUBLICAÇÃO',
+  'O marketplace que transforma rios em corredores digitais de carga',
+  'Frete fluvial e cabotagem',
+  'Explorar cargas',
+  'Ver impacto',
+  'Custo e sustentabilidade',
+  'Necessidade regional',
+  'Desburocratização'
+];
+
+const PROHIBITED_TERMS_ES = [
+  'Embarcação',
+  'Embarcações',
+  'Disponível',
+  'Em rota',
+  'Em manutenção',
+  'Baixa conectividade pronta',
+  'Checklist digital pronto',
+  'Proprietário',
+  'Aguardar aceite',
+  'Anexar laudo',
+  'Publicar nova carga',
+  'Simule a abertura',
+  'Redução de custo',
+  'Desburocratização',
+  'Menos burocracia'
 ];
 
 const IGNORE_TERMS = new Set([
@@ -56,12 +115,19 @@ const IGNORE_TERMS = new Set([
   'Manaus',
   'Belém',
   'Santarém',
+  'Macapá',
+  'Tefé',
+  'Porto Velho',
   'Tapajós',
   'Solimões',
   'Rio Negro',
+  'PA',
+  'AM',
+  'AP',
   'ANTAQ',
   'DOF',
   'NF-e',
+  'CT-e',
   'POD',
   'TEU'
 ]);
@@ -97,8 +163,13 @@ function isIgnoredMatch(text) {
 function findMatches(route, text) {
   const findings = [];
   const lowerText = text.toLocaleLowerCase('pt-BR');
+  const prohibitedTerms = route.startsWith('/en-US')
+    ? PROHIBITED_TERMS_EN_US
+    : route.startsWith('/es')
+      ? PROHIBITED_TERMS_ES
+      : [];
 
-  for (const term of PROHIBITED_TERMS) {
+  for (const term of prohibitedTerms) {
     if (isIgnoredMatch(term)) continue;
     const lowerTerm = term.toLocaleLowerCase('pt-BR');
     let index = lowerText.indexOf(lowerTerm);
@@ -157,7 +228,7 @@ function renderReport(findings, failures) {
 
 async function assertServerAvailable() {
   try {
-    const response = await fetch(`${BASE_URL}/en-US/dashboard`, { redirect: 'follow' });
+    const response = await fetch(`${BASE_URL}/en-US`, { redirect: 'follow' });
     if (!response.ok) {
       throw new Error(`Servidor respondeu com status ${response.status}`);
     }

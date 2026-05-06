@@ -205,9 +205,9 @@
   "pages": {
     "home": {
       "hero": {
-        "eyebrow": "INLAND WATERWAY & CABOTAGE FREIGHT",
+        "eyebrow": "RIVER FREIGHT AND CABOTAGE",
         "title": "The marketplace that turns rivers into digital cargo corridors.",
-        "description": "HydroRivers connects small producers, operators, and vessels to cut logistics cost, emissions, and red tape in the Amazon and Brazilian cabotage.",
+        "description": "HydroRivers connects small producers, operators and vessels to reduce logistics costs, emissions and bureaucracy in the Amazon and Brazilian cabotage.",
         "primary": "Explore cargoes",
         "secondary": "View impact"
       },
@@ -231,7 +231,7 @@
         },
         "automation": {
           "title": "Less bureaucracy",
-          "description": "Quoting, counteroffers, and documents in a digital flow ready for automation."
+          "description": "Quotes, counteroffers and documents in a digital flow ready for automation."
         }
       }
     },
