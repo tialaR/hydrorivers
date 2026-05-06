@@ -15,13 +15,17 @@ export function NegotiationDetail({ negotiation }: { negotiation: Negotiation })
       <Card className={styles.summary}>
         <span data-testid="negotiation-stage-label"><HydroIcon name="document" /> {common(`dealStage.${negotiation.stage}`)}</span>
         <h2>{translateMock(locale, negotiation.cargoTitle)}</h2>
-        <p>{negotiation.route} • {negotiation.vesselName}</p>
+        <p>
+          {negotiation.route}
+          {common('inlineListSeparator')}
+          {negotiation.vesselName}
+        </p>
         <strong>{negotiation.amount}</strong>
       </Card>
       <Card className={styles.panel}>
         <h3>{t('terms')}</h3>
         <dl>
-          <div><dt>{t('parties')}</dt><dd>{negotiation.parties.join(' × ')}</dd></div>
+          <div><dt>{t('parties')}</dt><dd>{negotiation.parties.join(t('partyListJoiner'))}</dd></div>
           <div><dt>{t('payment')}</dt><dd>{translateMock(locale, negotiation.paymentTerms)}</dd></div>
           <div><dt>{t('insurance')}</dt><dd>{translateMock(locale, negotiation.insurance)}</dd></div>
           <div><dt>{t('nextStep')}</dt><dd>{translateMock(locale, negotiation.nextStep)}</dd></div>

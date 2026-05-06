@@ -311,7 +311,8 @@
     "negotiations": {
       "eyebrow": "Comercial",
       "title": "Negociações",
-      "description": "Pipeline de cotações, contrapropostas, contratos e embarques."
+      "description": "Pipeline de cotações, contrapropostas, contratos e embarques.",
+      "listSectionAriaLabel": "Lista de negociações do pipeline comercial"
     },
     "tracking": {
       "eyebrow": "Rastreio por eventos",
@@ -500,6 +501,7 @@
     "negotiationDetail": {
       "terms": "Termos da negociação",
       "parties": "Partes",
+      "partyListJoiner": " × ",
       "payment": "Pagamento",
       "insurance": "Seguro",
       "nextStep": "Próximo passo",

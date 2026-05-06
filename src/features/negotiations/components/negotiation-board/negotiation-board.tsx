@@ -28,11 +28,12 @@ function iconForTitle(title: string) {
 }
 
 export function NegotiationBoard({ negotiations }: { negotiations: Negotiation[] }) {
+  const p = useTranslations('pages.negotiations');
   const t = useTranslations('common');
   const locale = useLocale();
 
   return (
-    <section className={styles.board} aria-label={t('negotiationCardsSectionAria')}>
+    <section className={styles.board} aria-label={p('listSectionAriaLabel')}>
       {negotiations.map((item) => (
         <Link
           key={item.id}
