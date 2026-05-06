@@ -1,4 +1,4 @@
-import { useLocale, useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { Card } from '@/shared/ui/card/card';
 import { HydroIcon } from '@/shared/ui/hydro-icon/hydro-icon';
 import type { Negotiation } from '@/features/marketplace/domain/marketplace.types';
@@ -6,10 +6,14 @@ import { translateMock } from '@/shared/i18n/mock-content';
 import { formatMockBrl, formatMockDate } from '@/shared/i18n/mock-format';
 import styles from './negotiation-detail.module.scss';
 
-export function NegotiationDetail({ negotiation }: { negotiation: Negotiation }) {
-  const t = useTranslations('pages.negotiationDetail');
-  const common = useTranslations('common');
-  const locale = useLocale();
+type NegotiationDetailProps = {
+  negotiation: Negotiation;
+  locale: string;
+};
+
+export async function NegotiationDetail({ negotiation, locale }: NegotiationDetailProps) {
+  const t = await getTranslations({ locale, namespace: 'pages.negotiationDetail' });
+  const common = await getTranslations({ locale, namespace: 'common' });
 
   return (
     <section className={styles.layout}>
