@@ -1,4 +1,4 @@
-import { getTranslations } from 'next-intl/server';
+import { getLocale, getTranslations } from 'next-intl/server';
 import { Link } from '@/core/i18n/navigation';
 import { intlAppPaths } from '@/shared/routing/app-routes';
 import { HydroIcon } from '@/shared/ui/hydro-icon/hydro-icon';
@@ -37,9 +37,10 @@ const columns = [
 ] as const;
 
 export async function AppFooter() {
-  const t = await getTranslations('layout.footer');
-  const nav = await getTranslations('nav');
-  const impact = await getTranslations('impactCards');
+  const locale = await getLocale();
+  const t = await getTranslations({ locale, namespace: 'layout.footer' });
+  const nav = await getTranslations({ locale, namespace: 'nav' });
+  const impact = await getTranslations({ locale, namespace: 'impactCards' });
   const impactLabels = ['brdomar', 'sustainability', 'regional', 'automation'] as const;
   const getLabel = (label: string) => {
     if ((impactLabels as readonly string[]).includes(label)) return impact(`${label}.title` as never);
