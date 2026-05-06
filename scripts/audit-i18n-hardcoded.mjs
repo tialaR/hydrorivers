@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const SRC = join(ROOT, 'src');
 const REPORT_PATH = join(ROOT, 'reports', 'i18n-hardcoded-audit.md');
+const MOCK_CONTENT_PATH = join(ROOT, 'src', 'shared', 'i18n', 'mock-content.ts');
 
 const EXCLUDED_DIRS = new Set([
   'node_modules',
@@ -61,9 +62,18 @@ const findings = {
 };
 
 const ignoredCounts = new Map();
+const localeAwareMockStrings = new Set();
 
 function bumpIgnored(reason) {
   ignoredCounts.set(reason, (ignoredCounts.get(reason) ?? 0) + 1);
+}
+
+function loadLocaleAwareMockStrings() {
+  const source = readFileSync(MOCK_CONTENT_PATH, 'utf8');
+  const exactSection = source.match(/const exact:[\s\S]*?const patterns:/)?.[0] ?? '';
+  for (const match of exactSection.matchAll(/'([^']+)':\s*\{/g)) {
+    localeAwareMockStrings.add(match[1]);
+  }
 }
 
 function normalizePath(path) {
@@ -145,6 +155,7 @@ function shouldIgnoreString(value, line, keyOrAttr) {
   if (INTERNAL_API_CODES.has(text)) return 'internal_api_code';
   if (keyOrAttr && ['className', 'data-testid', 'id', 'href', 'src'].includes(keyOrAttr)) return 'non_ui_attr';
   if (keyOrAttr === 'text' && looksLikeCodeIdentifier(text)) return 'identifier_like_text';
+  if (localeAwareMockStrings.has(text)) return 'locale_aware_mock_content';
   return null;
 }
 
@@ -345,6 +356,7 @@ function writeReport(scannedFiles) {
 }
 
 function main() {
+  loadLocaleAwareMockStrings();
   const files = walk(SRC);
   for (const file of files) scanFile(file);
   writeReport(files.length);
