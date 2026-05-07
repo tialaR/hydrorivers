@@ -64,7 +64,9 @@
       "lowDocumentReadiness": "Baja preparación documental ({value}%) — puede retrasar la reserva y revisiones."
     },
     "fallback": {
+      "heading": "Estado no mapeado",
       "summary": "El estado de la carga no está mapeado en esta versión del asistente. Revise manualmente la ficha, documentos y negociaciones.",
+      "explanation": "El estado recibido no tiene un paquete específico de asistencia en esta fase. La orientación usa una regla determinística de fallback.",
       "nextSteps": [
         "Valide el estado con el equipo operativo.",
         "Verifique la documentación y los próximos hitos en la vista de la carga."
@@ -72,11 +74,14 @@
       "blockers": [],
       "risks": [
         "La interpretación automática es limitada — confirme con una fuente oficial."
-      ]
+      ],
+      "attentionPoints": []
     },
     "status": {
       "open": {
+        "heading": "Estado abierta",
         "summary": "Carga publicada en el mercado; a la espera de propuestas alineadas con la ruta, el tipo y las restricciones declaradas.",
+        "explanation": "Aún no existe un compromiso de transporte confirmado. La prioridad es calificar propuestas adherentes al contexto operativo de la carga.",
         "nextSteps": [
           "Revise el paquete documental sugerido y vacíos antes de la primera reserva.",
           "Supervise la ventana operativa y señales de interés en el corredor.",
@@ -86,10 +91,13 @@
         "risks": [
           "Propuestas incompatibles con calado, temperatura o plazos pueden retrasar el encaje logístico.",
           "La baja conectividad en origen puede retrasar la forma en que el mercado percibe el estado."
-        ]
+        ],
+        "attentionPoints": []
       },
       "bidding": {
+        "heading": "Estado en cotización",
         "summary": "Hay cotizaciones o contrapropuestas en revisión; la decisión sigue con el embarcador y las partes involucradas.",
+        "explanation": "La carga ya entró en tratativas comerciales, pero aún depende de convergencia entre precio, términos y documentación.",
         "nextSteps": [
           "Compare términos, valores y compromisos documentales de cada propuesta.",
           "Solicite ajustes formales cuando falte evidencia o cláusula operativa.",
@@ -99,10 +107,13 @@
         "risks": [
           "Estancamiento en la fase de ofertas puede hacer perder la ventana de embarque prevista.",
           "Ambigüedad en documentación fiscal o sanitaria puede reabrir la negociación."
-        ]
+        ],
+        "attentionPoints": []
       },
       "contracting": {
+        "heading": "Estado en contratación",
         "summary": "La negociación avanzó a contratación; foco en formalización, documentos y reserva de capacidad.",
+        "explanation": "Existe una intención clara de cierre, con prioridad en validaciones contractuales y operativas antes de la ejecución.",
         "nextSteps": [
           "Valide borradores, garantías y responsabilidades antes del aceptación final.",
           "Sincronice el embarque con disponibilidad real de muelle y calado.",
@@ -112,10 +123,13 @@
         "risks": [
           "Retroceso contractual si los requisitos regulatorios no se cumplen a tiempo.",
           "Dependencias de terceros (terminal, fiscalización) pueden alargar plazos."
-        ]
+        ],
+        "attentionPoints": []
       },
       "reserved": {
+        "heading": "Estado reservada",
         "summary": "Capacidad o condición de reserva acordada; preparar embarque y conformidad final.",
+        "explanation": "Hay una reserva operativa activa, y es necesario cerrar pendientes para reducir el riesgo de reprogramación.",
         "nextSteps": [
           "Confirme lacres, temperatura y lotes con el transportista.",
           "Cierre pendientes documentales aún listadas como obligatorias.",
@@ -125,10 +139,13 @@
         "risks": [
           "La última milla documental aún puede bloquear la liberación física de la carga.",
           "Condiciones fluviales o portuarias pueden exigir reprogramación fina."
-        ]
+        ],
+        "attentionPoints": []
       },
       "boarded": {
+        "heading": "Estado embarcada/en tránsito",
         "summary": "Carga embarcada o en tránsito fluvial; monitoree eventos, sincronización y pruebas operativas.",
+        "explanation": "La operación está en ejecución logística. La prioridad pasa a ser la previsibilidad de ruta y la gestión de incidencias.",
         "nextSteps": [
           "Siga el rastreo y registros de incidencias a lo largo del corredor.",
           "Mantenga un canal de contingencia para retrasos o desvíos de ruta.",
@@ -138,10 +155,13 @@
         "risks": [
           "Tramos con señal limitada pueden retrasar la visibilidad casi en tiempo real.",
           "Variaciones estacionales pueden impactar ETA y conexiones de cabotaje."
-        ]
+        ],
+        "attentionPoints": []
       },
       "delivered": {
+        "heading": "Estado entregada",
         "summary": "Flujo principal concluido en la simulación operativa; foco en comprobantes y cierre.",
+        "explanation": "La entrega se completó en el flujo principal. Quedan validaciones postoperación para cierre documental y financiero.",
         "nextSteps": [
           "Archive POD, comprobantes y comunicaciones relevantes.",
           "Registre lecciones aprendidas e indicadores para próximos ciclos.",
@@ -151,7 +171,8 @@
         "risks": [
           "Pendencias post-entrega (divergencia de volumen, avería) pueden aparecer tras el desembarque.",
           "Retención incompleta de documentos puede afectar auditorías futuras."
-        ]
+        ],
+        "attentionPoints": []
       }
     }
   },
