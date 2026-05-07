@@ -50,11 +50,44 @@
 .routeNode { display: flex; align-items: center; gap: .55rem; min-width: 0; }
 .routeNode > div { min-width: 0; }
 .routeNode strong { display: block; font-size: 1rem; line-height: 1.15; overflow-wrap: anywhere; }
+.cardMyCargoes .routeFlowMyCargoes {
+  grid-template-columns: minmax(0, 1fr) minmax(7rem, 1.4fr) minmax(0, 1fr);
+  gap: .8rem;
+  justify-items: stretch;
+}
+
+.cardMyCargoes .routeNodeOriginAligned {
+  justify-self: start;
+}
+
+.cardMyCargoes .routeNodeDestinationAligned {
+  justify-self: end;
+}
+
+.cardMyCargoes .routeNodeDestinationAligned > div {
+  text-align: right;
+}
+
+.cardMyCargoes .routeArrowMyCargoes {
+  width: 100%;
+  max-width: min(15rem, 100%);
+  justify-self: center;
+  align-self: center;
+}
+
+.cardMyCargoes .routeArrowMyCargoes span {
+  width: 100%;
+}
+
+.cardMyCargoes .routeArrowMyCargoes > svg {
+  justify-self: center;
+}
+
 .dotOrigin, .dotDestination { width: 2rem; height: 2rem; border-radius: 999px; display: inline-grid; place-items: center; flex: 0 0 auto; color: #07110e; }
 .dotOrigin { background: color-mix(in srgb, var(--brand) 80%, white); box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand) 18%, transparent); }
 .dotDestination { background: color-mix(in srgb, var(--river) 86%, white); box-shadow: 0 0 0 4px color-mix(in srgb, var(--river) 18%, transparent); }
-.routeArrow { width: 4rem; display: grid; justify-items: center; gap: .18rem; color: var(--brand-strong); }
-.routeArrow span { width: 100%; height: 2px; border-radius: 999px; background: linear-gradient(90deg, var(--brand), var(--river)); }
+.routeArrow { width: 5.4rem; display: grid; justify-items: center; gap: .2rem; color: var(--brand-strong); }
+.routeArrow span { width: 100%; height: 3px; border-radius: 999px; background: linear-gradient(90deg, var(--brand), var(--river)); box-shadow: 0 0 0 1px color-mix(in srgb, var(--brand) 16%, transparent); }
 .serviceLabel { min-height: 2.2rem; padding: .45rem .7rem; border-radius: var(--radius-md); border: 1px dashed var(--line); background: color-mix(in srgb, var(--surface) 65%, transparent); }
 .serviceLabel svg { color: var(--river); }
 .card dl { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem; margin: 0; }
@@ -91,6 +124,18 @@
   .card { border-radius: 16px; }
   .routeFlow { grid-template-columns: 1fr; }
   .routeArrow { width: 100%; grid-auto-flow: column; justify-content: flex-start; }
+  .cardMyCargoes .routeNodeDestinationAligned {
+    justify-self: start;
+  }
+
+  .cardMyCargoes .routeNodeDestinationAligned > div {
+    text-align: left;
+  }
+
+  .cardMyCargoes .routeArrowMyCargoes {
+    max-width: none;
+  }
+
   .card dl { grid-template-columns: 1fr; }
 }
 
