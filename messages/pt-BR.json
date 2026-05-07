@@ -29,9 +29,88 @@
     "subpageContext": "contexto operacional ativo"
   },
   "cargoStatusAi": {
+    "card": {
+      "eyebrow": "Assistente operacional",
+      "title": "Assistente da carga",
+      "collapsedTitle": "Sou seu assistente da carga \"{cargoName}\".",
+      "collapsedDescription": "Estou aqui para resumir a situação, sugerir próximos passos e destacar pontos de atenção desta operação.",
+      "expandedIntro": "Revisei os dados atuais e preparei uma leitura simples para ajudar você a seguir com mais segurança.",
+      "expandAction": "Ver análise",
+      "collapseAction": "Ocultar análise",
+      "currentStage": "Etapa atual",
+      "nextStepsCount": "{count, plural, =0 {Sem próximos passos} one {# próximo passo} other {# próximos passos}}",
+      "alertsCount": "{count, plural, =0 {Sem alertas} one {# alerta} other {# alertas}}",
+      "blockersCount": "{count, plural, one {# bloqueador} other {# bloqueadores}}",
+      "noBlockers": "Sem bloqueadores",
+      "fallbackCargoName": "esta carga"
+    },
+    "sections": {
+      "timeline": "Linha da carga",
+      "summary": "Resumo da situação",
+      "explanation": "O que isso significa",
+      "nextSteps": "Próximos passos sugeridos",
+      "attentionPoints": "Pontos de atenção",
+      "blockers": "Bloqueadores",
+      "risks": "Riscos e alertas",
+      "meta": "Contexto da análise"
+    },
+    "stages": {
+      "open": "Aberta",
+      "bidding": "Em negociação",
+      "contracting": "Em contratação",
+      "reserved": "Reservada",
+      "boarded": "Embarcada",
+      "delivered": "Entregue",
+      "unknown": "Etapa não identificada"
+    },
+    "emptyStates": {
+      "noBlockers": "Nenhum bloqueador crítico identificado no momento.",
+      "noAlerts": "Nenhum ponto de atenção relevante no momento.",
+      "noNextSteps": "Nenhum próximo passo sugerido no momento."
+    },
+    "states": {
+      "idleTitle": "Assistente pronto para analisar",
+      "idleDescription": "Abra o painel para ver um resumo claro da situação da carga.",
+      "loadingTitle": "Analisando a carga",
+      "loadingDescription": "Estou organizando os principais sinais operacionais para você.",
+      "unauthorizedTitle": "Faça login para continuar",
+      "unauthorizedDescription": "Entre na sua conta para acessar a análise desta carga.",
+      "forbiddenTitle": "Sem acesso a esta análise",
+      "forbiddenDescription": "Seu perfil não possui permissão para visualizar este assistente nesta carga.",
+      "errorTitle": "Não consegui concluir a análise",
+      "errorDescription": "Tente novamente em instantes para atualizar a leitura da carga.",
+      "retryAction": "Tentar novamente"
+    },
+    "meta": {
+      "basedOnCurrentData": "Baseado nos dados atuais da carga",
+      "confidence": "Confiança",
+      "confidenceLow": "Baixa",
+      "confidenceMedium": "Média",
+      "confidenceHigh": "Alta",
+      "mockSource": "Análise gerada por simulação interna",
+      "disclaimer": "Use como apoio operacional; não substitui validação contratual."
+    },
     "cardTitle": "Assistente de status da carga",
-    "cardHint": "Texto gerado por simulação interna (sem provedor externo). Não substitui decisão operacional, contrato nem liberação documental.",
-    "disclaimerShort": "Sugestão e resumo automáticos (mock).",
+    "cardHint": "Revise este painel para entender rapidamente a fase atual da carga e agir com mais confiança operacional.",
+    "disclaimerShort": "Assistência contextual (simulação interna).",
+    "assistantGreeting": "Sou seu assistente da carga {cargoName}.",
+    "assistantDescription": "Estou aqui para resumir a situação atual, sugerir próximos passos e destacar pontos de atenção.",
+    "expandCta": "Expandir assistência",
+    "collapseCta": "Recolher assistência",
+    "cargoFallbackName": "atual",
+    "currentStageLabel": "Etapa atual",
+    "timelineTitle": "Linha de progresso da carga",
+    "timeline": {
+      "hints": {
+        "open": "Sua carga está aberta no marketplace e pronta para atrair propostas qualificadas.",
+        "bidding": "Sua carga está em cotação. Este é o momento de comparar propostas com atenção.",
+        "contracting": "Sua carga entrou em contratação. Foque em validar cláusulas e documentos críticos.",
+        "reserved": "Sua carga já está reservada. Agora priorize a preparação final para embarque.",
+        "boarded": "Sua carga está em trânsito. Monitore ocorrências e mantenha contingências ativas.",
+        "delivered": "Sua carga foi entregue. O foco agora é fechamento documental e lições aprendidas.",
+        "unknown": "Não consegui identificar a etapa com precisão. Recomendo revisar o contexto desta carga."
+      }
+    },
     "summaryLabel": "Resumo",
     "headingLabel": "Título do status",
     "explanationLabel": "Explicação do status atual",

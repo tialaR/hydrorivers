@@ -177,7 +177,11 @@ export function CargoDetail({ cargo, viewer }: { cargo: Cargo; viewer?: CargoVie
 
       {cargo.id.trim() ? (
         <div className={styles.assistantRow}>
-          <CargoStatusAssistantCard cargoId={cargo.id} />
+          <CargoStatusAssistantCard
+            cargoId={cargo.id}
+            cargoName={translateMock(locale, cargo.title)}
+            cargoStatus={cargo.status}
+          />
         </div>
       ) : null}
 
