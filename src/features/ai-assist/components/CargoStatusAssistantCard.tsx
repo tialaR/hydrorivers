@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import type { AppLocale } from '@/core/i18n/routing';
 import type { AiAssistResponse } from '@/features/ai-assist/domain/types';
@@ -36,8 +36,26 @@ const timelineSteps: TimelineStep[] = [
 ];
 
 export function CargoStatusAssistantCard({ cargoId, cargoName, cargoStatus = 'open' }: Props) {
-  const t = useTranslations('cargoStatusAi');
   const locale = useLocale() as AppLocale;
+  const contextCargoId = typeof cargoId === 'string' ? cargoId.trim() : '';
+
+  return (
+    <CargoStatusAssistantCardInner
+      key={`${locale}:${contextCargoId}`}
+      cargoId={cargoId}
+      cargoName={cargoName}
+      cargoStatus={cargoStatus}
+      locale={locale}
+    />
+  );
+}
+
+type InnerProps = Props & {
+  locale: AppLocale;
+};
+
+function CargoStatusAssistantCardInner({ cargoId, cargoName, cargoStatus = 'open', locale }: InnerProps) {
+  const t = useTranslations('cargoStatusAi');
   const [state, setState] = useState<LoadState>('idle');
   const [expanded, setExpanded] = useState(false);
   const [assist, setAssist] = useState<AiAssistResponse | null>(null);
@@ -106,13 +124,6 @@ export function CargoStatusAssistantCard({ cargoId, cargoName, cargoStatus = 'op
       setState('error');
       setErrorKind('generic');
     }
-  }, [hasValidCargoId, locale, normalizedCargoId]);
-
-  useEffect(() => {
-    setState('idle');
-    setAssist(null);
-    setErrorKind(null);
-    setAttemptedLoad(false);
   }, [hasValidCargoId, locale, normalizedCargoId]);
 
   function handleToggleAccordion() {
