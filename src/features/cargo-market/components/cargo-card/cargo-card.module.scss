@@ -53,8 +53,8 @@
 .dotOrigin, .dotDestination { width: 2rem; height: 2rem; border-radius: 999px; display: inline-grid; place-items: center; flex: 0 0 auto; color: #07110e; }
 .dotOrigin { background: color-mix(in srgb, var(--brand) 80%, white); box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand) 18%, transparent); }
 .dotDestination { background: color-mix(in srgb, var(--river) 86%, white); box-shadow: 0 0 0 4px color-mix(in srgb, var(--river) 18%, transparent); }
-.routeArrow { width: 4rem; display: grid; justify-items: center; gap: .18rem; color: var(--brand-strong); }
-.routeArrow span { width: 100%; height: 2px; border-radius: 999px; background: linear-gradient(90deg, var(--brand), var(--river)); }
+.routeArrow { width: 5.4rem; display: grid; justify-items: center; gap: .2rem; color: var(--brand-strong); }
+.routeArrow span { width: 100%; height: 3px; border-radius: 999px; background: linear-gradient(90deg, var(--brand), var(--river)); box-shadow: 0 0 0 1px color-mix(in srgb, var(--brand) 16%, transparent); }
 .serviceLabel { min-height: 2.2rem; padding: .45rem .7rem; border-radius: var(--radius-md); border: 1px dashed var(--line); background: color-mix(in srgb, var(--surface) 65%, transparent); }
 .serviceLabel svg { color: var(--river); }
 .card dl { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem; margin: 0; }

@@ -72,6 +72,7 @@ export function ProfilePanel() {
   const [pending, setPending] = useState(false);
   const [avatarError, setAvatarError] = useState('');
   const [avatarPreviewFailedSrc, setAvatarPreviewFailedSrc] = useState<string | null>(null);
+  const [isAvatarViewerOpen, setIsAvatarViewerOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const baseProfile: ProfileFormState = user ? {
@@ -156,6 +157,7 @@ export function ProfilePanel() {
       [user.id]: { ...(current[user.id] ?? baseProfile), avatarUrl: '' }
     }));
     setSaved(false);
+    setIsAvatarViewerOpen(false);
     resetFileInput();
   }
 
@@ -200,7 +202,37 @@ export function ProfilePanel() {
       <p className={styles.eyebrow}>{t('eyebrow')}</p><h1>{t('title')}</h1><span>{t('description')}</span>
       <section className={styles.grid}>
         <Card className={styles.identity}>
-          <div className={styles.avatar}>{avatarPreviewAvailable ? <NextImage src={profile.avatarUrl ?? ''} alt="" width={120} height={120} unoptimized onError={() => setAvatarPreviewFailedSrc(profile.avatarUrl ?? null)} /> : <span>{getInitials(profile.name)}</span>}</div>
+          <button
+            type="button"
+            className={`${styles.avatar} ${avatarPreviewAvailable ? styles.avatarButton : ''}`}
+            onClick={() => {
+              if (!avatarPreviewAvailable) return;
+              setIsAvatarViewerOpen(true);
+            }}
+            aria-label={auth('avatar')}
+          >
+            {avatarPreviewAvailable ? (
+              <NextImage
+                src={profile.avatarUrl ?? ''}
+                alt=""
+                width={220}
+                height={220}
+                unoptimized
+                onError={() => setAvatarPreviewFailedSrc(profile.avatarUrl ?? null)}
+              />
+            ) : (
+              <span>{getInitials(profile.name)}</span>
+            )}
+          </button>
+          <div className={styles.avatarActions}>
+            <button type="button" className={styles.uploadButton} onClick={() => fileInputRef.current?.click()}>
+              <Camera size={18} />
+              <span>{auth('avatarUpload')}</span>
+            </button>
+            <input ref={fileInputRef} className={styles.hiddenFileInput} type="file" accept="image/jpeg,.jpg,.jpeg" onChange={(event) => handleAvatarUpload(event.target.files?.[0])} />
+            {profile.avatarUrl ? <button type="button" className={styles.removeAvatar} onClick={removeAvatar}>{auth('removeAvatar')}</button> : null}
+          </div>
+          {avatarError ? <small className={styles.error}>{avatarError}</small> : null}
           <h2>{profile.name}</h2>
           <p>{profile.company}</p>
           <Badge tone={user.approved ? 'success' : 'warning'}>{user.approved ? t('approved') : t('pending')}</Badge>
@@ -219,23 +251,22 @@ export function ProfilePanel() {
             <label><span>{auth('company')}</span><input name="company" value={profile.company} onChange={(event) => updateField('company', event.target.value)} /></label>
             <label><span>{t('phone')}</span><input name="phone" value={profile.phone ?? ''} onChange={(event) => updateField('phone', event.target.value)} placeholder={t('phonePlaceholder')} /></label>
             <label><span>{t('baseCity')}</span><input name="city" value={profile.city ?? ''} onChange={(event) => updateField('city', event.target.value)} placeholder={t('baseCityPlaceholder')} /></label>
-            <div className={`${styles.full} ${styles.avatarUpload}`}>
-              <span>{auth('avatar')}</span>
-              <div className={styles.uploadRow}>
-                <button type="button" className={styles.uploadButton} onClick={() => fileInputRef.current?.click()}>
-                  <Camera size={18} />
-                  <span>{auth('avatarUpload')}</span>
-                </button>
-                <input ref={fileInputRef} className={styles.hiddenFileInput} type="file" accept="image/jpeg,.jpg,.jpeg" onChange={(event) => handleAvatarUpload(event.target.files?.[0])} />
-                {profile.avatarUrl ? <button type="button" className={styles.removeAvatar} onClick={removeAvatar}>{auth('removeAvatar')}</button> : null}
-              </div>
-              <input name="avatarUrl" value={profile.avatarUrl ?? ''} onChange={(event) => updateField('avatarUrl', event.target.value)} placeholder={auth('avatarUrlPlaceholder')} />
-              {avatarError ? <small className={styles.error}>{avatarError}</small> : <small>{auth('avatarHelp')}</small>}
-            </div>
             <Button className={styles.full} loading={pending} loadingLabel={auth('loading')}>{saved ? auth('saved') : auth('saveProfile')}</Button>
           </form>
         </Card>
       </section>
+      {isAvatarViewerOpen && avatarPreviewAvailable ? (
+        <div className={styles.viewerOverlay} role="presentation" onClick={() => setIsAvatarViewerOpen(false)}>
+          <div className={styles.viewerDialog} role="dialog" aria-modal="true" aria-label={auth('avatar')} onClick={(event) => event.stopPropagation()}>
+            <button type="button" className={styles.viewerClose} onClick={() => setIsAvatarViewerOpen(false)} aria-label={auth('removeAvatar')}>
+              ×
+            </button>
+            <div className={styles.viewerImageWrap}>
+              <NextImage src={profile.avatarUrl ?? ''} alt="" width={640} height={640} unoptimized />
+            </div>
+          </div>
+        </div>
+      ) : null}
     </main>
   );
 }
