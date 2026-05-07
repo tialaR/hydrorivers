@@ -32,9 +32,10 @@
     "card": {
       "eyebrow": "Operations assistant",
       "title": "Cargo assistant",
-      "collapsedTitle": "Hi! I’m following {cargoName} and I organized the most important points for you.",
-      "collapsedDescription": "I prepared a simple view to show what already moved forward, what deserves attention, and the best next steps.",
-      "expandedIntro": "I want to help you understand the cargo moment clearly and decide what is worth doing now.",
+      "greeting": "Hi! I’m your assistant for this cargo.",
+      "collapsedTitle": "I’m following {cargoName} and I organized the most important points for you.",
+      "collapsedDescription": "I prepared a simple view to show what has already moved forward, what deserves attention, and what is worth doing now.",
+      "expandedIntro": "Here is a clear summary to help you understand this cargo moment with more confidence.",
       "expandAction": "View guidance",
       "collapseAction": "Hide guidance",
       "currentStage": "Current stage",

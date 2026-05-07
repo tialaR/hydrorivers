@@ -32,9 +32,10 @@
     "card": {
       "eyebrow": "Asistente de la operación",
       "title": "Asistente de la carga",
-      "collapsedTitle": "¡Hola! Estoy siguiendo {cargoName} y organicé los puntos más importantes para ti.",
-      "collapsedDescription": "Preparé una vista simple para mostrar qué ya avanzó, qué merece atención y cuáles son los próximos pasos.",
-      "expandedIntro": "Quiero ayudarte a entender con claridad el momento de la carga y decidir qué conviene hacer ahora.",
+      "greeting": "¡Hola! Soy tu asistente para esta carga.",
+      "collapsedTitle": "Estoy siguiendo {cargoName} y organicé los puntos más importantes para ti.",
+      "collapsedDescription": "Preparé una vista simple para mostrar qué ya avanzó, qué merece atención y qué conviene hacer ahora.",
+      "expandedIntro": "Aquí tienes un resumen claro para ayudarte a entender este momento de la carga con más tranquilidad.",
       "expandAction": "Ver orientación",
       "collapseAction": "Ocultar orientación",
       "currentStage": "Etapa actual",

@@ -30,11 +30,12 @@
   },
   "cargoStatusAi": {
     "card": {
-      "eyebrow": "Assistente da operação",
+      "eyebrow": "ASSISTENTE DA OPERAÇÃO",
       "title": "Assistente da carga",
-      "collapsedTitle": "Olá! Estou acompanhando {cargoName} e organizei os pontos mais importantes para você.",
-      "collapsedDescription": "Preparei uma visão simples para mostrar o que já avançou, o que merece atenção e quais são os próximos passos.",
-      "expandedIntro": "Quero ajudar você a entender o momento da carga com clareza e decidir o que vale fazer agora.",
+      "greeting": "Olá! Sou seu assistente dessa carga.",
+      "collapsedTitle": "Estou acompanhando {cargoName} e organizei os pontos mais importantes para você.",
+      "collapsedDescription": "Preparei uma visão simples para mostrar o que já avançou, o que merece atenção e o que vale fazer agora.",
+      "expandedIntro": "Aqui vai um resumo claro para ajudar você a entender o momento da carga com mais tranquilidade.",
       "expandAction": "Ver orientação",
       "collapseAction": "Ocultar orientação",
       "currentStage": "Etapa atual",

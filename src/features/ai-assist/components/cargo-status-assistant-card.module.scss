@@ -77,15 +77,22 @@
 }
 
 .heroLine {
-  margin: 0.64rem 0 0;
+  margin: 0.72rem 0 0;
   font-size: 1.03rem;
   font-weight: 720;
-  line-height: 1.56;
+  line-height: 1.6;
   color: var(--text);
 }
 
+.secondaryLine {
+  margin: 0.52rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.58;
+  color: color-mix(in srgb, var(--text) 94%, var(--muted, #6b7280));
+}
+
 .hint {
-  margin: 0.5rem 0 0;
+  margin: 0.58rem 0 0;
   font-size: 0.88rem;
   line-height: 1.6;
   color: var(--muted, #6b7280);
@@ -96,7 +103,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 0.56rem;
-  margin-top: 0.12rem;
+  margin-top: 0.2rem;
 }
 
 .stageChip {
@@ -389,5 +396,21 @@
   .triggerMeta {
     align-items: flex-start;
     gap: 0.48rem;
+  }
+
+  .cta {
+    margin-left: 0;
+    width: 100%;
+    justify-content: flex-end;
+    padding-top: 0.22rem;
+  }
+
+  .heroLine {
+    font-size: 1rem;
+  }
+
+  .secondaryLine {
+    font-size: 0.88rem;
+    line-height: 1.55;
   }
 }

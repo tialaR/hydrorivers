@@ -142,12 +142,12 @@ export function CargoStatusAssistantCard({ cargoId, cargoName, cargoStatus = 'op
         >
           <div className={styles.triggerMain}>
             <div className={styles.avatar} aria-hidden="true">
-              <HydroIcon name="user" size={22} />
+              <HydroIcon name="message" size={22} />
             </div>
             <div className={styles.triggerText}>
               <span className={styles.kicker}>{t('card.eyebrow')}</span>
-              <h3>{t('card.title')}</h3>
-              <p className={styles.heroLine}>{t('card.collapsedTitle', { cargoName: normalizedCargoName })}</p>
+              <p className={styles.heroLine}>{t('card.greeting')}</p>
+              <p className={styles.secondaryLine}>{t('card.collapsedTitle', { cargoName: normalizedCargoName })}</p>
               <p className={styles.hint}>{t('card.collapsedDescription')}</p>
             </div>
           </div>
@@ -252,6 +252,7 @@ export function CargoStatusAssistantCard({ cargoId, cargoName, cargoStatus = 'op
                       <span className={styles.sectionIcon}><HydroIcon name="info" size={16} /></span>
                       {t('card.title')}
                     </h4>
+                    <p className={styles.body}>{t('card.greeting')}</p>
                     <p className={styles.body}>{t('card.collapsedTitle', { cargoName: normalizedCargoName })}</p>
                     <p className={styles.body}>{t('card.expandedIntro')}</p>
                   </section>
