@@ -42,7 +42,7 @@ export function MyCargoesList({
       {items.length ? (
         <div className={listStyles.grid} data-testid="minhas-cargas-grid">
           {items.map((cargo) => (
-            <CargoCard key={cargo.id} cargo={cargo} />
+            <CargoCard key={cargo.id} cargo={cargo} variant="myCargoes" />
           ))}
         </div>
       ) : (

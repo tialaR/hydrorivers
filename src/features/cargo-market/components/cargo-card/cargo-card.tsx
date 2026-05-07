@@ -32,7 +32,13 @@ function iconForStatus(status: Cargo['status']) {
   return 'document';
 }
 
-export function CargoCard({ cargo }: { cargo: Cargo }) {
+export function CargoCard({
+  cargo,
+  variant
+}: {
+  cargo: Cargo;
+  variant?: 'default' | 'myCargoes';
+}) {
   const t = useTranslations('common');
   const locale = useLocale();
 
@@ -56,7 +62,7 @@ export function CargoCard({ cargo }: { cargo: Cargo }) {
       data-testid="cargo-card"
       aria-label={t('openCargo', { title: translateMock(locale, cargo.title) })}
     >
-      <Card className={`${styles.card} ${styles[cargo.status]}`}>
+      <Card className={`${styles.card} ${styles[cargo.status]} ${variant === 'myCargoes' ? styles.cardMyCargoes : ''}`}>
         <div className={styles.topline}>
           <Badge tone={statusTone(cargo.status)}>
             <HydroIcon name={iconForStatus(cargo.status)} size={13} />
@@ -83,19 +89,19 @@ export function CargoCard({ cargo }: { cargo: Cargo }) {
             <small><HydroIcon name="route" size={14} /> {cargo.corridor ?? t('waterwayRoute')}</small>
             {cargo.mainRiver ? <span><HydroIcon name="waves" size={14} /> {cargo.mainRiver}</span> : null}
           </div>
-          <div className={styles.routeFlow}>
-            <div className={styles.routeNode}>
+          <div className={`${styles.routeFlow} ${variant === 'myCargoes' ? styles.routeFlowMyCargoes : ''}`}>
+            <div className={`${styles.routeNode} ${variant === 'myCargoes' ? styles.routeNodeOriginAligned : ''}`}>
               <span className={styles.dotOrigin}><HydroIcon name="dock" size={14} /></span>
               <div>
                 <small>{t('origin')}</small>
                 <strong>{cargo.origin}</strong>
               </div>
             </div>
-            <div className={styles.routeArrow} aria-hidden="true">
+            <div className={`${styles.routeArrow} ${variant === 'myCargoes' ? styles.routeArrowMyCargoes : ''}`} aria-hidden="true">
               <HydroIcon name="ship" size={16} />
               <span />
             </div>
-            <div className={styles.routeNode}>
+            <div className={`${styles.routeNode} ${variant === 'myCargoes' ? styles.routeNodeDestinationAligned : ''}`}>
               <span className={styles.dotDestination}><HydroIcon name="map" size={14} /></span>
               <div>
                 <small>{t('destination')}</small>
