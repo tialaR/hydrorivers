@@ -51,8 +51,15 @@
     "forbiddenHint": "Your session is not allowed to use this assistant for this cargo.",
     "loadError": "Could not load the assistant right now.",
     "retry": "Refresh assistant",
+    "idleHint": "Preparing status assistance for this cargo.",
     "loading": "Generating summary…",
     "emptyList": "No items.",
+    "errors": {
+      "invalidCargoId": "Could not request assistance: missing or invalid cargo identifier.",
+      "badRequest": "Could not request assistance with the current cargo data.",
+      "notFound": "This cargo was not found for status assistance.",
+      "generic": "Could not load the assistant right now."
+    },
     "extra": {
       "lowDocumentReadiness": "Low document readiness ({value}%) — may delay booking and checks."
     },

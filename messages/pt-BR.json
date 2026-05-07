@@ -51,8 +51,15 @@
     "forbiddenHint": "Sua sessão não tem permissão para esta assistência nesta carga.",
     "loadError": "Não foi possível carregar a assistência agora.",
     "retry": "Atualizar assistência",
+    "idleHint": "Preparando a assistência de status desta carga.",
     "loading": "Gerando resumo…",
     "emptyList": "Nenhum item.",
+    "errors": {
+      "invalidCargoId": "Não foi possível solicitar assistência: identificador da carga ausente ou inválido.",
+      "badRequest": "Não foi possível solicitar assistência com os dados atuais da carga.",
+      "notFound": "Esta carga não foi encontrada para gerar assistência de status.",
+      "generic": "Não foi possível carregar a assistência agora."
+    },
     "extra": {
       "lowDocumentReadiness": "Prontidão documental baixa ({value}%) — pode atrasar reserva e checagens."
     },

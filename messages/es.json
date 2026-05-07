@@ -51,8 +51,15 @@
     "forbiddenHint": "Su sesión no tiene permiso para este asistente en esta carga.",
     "loadError": "No se pudo cargar el asistente en este momento.",
     "retry": "Actualizar asistente",
+    "idleHint": "Preparando la asistencia de estado para esta carga.",
     "loading": "Generando resumen…",
     "emptyList": "Sin ítems.",
+    "errors": {
+      "invalidCargoId": "No se pudo solicitar asistencia: identificador de carga ausente o inválido.",
+      "badRequest": "No se pudo solicitar asistencia con los datos actuales de la carga.",
+      "notFound": "No se encontró esta carga para generar la asistencia de estado.",
+      "generic": "No se pudo cargar el asistente en este momento."
+    },
     "extra": {
       "lowDocumentReadiness": "Baja preparación documental ({value}%) — puede retrasar la reserva y revisiones."
     },

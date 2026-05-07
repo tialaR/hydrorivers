@@ -11,60 +11,95 @@ import { httpStatus } from '@/shared/http/http-status';
 import styles from './cargo-status-assistant-card.module.scss';
 
 type Props = {
-  cargoId: string;
+  cargoId?: string | null;
 };
 
-type LoadState = 'loading' | 'ready' | 'error' | 'guest' | 'forbidden';
+type LoadState = 'idle' | 'loading' | 'success' | 'unauthorized' | 'forbidden' | 'error';
+type ErrorKind = 'invalidCargoId' | 'badRequest' | 'notFound' | 'generic';
 
 export function CargoStatusAssistantCard({ cargoId }: Props) {
   const t = useTranslations('cargoStatusAi');
   const locale = useLocale() as AppLocale;
-  const [state, setState] = useState<LoadState>('loading');
+  const [state, setState] = useState<LoadState>('idle');
   const [assist, setAssist] = useState<AiAssistResponse | null>(null);
+  const [errorKind, setErrorKind] = useState<ErrorKind | null>(null);
+  const normalizedCargoId = typeof cargoId === 'string' ? cargoId.trim() : '';
+  const hasValidCargoId = normalizedCargoId.length > 0;
 
   const load = useCallback(async () => {
+    if (!hasValidCargoId) {
+      setState('error');
+      setAssist(null);
+      setErrorKind('invalidCargoId');
+      return;
+    }
+
     setState('loading');
     setAssist(null);
+    setErrorKind(null);
     try {
       const response = await fetch(apiRoutes.ai.cargoStatus, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'same-origin',
-        body: JSON.stringify({ cargoId, locale })
+        body: JSON.stringify({ cargoId: normalizedCargoId, locale })
       });
       if (response.status === httpStatus.unauthorized) {
-        setState('guest');
+        setState('unauthorized');
         return;
       }
       if (response.status === httpStatus.forbidden) {
         setState('forbidden');
         return;
       }
+      if (response.status === httpStatus.badRequest) {
+        setState('error');
+        setErrorKind('badRequest');
+        return;
+      }
+      if (response.status === httpStatus.notFound) {
+        setState('error');
+        setErrorKind('notFound');
+        return;
+      }
       if (!response.ok) {
         setState('error');
+        setErrorKind('generic');
         return;
       }
       const body = (await response.json()) as { data?: AiAssistResponse };
       if (!body.data) {
         setState('error');
+        setErrorKind('generic');
         return;
       }
       setAssist(body.data);
-      setState('ready');
+      setState('success');
     } catch {
       setState('error');
+      setErrorKind('generic');
     }
-  }, [cargoId, locale]);
+  }, [hasValidCargoId, locale, normalizedCargoId]);
 
   useEffect(() => {
+    if (!hasValidCargoId) {
+      setState('error');
+      setAssist(null);
+      setErrorKind('invalidCargoId');
+      return;
+    }
+    setState('idle');
+    setAssist(null);
+    setErrorKind(null);
     const handle = window.setTimeout(() => {
       void load();
     }, 0);
     return () => window.clearTimeout(handle);
-  }, [load]);
+  }, [hasValidCargoId, load]);
 
   const confidenceLabel = assist ? t(`confidence.${assist.confidence}`) : '';
   const sourceLabel = assist ? t(`source.${assist.source === 'mock-ai' ? 'mockAi' : 'fallbackRule'}`) : '';
+  const errorMessage = errorKind ? t(`errors.${errorKind}`) : t('errors.generic');
 
   return (
     <div className={styles.wrap}>
@@ -75,19 +110,26 @@ export function CargoStatusAssistantCard({ cargoId }: Props) {
           <p className={styles.hint}>{t('cardHint')}</p>
         </div>
 
-        {state === 'loading' ? <p className={styles.empty}>{t('loading')}</p> : null}
-        {state === 'guest' ? <p className={styles.empty}>{t('notAuthenticatedHint')}</p> : null}
-        {state === 'forbidden' ? <p className={styles.empty}>{t('forbiddenHint')}</p> : null}
-        {state === 'error' ? (
-          <>
-            <p className={styles.empty}>{t('loadError')}</p>
-            <div className={styles.retry}>
-              <Button type="button" onClick={() => void load()}>{t('retry')}</Button>
-            </div>
-          </>
-        ) : null}
+        <div className={styles.statusArea} aria-live="polite" aria-atomic="true">
+          {state === 'idle' ? <p className={styles.empty}>{t('idleHint')}</p> : null}
+          {state === 'loading' ? <p className={styles.empty}>{t('loading')}</p> : null}
+          {state === 'unauthorized' ? <p className={styles.empty}>{t('notAuthenticatedHint')}</p> : null}
+          {state === 'forbidden' ? <p className={styles.empty}>{t('forbiddenHint')}</p> : null}
+          {state === 'error' ? (
+            <>
+              <p className={styles.empty}>{errorMessage}</p>
+              {errorKind !== 'invalidCargoId' ? (
+                <div className={styles.retry}>
+                  <Button type="button" onClick={() => void load()} aria-label={t('retry')}>
+                    {t('retry')}
+                  </Button>
+                </div>
+              ) : null}
+            </>
+          ) : null}
+        </div>
 
-        {state === 'ready' && assist ? (
+        {state === 'success' && assist ? (
           <>
             <section className={styles.section} aria-labelledby="cargo-ai-summary">
               <h4 id="cargo-ai-summary" className={styles.sectionTitle}>{t('summaryLabel')}</h4>
