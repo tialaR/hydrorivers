@@ -33,8 +33,8 @@
       "eyebrow": "Assistente operacional",
       "title": "Assistente da carga",
       "collapsedTitle": "Sou seu assistente da carga \"{cargoName}\".",
-      "collapsedDescription": "Estou aqui para resumir a situação, sugerir próximos passos e destacar pontos de atenção desta operação.",
-      "expandedIntro": "Revisei os dados atuais e preparei uma leitura simples para ajudar você a seguir com mais segurança.",
+      "collapsedDescription": "Revisei a operação e organizei os pontos mais importantes para ajudar você a seguir com mais clareza e segurança.",
+      "expandedIntro": "Estou aqui para ajudar você a entender a etapa atual, o que já avançou e o que merece atenção agora.",
       "expandAction": "Ver análise",
       "collapseAction": "Ocultar análise",
       "currentStage": "Etapa atual",
@@ -65,8 +65,8 @@
     },
     "emptyStates": {
       "noBlockers": "Nenhum bloqueador crítico identificado no momento.",
-      "noAlerts": "Nenhum ponto de atenção relevante no momento.",
-      "noNextSteps": "Nenhum próximo passo sugerido no momento."
+      "noAlerts": "Nenhum ponto de atenção relevante por enquanto.",
+      "noNextSteps": "Nenhum próximo passo sugerido para esta etapa."
     },
     "states": {
       "idleTitle": "Assistente pronto para analisar",
@@ -88,7 +88,7 @@
       "confidenceMedium": "Média",
       "confidenceHigh": "Alta",
       "mockSource": "Análise gerada por simulação interna",
-      "disclaimer": "Use como apoio operacional; não substitui validação contratual."
+      "disclaimer": "Esta orientação não substitui validação operacional, contrato ou liberação documental."
     },
     "cardTitle": "Assistente de status da carga",
     "cardHint": "Revise este painel para entender rapidamente a fase atual da carga e agir com mais confiança operacional.",
@@ -211,16 +211,18 @@
       "reserved": {
         "heading": "Status reservado",
         "summary": "Capacidade ou condição de reserva acordada; preparar embarque e conformidade final.",
-        "explanation": "Sua carga já está reservada. Agora vale alinhar os detalhes finais para reduzir riscos e preparar um embarque tranquilo.",
+        "explanation": "A operação já tem uma reserva confirmada. Para manter o fluxo sem atrasos, vale concluir as últimas pendências desta etapa.",
         "nextSteps": [
-          "Confirmar lacres, temperatura e lotes com o transportador.",
-          "Fechar pendências documentais ainda listadas como obrigatórias.",
-          "Agendar janela de atracação e conferência no cais."
+          "Vale confirmar lacres, temperatura e lotes com o transportador.",
+          "Agora é um bom momento para finalizar a documentação obrigatória.",
+          "Depois disso, recomenda-se agendar a janela de atracação e a conferência no cais."
         ],
         "blockers": [],
         "risks": [
-          "Última milha documental ainda pode bloquear liberação física da carga.",
-          "Condições fluviais ou portuárias podem exigir replanejamento fino."
+          "Ainda existem ajustes documentais que podem atrasar a liberação da carga se não forem resolvidos a tempo.",
+          "Condições fluviais ou portuárias podem exigir pequenos ajustes no planejamento.",
+          "A janela de cadeia fria é curta e merece atenção extra.",
+          "O sinal entre terminais menores pode variar e reduzir a previsibilidade do acompanhamento."
         ],
         "attentionPoints": []
       },
