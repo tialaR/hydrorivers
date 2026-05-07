@@ -9,6 +9,25 @@ import type { Cargo, Negotiation } from '@/features/marketplace/domain/marketpla
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
+type CargoStatusPayload = {
+  cargoId: string;
+  locale: AppLocale;
+};
+
+function parseCargoStatusPayload(payload: unknown): CargoStatusPayload | null {
+  if (!payload || typeof payload !== 'object' || Array.isArray(payload)) return null;
+
+  const record = payload as Record<string, unknown>;
+  if (typeof record.cargoId !== 'string' || !record.cargoId.trim()) return null;
+
+  const cargoId = record.cargoId.trim();
+  const locale = typeof record.locale === 'string' && (routing.locales as readonly string[]).includes(record.locale)
+    ? (record.locale as AppLocale)
+    : routing.defaultLocale;
+
+  return { cargoId, locale };
+}
+
 export async function POST(request: Request) {
   const user = await getSessionUser();
   if (!user) {
@@ -19,16 +38,12 @@ export async function POST(request: Request) {
     return forbidden('user-not-approved');
   }
 
-  const payload = await request.json().catch(() => null) as { cargoId?: unknown; locale?: unknown } | null;
-  if (!payload || typeof payload.cargoId !== 'string' || !payload.cargoId.trim()) {
+  const payload = parseCargoStatusPayload(await request.json().catch(() => null));
+  if (!payload) {
     return invalidPayload('missing-cargo-id');
   }
 
-  const cargoId = payload.cargoId.trim();
-  const rawLocale = payload.locale;
-  const locale: AppLocale = typeof rawLocale === 'string' && (routing.locales as readonly string[]).includes(rawLocale)
-    ? (rawLocale as AppLocale)
-    : routing.defaultLocale;
+  const { cargoId, locale } = payload;
 
   const cargoes = readMock('cargoes') as Cargo[];
   const cargo = cargoes.find((item) => item.id === cargoId);

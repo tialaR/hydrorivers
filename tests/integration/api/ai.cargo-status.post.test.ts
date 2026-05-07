@@ -15,6 +15,7 @@ vi.mock('@/shared/server/mock-db', () => ({
 
 import { POST } from '@/app/api/ai/cargo-status/route';
 import type { Cargo } from '@/features/marketplace/domain/marketplace.types';
+import { buildCargoStatusAssist } from '@/features/ai-assist/services/cargo-status-assistant';
 import { apiRoutes } from '@/shared/routing/api-routes';
 
 const cargoStatusPostUrl = `http://localhost${apiRoutes.ai.cargoStatus}`;
@@ -220,6 +221,109 @@ describe('POST /api/ai/cargo-status', () => {
 
     const response = await post({ locale: 'pt-BR' });
     expect(response.status).toBe(400);
+  });
+
+  it('retorna 400 quando cargoId é string vazia', async () => {
+    mockGetSessionUser.mockResolvedValue({
+      id: 'u-admin-1',
+      name: 'Admin',
+      email: 'admin@test.com',
+      company: 'Hydro',
+      role: 'admin',
+      approved: true
+    });
+
+    const response = await post({ cargoId: '   ', locale: 'pt-BR' });
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toMatchObject({ error: 'invalid-payload', reason: 'missing-cargo-id' });
+  });
+
+  it('locale inválido usa fallback para defaultLocale', async () => {
+    mockGetSessionUser.mockResolvedValue({
+      id: 'u-admin-1',
+      name: 'Admin',
+      email: 'admin@test.com',
+      company: 'Hydro',
+      role: 'admin',
+      approved: true
+    });
+    mockReadMock.mockImplementation((key: string) => {
+      if (key === 'cargoes') return [baseCargo];
+      if (key === 'negotiations') return [];
+      return [];
+    });
+
+    const response = await post({ cargoId: 'cargo-test-1', locale: 'en' });
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    const expected = buildCargoStatusAssist(baseCargo, 'pt-BR');
+    expect(body.data).toMatchObject(expected);
+  });
+
+  it('locale en-US funciona explicitamente', async () => {
+    mockGetSessionUser.mockResolvedValue({
+      id: 'u-admin-1',
+      name: 'Admin',
+      email: 'admin@test.com',
+      company: 'Hydro',
+      role: 'admin',
+      approved: true
+    });
+    mockReadMock.mockImplementation((key: string) => {
+      if (key === 'cargoes') return [baseCargo];
+      if (key === 'negotiations') return [];
+      return [];
+    });
+
+    const response = await post({ cargoId: 'cargo-test-1', locale: 'en-US' });
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    const expected = buildCargoStatusAssist(baseCargo, 'en-US');
+    expect(body.data).toMatchObject(expected);
+  });
+
+  it('locale es funciona explicitamente', async () => {
+    mockGetSessionUser.mockResolvedValue({
+      id: 'u-admin-1',
+      name: 'Admin',
+      email: 'admin@test.com',
+      company: 'Hydro',
+      role: 'admin',
+      approved: true
+    });
+    mockReadMock.mockImplementation((key: string) => {
+      if (key === 'cargoes') return [baseCargo];
+      if (key === 'negotiations') return [];
+      return [];
+    });
+
+    const response = await post({ cargoId: 'cargo-test-1', locale: 'es' });
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    const expected = buildCargoStatusAssist(baseCargo, 'es');
+    expect(body.data).toMatchObject(expected);
+  });
+
+  it('locale pt-BR funciona explicitamente', async () => {
+    mockGetSessionUser.mockResolvedValue({
+      id: 'u-admin-1',
+      name: 'Admin',
+      email: 'admin@test.com',
+      company: 'Hydro',
+      role: 'admin',
+      approved: true
+    });
+    mockReadMock.mockImplementation((key: string) => {
+      if (key === 'cargoes') return [baseCargo];
+      if (key === 'negotiations') return [];
+      return [];
+    });
+
+    const response = await post({ cargoId: 'cargo-test-1', locale: 'pt-BR' });
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    const expected = buildCargoStatusAssist(baseCargo, 'pt-BR');
+    expect(body.data).toMatchObject(expected);
   });
 
   it('JSON da resposta não expõe passwordHash nem outros campos da sessão', async () => {
