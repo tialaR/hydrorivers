@@ -131,10 +131,24 @@ export function CargoStatusAssistantCard({ cargoId }: Props) {
 
         {state === 'success' && assist ? (
           <>
+            {assist.heading ? (
+              <section className={styles.section} aria-labelledby="cargo-ai-heading">
+                <h4 id="cargo-ai-heading" className={styles.sectionTitle}>{t('headingLabel')}</h4>
+                <p className={styles.body}>{assist.heading}</p>
+              </section>
+            ) : null}
+
             <section className={styles.section} aria-labelledby="cargo-ai-summary">
               <h4 id="cargo-ai-summary" className={styles.sectionTitle}>{t('summaryLabel')}</h4>
               <p className={styles.body}>{assist.summary}</p>
             </section>
+
+            {assist.explanation ? (
+              <section className={styles.section} aria-labelledby="cargo-ai-explanation">
+                <h4 id="cargo-ai-explanation" className={styles.sectionTitle}>{t('explanationLabel')}</h4>
+                <p className={styles.body}>{assist.explanation}</p>
+              </section>
+            ) : null}
 
             <section className={styles.section} aria-labelledby="cargo-ai-next">
               <h4 id="cargo-ai-next" className={styles.sectionTitle}>{t('nextStepsLabel')}</h4>
@@ -162,6 +176,13 @@ export function CargoStatusAssistantCard({ cargoId }: Props) {
                 <p className={styles.empty}>{t('emptyList')}</p>
               )}
             </section>
+
+            {assist.attentionPoints?.length ? (
+              <section className={styles.section} aria-labelledby="cargo-ai-attention">
+                <h4 id="cargo-ai-attention" className={styles.sectionTitle}>{t('attentionPointsLabel')}</h4>
+                <ul className={styles.list}>{assist.attentionPoints.map((item, index) => <li key={`a-${index}`}>{item}</li>)}</ul>
+              </section>
+            ) : null}
 
             <div className={styles.meta}>
               <span><strong>{t('confidenceLabel')}:</strong> {confidenceLabel}</span>
