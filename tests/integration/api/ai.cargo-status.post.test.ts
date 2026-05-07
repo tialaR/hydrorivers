@@ -347,5 +347,76 @@ describe('POST /api/ai/cargo-status', () => {
     const bodyText = JSON.stringify(await response.json());
     expect(bodyText).not.toContain('NEVER_LEAK_THIS_HASH_VALUE');
     expect(bodyText).not.toContain('passwordHash');
+    expect(bodyText).not.toContain('token');
+    expect(bodyText).not.toContain('session');
+  });
+
+  it('resposta 200 inclui apenas contrato público do assistente', async () => {
+    mockGetSessionUser.mockResolvedValue({
+      id: 'u-admin-1',
+      name: 'Admin',
+      email: 'admin@test.com',
+      company: 'Hydro',
+      role: 'admin',
+      approved: true,
+      passwordHash: 'HASH_SHOULD_NOT_LEAK'
+    });
+    mockReadMock.mockImplementation((key: string) => {
+      if (key === 'cargoes') {
+        return [{
+          ...baseCargo,
+          ownerId: 'u-shipper-1',
+          shipperId: 'u-shipper-1',
+          carrierId: 'u-carrier-1',
+          negotiationIds: ['n1']
+        }];
+      }
+      if (key === 'negotiations') return [];
+      return [];
+    });
+
+    const response = await post({ cargoId: 'cargo-test-1', locale: 'pt-BR' });
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body).toEqual({
+      data: expect.objectContaining({
+        summary: expect.any(String),
+        nextSteps: expect.any(Array),
+        blockers: expect.any(Array),
+        risks: expect.any(Array),
+        confidence: expect.stringMatching(/^(low|medium|high)$/),
+        source: expect.stringMatching(/^(mock-ai|fallback-rule)$/)
+      })
+    });
+
+    const bodyText = JSON.stringify(body);
+    expect(bodyText).not.toContain('HASH_SHOULD_NOT_LEAK');
+    expect(bodyText).not.toContain('passwordHash');
+    expect(bodyText).not.toContain('ownerId');
+    expect(bodyText).not.toContain('shipperId');
+    expect(bodyText).not.toContain('carrierId');
+    expect(bodyText).not.toContain('negotiationIds');
+  });
+
+  it('retorna 500 genérico quando ocorre erro interno inesperado', async () => {
+    mockGetSessionUser.mockResolvedValue({
+      id: 'u-admin-1',
+      name: 'Admin',
+      email: 'admin@test.com',
+      company: 'Hydro',
+      role: 'admin',
+      approved: true
+    });
+    mockReadMock.mockImplementation((key: string) => {
+      if (key === 'cargoes') throw new Error('database connection failed: secret details');
+      if (key === 'negotiations') return [];
+      return [];
+    });
+
+    const response = await post({ cargoId: 'cargo-test-1', locale: 'pt-BR' });
+    expect(response.status).toBe(500);
+    const body = await response.json();
+    expect(body).toEqual({ error: 'internal-server-error' });
+    expect(JSON.stringify(body)).not.toContain('secret details');
   });
 });
