@@ -175,9 +175,15 @@ export function CargoDetail({ cargo, viewer }: { cargo: Cargo; viewer?: CargoVie
         </div>
       </Card>
 
-      <div className={styles.assistantRow}>
-        <CargoStatusAssistantCard cargoId={cargo.id} />
-      </div>
+      {cargo.id.trim() ? (
+        <div className={styles.assistantRow}>
+          <CargoStatusAssistantCard
+            cargoId={cargo.id}
+            cargoName={translateMock(locale, cargo.title)}
+            cargoStatus={cargo.status}
+          />
+        </div>
+      ) : null}
 
       <Card className={styles.docCard}>
         <div className={styles.docHeader}>

@@ -29,11 +29,94 @@
     "subpageContext": "contexto operacional ativo"
   },
   "cargoStatusAi": {
+    "card": {
+      "eyebrow": "ASSISTENTE DA OPERAÇÃO",
+      "title": "Assistente da carga",
+      "greeting": "Olá! Sou seu assistente dessa carga.",
+      "collapsedTitle": "Estou acompanhando {cargoName} e organizei os pontos mais importantes para você.",
+      "collapsedDescription": "Preparei uma visão simples para mostrar o que já avançou, o que merece atenção e o que vale fazer agora.",
+      "expandedIntro": "Aqui vai um resumo claro para ajudar você a entender o momento da carga com mais tranquilidade.",
+      "expandAction": "Ver orientação",
+      "collapseAction": "Ocultar orientação",
+      "currentStage": "Etapa atual",
+      "nextStepsCount": "{count, plural, =0 {Sem próximos passos} one {# próximo passo} other {# próximos passos}}",
+      "alertsCount": "{count, plural, =0 {Sem alertas} one {# alerta} other {# alertas}}",
+      "blockersCount": "{count, plural, one {# bloqueador} other {# bloqueadores}}",
+      "noBlockers": "Sem bloqueadores",
+      "fallbackCargoName": "esta carga"
+    },
+    "sections": {
+      "timeline": "Linha da carga",
+      "summary": "Resumo da situação",
+      "explanation": "O que isso significa",
+      "nextSteps": "Próximos passos sugeridos",
+      "attentionPoints": "Pontos de atenção",
+      "blockers": "Bloqueadores",
+      "risks": "Riscos e alertas",
+      "meta": "Contexto da análise"
+    },
+    "stages": {
+      "open": "Aberta",
+      "bidding": "Em negociação",
+      "contracting": "Em contratação",
+      "reserved": "Reservada",
+      "boarded": "Embarcada",
+      "delivered": "Entregue",
+      "unknown": "Etapa não identificada"
+    },
+    "emptyStates": {
+      "noBlockers": "Nenhum bloqueador crítico identificado no momento.",
+      "noAlerts": "Nenhum ponto de atenção relevante por enquanto.",
+      "noNextSteps": "Nenhum próximo passo sugerido para esta etapa."
+    },
+    "states": {
+      "idleTitle": "Assistente pronto para analisar",
+      "idleDescription": "Abra o painel para ver um resumo claro da situação da carga.",
+      "loadingTitle": "Analisando a carga",
+      "loadingDescription": "Estou organizando os principais sinais operacionais para você.",
+      "unauthorizedTitle": "Faça login para continuar",
+      "unauthorizedDescription": "Entre na sua conta para acessar a análise desta carga.",
+      "forbiddenTitle": "Sem acesso a esta análise",
+      "forbiddenDescription": "Seu perfil não possui permissão para visualizar este assistente nesta carga.",
+      "errorTitle": "Não consegui concluir a análise",
+      "errorDescription": "Tente novamente em instantes para atualizar a leitura da carga.",
+      "retryAction": "Tentar novamente"
+    },
+    "meta": {
+      "basedOnCurrentData": "Baseado nos dados atuais da carga",
+      "confidence": "Confiança",
+      "confidenceLow": "Baixa",
+      "confidenceMedium": "Média",
+      "confidenceHigh": "Alta",
+      "mockSource": "Análise gerada por simulação interna",
+      "disclaimer": "Esta orientação não substitui validação operacional, contrato ou liberação documental."
+    },
     "cardTitle": "Assistente de status da carga",
-    "cardHint": "Texto gerado por simulação interna (sem provedor externo). Não substitui decisão operacional, contrato nem liberação documental.",
-    "disclaimerShort": "Sugestão e resumo automáticos (mock).",
+    "cardHint": "Revise este painel para entender rapidamente a fase atual da carga e agir com mais confiança operacional.",
+    "disclaimerShort": "Assistência contextual (simulação interna).",
+    "assistantGreeting": "Sou seu assistente da carga {cargoName}.",
+    "assistantDescription": "Estou aqui para resumir a situação atual, sugerir próximos passos e destacar pontos de atenção.",
+    "expandCta": "Expandir assistência",
+    "collapseCta": "Recolher assistência",
+    "cargoFallbackName": "atual",
+    "currentStageLabel": "Etapa atual",
+    "timelineTitle": "Linha de progresso da carga",
+    "timeline": {
+      "hints": {
+        "open": "Sua carga está aberta no marketplace e pronta para atrair propostas qualificadas.",
+        "bidding": "Sua carga está em cotação. Este é o momento de comparar propostas com atenção.",
+        "contracting": "Sua carga entrou em contratação. Foque em validar cláusulas e documentos críticos.",
+        "reserved": "Sua carga já está reservada. Agora priorize a preparação final para embarque.",
+        "boarded": "Sua carga está em trânsito. Monitore ocorrências e mantenha contingências ativas.",
+        "delivered": "Sua carga foi entregue. O foco agora é fechamento documental e lições aprendidas.",
+        "unknown": "Não consegui identificar a etapa com precisão. Recomendo revisar o contexto desta carga."
+      }
+    },
     "summaryLabel": "Resumo",
+    "headingLabel": "Título do status",
+    "explanationLabel": "Explicação do status atual",
     "nextStepsLabel": "Próximos passos sugeridos",
+    "attentionPointsLabel": "Pontos de atenção",
     "blockersLabel": "Bloqueadores",
     "risksLabel": "Riscos e alertas",
     "confidenceLabel": "Confiança da análise",
@@ -51,13 +134,22 @@
     "forbiddenHint": "Sua sessão não tem permissão para esta assistência nesta carga.",
     "loadError": "Não foi possível carregar a assistência agora.",
     "retry": "Atualizar assistência",
+    "idleHint": "Preparando a assistência de status desta carga.",
     "loading": "Gerando resumo…",
     "emptyList": "Nenhum item.",
+    "errors": {
+      "invalidCargoId": "Não foi possível solicitar assistência: identificador da carga ausente ou inválido.",
+      "badRequest": "Não foi possível solicitar assistência com os dados atuais da carga.",
+      "notFound": "Esta carga não foi encontrada para gerar assistência de status.",
+      "generic": "Não foi possível carregar a assistência agora."
+    },
     "extra": {
       "lowDocumentReadiness": "Prontidão documental baixa ({value}%) — pode atrasar reserva e checagens."
     },
     "fallback": {
+      "heading": "Status não mapeado",
       "summary": "Estado da carga não mapeado nesta versão do assistente. Revise manualmente a ficha, documentos e negociações.",
+      "explanation": "Ainda não consegui identificar essa etapa com precisão. Vou te apoiar com uma orientação segura de fallback para você seguir sem perder contexto.",
       "nextSteps": [
         "Valide o status com o time operacional.",
         "Confira documentação e próximos marcos no painel da carga."
@@ -65,11 +157,14 @@
       "blockers": [],
       "risks": [
         "Interpretação automática limitada — confirme em fonte oficial."
-      ]
+      ],
+      "attentionPoints": []
     },
     "status": {
       "open": {
+        "heading": "Status aberto",
         "summary": "Carga publicada no marketplace; aguardando propostas alinhadas a rota, tipo e restrições declaradas.",
+        "explanation": "Ainda não há transporte confirmado. Agora o ideal é atrair propostas compatíveis e organizar as informações-chave para acelerar a próxima decisão.",
         "nextSteps": [
           "Conferir pacote documental sugerido e lacunas antes da primeira reserva.",
           "Monitorar janela operacional e sinalização de interesse no corredor.",
@@ -79,10 +174,13 @@
         "risks": [
           "Propostas incompatíveis com calado, temperatura ou prazo podem atrasar o encaixe logístico.",
           "Baixa conectividade na origem pode postergar atualização de status percebido pelo mercado."
-        ]
+        ],
+        "attentionPoints": []
       },
       "bidding": {
+        "heading": "Status em cotação",
         "summary": "Há cotações ou contrapropostas em análise; a decisão segue com o embarcador e as partes envolvidas.",
+        "explanation": "Sua carga já está em negociação. Este é o momento de comparar opções com calma para fechar a melhor combinação entre preço, prazo e segurança documental.",
         "nextSteps": [
           "Comparar termos, valores e compromissos documentais de cada proposta.",
           "Pedir ajustes formais quando faltar evidência ou cláusula operacional.",
@@ -92,10 +190,13 @@
         "risks": [
           "Estagnação na fase de lances pode expirar a janela de embarque planejada.",
           "Ambiguidade em documentação fiscal ou sanitária pode reabrir negociação."
-        ]
+        ],
+        "attentionPoints": []
       },
       "contracting": {
+        "heading": "Status em contratação",
         "summary": "Negociação avançou para contratação; foco em formalização, documentos e reserva de capacidade.",
+        "explanation": "Você está perto do fechamento. O foco agora é validar os últimos detalhes contratuais e operacionais para seguir com confiança.",
         "nextSteps": [
           "Validar minutas, garantias e responsabilidades antes do aceite final.",
           "Sincronizar embarque com disponibilidade real de cais e calado.",
@@ -105,23 +206,31 @@
         "risks": [
           "Retrocesso contratual se exigências regulatórias não forem atendidas a tempo.",
           "Dependência de terceiros (terminal, fiscalização) pode alongar prazos."
-        ]
+        ],
+        "attentionPoints": []
       },
       "reserved": {
-        "summary": "Capacidade ou condição de reserva acordada; preparar embarque e conformidade final.",
+        "heading": "Status reservado",
+        "summary": "Sua carga já está reservada. Agora vale alinhar os detalhes finais para seguir ao embarque com mais segurança.",
+        "explanation": "A operação já tem uma reserva confirmada. Para manter o fluxo sem atrasos, vale concluir as últimas pendências desta etapa.",
         "nextSteps": [
-          "Confirmar lacres, temperatura e lotes com o transportador.",
-          "Fechar pendências documentais ainda listadas como obrigatórias.",
-          "Agendar janela de atracação e conferência no cais."
+          "Vale confirmar lacres, temperatura e lotes com o transportador.",
+          "Agora é um bom momento para finalizar a documentação obrigatória.",
+          "Depois disso, recomenda-se agendar a janela de atracação e a conferência no cais."
         ],
         "blockers": [],
         "risks": [
-          "Última milha documental ainda pode bloquear liberação física da carga.",
-          "Condições fluviais ou portuárias podem exigir replanejamento fino."
-        ]
+          "Ainda existem ajustes documentais que podem atrasar a liberação da carga se não forem resolvidos a tempo.",
+          "Condições fluviais ou portuárias podem exigir pequenos ajustes no planejamento.",
+          "A janela de cadeia fria é curta e merece atenção extra.",
+          "O sinal entre terminais menores pode variar e reduzir a previsibilidade do acompanhamento."
+        ],
+        "attentionPoints": []
       },
       "boarded": {
+        "heading": "Status embarcada/em trânsito",
         "summary": "Carga embarcada ou em trânsito fluvial; monitorar eventos, sincronização e provas operacionais.",
+        "explanation": "A operação está em movimento. O foco passa a ser visibilidade do trajeto, resposta rápida a ocorrências e comunicação clara com todos os envolvidos.",
         "nextSteps": [
           "Acompanhar rastreio e registros de ocorrência ao longo do corredor.",
           "Garantir canal de contingência para atrasos ou desvios de rota.",
@@ -131,10 +240,13 @@
         "risks": [
           "Trechos com sinal limitado podem atrasar visibilidade em tempo quase real.",
           "Variações sazonais podem impactar ETA e conexões cabotadas."
-        ]
+        ],
+        "attentionPoints": []
       },
       "delivered": {
+        "heading": "Status entregue",
         "summary": "Fluxo principal concluído do ponto de vista operacional simulado; foco em comprovações e encerramento.",
+        "explanation": "A entrega principal foi concluída. Agora vale finalizar documentos, registrar aprendizados e encerrar a operação com segurança.",
         "nextSteps": [
           "Arquivar comprovantes, POD e comunicações relevantes.",
           "Registrar lições aprendidas e indicadores para próximos ciclos.",
@@ -144,7 +256,8 @@
         "risks": [
           "Pendências pós-entrega (divergência de volume, avaria) podem surgir após o desembarque.",
           "Retenção de documentos incompletos pode afetar auditoria futura."
-        ]
+        ],
+        "attentionPoints": []
       }
     }
   },

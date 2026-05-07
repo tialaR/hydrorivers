@@ -10,10 +10,13 @@ import messagesPt from '../../../../messages/pt-BR.json';
 
 type Messages = typeof messagesPt;
 type StatusBundle = {
+  heading?: string;
   summary: string;
+  explanation?: string;
   nextSteps: string[];
   blockers: string[];
   risks: string[];
+  attentionPoints?: string[];
 };
 
 const bundles: Record<AppLocale, Messages> = {
@@ -28,16 +31,25 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function asStatusBundle(value: unknown): StatusBundle | null {
   if (!isRecord(value)) return null;
-  const { summary, nextSteps, blockers, risks } = value;
+  const { heading, summary, explanation, nextSteps, blockers, risks, attentionPoints } = value;
   if (typeof summary !== 'string' || !Array.isArray(nextSteps) || !Array.isArray(blockers) || !Array.isArray(risks)) return null;
+  if (heading !== undefined && typeof heading !== 'string') return null;
+  if (explanation !== undefined && typeof explanation !== 'string') return null;
   if (!nextSteps.every((item) => typeof item === 'string')) return null;
   if (!blockers.every((item) => typeof item === 'string')) return null;
   if (!risks.every((item) => typeof item === 'string')) return null;
+  if (attentionPoints !== undefined) {
+    if (!Array.isArray(attentionPoints)) return null;
+    if (!attentionPoints.every((item) => typeof item === 'string')) return null;
+  }
   return {
+    heading,
     summary,
+    explanation,
     nextSteps: nextSteps as string[],
     blockers: blockers as string[],
-    risks: risks as string[]
+    risks: risks as string[],
+    attentionPoints: attentionPoints as string[] | undefined
   };
 }
 
@@ -83,12 +95,17 @@ export function buildCargoStatusAssist(cargo: Cargo, locale: AppLocale): AiAssis
   if (extra) blockers.push(extra);
 
   const risks = [...bundle.risks, ...translatedOperationalRisks(locale, cargo)];
+  const attentionPoints = [...(bundle.attentionPoints ?? [])];
+  if (extra) attentionPoints.push(extra);
 
   return {
+    heading: bundle.heading,
     summary: bundle.summary,
+    explanation: bundle.explanation,
     nextSteps: [...bundle.nextSteps],
     blockers,
     risks,
+    attentionPoints,
     confidence: resolveConfidence(cargo, source),
     source
   };

@@ -6,7 +6,7 @@ Explicar, em linguagem operacional, o **status atual de uma carga** na tela de d
 
 ## Escopo
 
-- Endpoint: `POST /api/ai/cargo-status` com corpo JSON `{ "cargoId": string, "locale"?: "pt-BR" | "en" | "es" }`.
+- Endpoint: `POST /api/ai/cargo-status` com corpo JSON `{ "cargoId": string, "locale"?: "pt-BR" | "en-US" | "es" }`.
 - Resposta: `{ "data": AiAssistResponse }` onde `AiAssistResponse` inclui `summary`, `nextSteps[]`, `blockers[]`, `risks[]`, `confidence`, `source`.
 - UI: card na página `[locale]/cargas/[id]` (`CargoStatusAssistantCard`), com aviso claro de que é **assistência / sugestão**, não decisão automática.
 
@@ -43,7 +43,7 @@ A função `reportDevScenario` permanece no mesmo pacote para cenários dev quan
 ## Validação manual
 
 1. Abrir o detalhe de uma carga com usuário **embarcador** dono da carga ou **transportador** em negociação vinculada (ou **admin**).
-2. Confirmar que o card carrega resumo e listas em **pt-BR**, **en** ou **es** conforme o locale da UI.
+2. Confirmar que o card carrega resumo e listas em **pt-BR**, **en-US** ou **es** conforme o locale da UI.
 3. Sem login, ver mensagem orientando entrar na conta (401 tratado no cliente).
 4. Opcional: inspecionar `POST /api/ai/cargo-status` no DevTools (rede) e validar o JSON de `data`.
 
