@@ -30,13 +30,13 @@
   },
   "cargoStatusAi": {
     "card": {
-      "eyebrow": "Asistente operativo",
+      "eyebrow": "Asistente de la operación",
       "title": "Asistente de la carga",
-      "collapsedTitle": "Soy tu asistente para \"{cargoName}\".",
-      "collapsedDescription": "Revisé la operación y organicé los puntos más importantes para ayudarte a avanzar con más claridad y seguridad.",
-      "expandedIntro": "Estoy aquí para ayudarte a entender la etapa actual, lo que ya avanzó y lo que merece atención ahora.",
-      "expandAction": "Ver análisis",
-      "collapseAction": "Ocultar análisis",
+      "collapsedTitle": "¡Hola! Estoy siguiendo {cargoName} y organicé los puntos más importantes para ti.",
+      "collapsedDescription": "Preparé una vista simple para mostrar qué ya avanzó, qué merece atención y cuáles son los próximos pasos.",
+      "expandedIntro": "Quiero ayudarte a entender con claridad el momento de la carga y decidir qué conviene hacer ahora.",
+      "expandAction": "Ver orientación",
+      "collapseAction": "Ocultar orientación",
       "currentStage": "Etapa actual",
       "nextStepsCount": "{count, plural, =0 {Sin próximos pasos} one {# próximo paso} other {# próximos pasos}}",
       "alertsCount": "{count, plural, =0 {Sin alertas} one {# alerta} other {# alertas}}",
@@ -210,7 +210,7 @@
       },
       "reserved": {
         "heading": "Estado reservada",
-        "summary": "Capacidad o condición de reserva acordada; preparar embarque y conformidad final.",
+        "summary": "Tu carga ya está reservada. Ahora conviene alinear los detalles finales para avanzar hacia el embarque con más seguridad.",
         "explanation": "La operación ya tiene una reserva confirmada. Para mantener el flujo sin retrasos, conviene cerrar las últimas pendientes de esta etapa.",
         "nextSteps": [
           "Conviene confirmar precintos, temperatura y lotes con el transportista.",

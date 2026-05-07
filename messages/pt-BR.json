@@ -30,13 +30,13 @@
   },
   "cargoStatusAi": {
     "card": {
-      "eyebrow": "Assistente operacional",
+      "eyebrow": "Assistente da operação",
       "title": "Assistente da carga",
-      "collapsedTitle": "Sou seu assistente da carga \"{cargoName}\".",
-      "collapsedDescription": "Revisei a operação e organizei os pontos mais importantes para ajudar você a seguir com mais clareza e segurança.",
-      "expandedIntro": "Estou aqui para ajudar você a entender a etapa atual, o que já avançou e o que merece atenção agora.",
-      "expandAction": "Ver análise",
-      "collapseAction": "Ocultar análise",
+      "collapsedTitle": "Olá! Estou acompanhando {cargoName} e organizei os pontos mais importantes para você.",
+      "collapsedDescription": "Preparei uma visão simples para mostrar o que já avançou, o que merece atenção e quais são os próximos passos.",
+      "expandedIntro": "Quero ajudar você a entender o momento da carga com clareza e decidir o que vale fazer agora.",
+      "expandAction": "Ver orientação",
+      "collapseAction": "Ocultar orientação",
       "currentStage": "Etapa atual",
       "nextStepsCount": "{count, plural, =0 {Sem próximos passos} one {# próximo passo} other {# próximos passos}}",
       "alertsCount": "{count, plural, =0 {Sem alertas} one {# alerta} other {# alertas}}",
@@ -210,7 +210,7 @@
       },
       "reserved": {
         "heading": "Status reservado",
-        "summary": "Capacidade ou condição de reserva acordada; preparar embarque e conformidade final.",
+        "summary": "Sua carga já está reservada. Agora vale alinhar os detalhes finais para seguir ao embarque com mais segurança.",
         "explanation": "A operação já tem uma reserva confirmada. Para manter o fluxo sem atrasos, vale concluir as últimas pendências desta etapa.",
         "nextSteps": [
           "Vale confirmar lacres, temperatura e lotes com o transportador.",

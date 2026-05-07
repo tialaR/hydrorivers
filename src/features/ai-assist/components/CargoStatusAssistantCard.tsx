@@ -142,7 +142,7 @@ export function CargoStatusAssistantCard({ cargoId, cargoName, cargoStatus = 'op
         >
           <div className={styles.triggerMain}>
             <div className={styles.avatar} aria-hidden="true">
-              <HydroIcon name="message" size={20} />
+              <HydroIcon name="user" size={22} />
             </div>
             <div className={styles.triggerText}>
               <span className={styles.kicker}>{t('card.eyebrow')}</span>
@@ -153,20 +153,20 @@ export function CargoStatusAssistantCard({ cargoId, cargoName, cargoStatus = 'op
           </div>
           <div className={styles.triggerMeta}>
             <span className={styles.stageChip}>
-              <HydroIcon name="route" size={14} />
+              <HydroIcon name="route" size={16} />
               {t('card.currentStage')}: {currentStageLabel}
             </span>
             <span className={styles.counterChip}>
-              <HydroIcon name="shield" size={13} />
+              <HydroIcon name="shield" size={15} />
               {t('card.alertsCount', { count: attentionCount })}
             </span>
             <span className={styles.counterChip}>
-              <HydroIcon name="check" size={13} />
+              <HydroIcon name="check" size={15} />
               {t('card.nextStepsCount', { count: nextStepsCount })}
             </span>
             <span className={styles.cta}>
               {expanded ? t('card.collapseAction') : t('card.expandAction')}
-              <HydroIcon name="chevronDown" size={16} className={expanded ? styles.chevronUp : styles.chevronDown} />
+              <HydroIcon name="chevronDown" size={17} className={expanded ? styles.chevronUp : styles.chevronDown} />
             </span>
           </div>
         </button>

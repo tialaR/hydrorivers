@@ -30,13 +30,13 @@
   },
   "cargoStatusAi": {
     "card": {
-      "eyebrow": "Operational assistant",
+      "eyebrow": "Operations assistant",
       "title": "Cargo assistant",
-      "collapsedTitle": "I’m your assistant for \"{cargoName}\".",
-      "collapsedDescription": "I reviewed the operation and organized the key points to help you move forward with more clarity and confidence.",
-      "expandedIntro": "I am here to help you understand the current stage, what has already progressed, and what deserves attention now.",
-      "expandAction": "View analysis",
-      "collapseAction": "Hide analysis",
+      "collapsedTitle": "Hi! I’m following {cargoName} and I organized the most important points for you.",
+      "collapsedDescription": "I prepared a simple view to show what already moved forward, what deserves attention, and the best next steps.",
+      "expandedIntro": "I want to help you understand the cargo moment clearly and decide what is worth doing now.",
+      "expandAction": "View guidance",
+      "collapseAction": "Hide guidance",
       "currentStage": "Current stage",
       "nextStepsCount": "{count, plural, =0 {No next steps} one {# next step} other {# next steps}}",
       "alertsCount": "{count, plural, =0 {No alerts} one {# alert} other {# alerts}}",
@@ -210,7 +210,7 @@
       },
       "reserved": {
         "heading": "Reserved status",
-        "summary": "Capacity or booking condition agreed; prepare loading and final compliance.",
+        "summary": "Your cargo is already reserved. Now it is worth aligning the final details so boarding can move forward more safely.",
         "explanation": "The operation already has a confirmed reservation. To keep things moving without delays, it is worth closing the final pending items for this stage.",
         "nextSteps": [
           "Confirm seals, temperature, and lots with the carrier.",
