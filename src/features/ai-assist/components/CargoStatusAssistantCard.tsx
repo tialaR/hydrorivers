@@ -51,7 +51,6 @@ export function CargoStatusAssistantCard({ cargoId, cargoName, cargoStatus = 'op
   const currentStageLabel = t(`stages.${currentStage}`);
   const attentionCount = assist?.attentionPoints?.length ?? 0;
   const nextStepsCount = assist?.nextSteps.length ?? 0;
-  const blockersCount = assist?.blockers.length ?? 0;
 
   const load = useCallback(async () => {
     setAttemptedLoad(true);
@@ -143,7 +142,7 @@ export function CargoStatusAssistantCard({ cargoId, cargoName, cargoStatus = 'op
         >
           <div className={styles.triggerMain}>
             <div className={styles.avatar} aria-hidden="true">
-              <HydroIcon name="user" size={18} />
+              <HydroIcon name="message" size={20} />
             </div>
             <div className={styles.triggerText}>
               <span className={styles.kicker}>{t('card.eyebrow')}</span>
@@ -164,10 +163,6 @@ export function CargoStatusAssistantCard({ cargoId, cargoName, cargoStatus = 'op
             <span className={styles.counterChip}>
               <HydroIcon name="check" size={13} />
               {t('card.nextStepsCount', { count: nextStepsCount })}
-            </span>
-            <span className={styles.counterChip}>
-              <HydroIcon name="anchor" size={13} />
-              {blockersCount > 0 ? t('card.blockersCount', { count: blockersCount }) : t('card.noBlockers')}
             </span>
             <span className={styles.cta}>
               {expanded ? t('card.collapseAction') : t('card.expandAction')}
@@ -252,9 +247,9 @@ export function CargoStatusAssistantCard({ cargoId, cargoName, cargoStatus = 'op
             {state === 'success' && assist ? (
               <>
                 {assist.heading ? (
-                  <section className={styles.section} aria-labelledby="cargo-ai-heading">
+                  <section className={`${styles.section} ${styles.sectionHeader}`} aria-labelledby="cargo-ai-heading">
                     <h4 id="cargo-ai-heading" className={styles.sectionTitle}>
-                      <HydroIcon name="info" size={15} />
+                      <span className={styles.sectionIcon}><HydroIcon name="info" size={16} /></span>
                       {t('card.title')}
                     </h4>
                     <p className={styles.body}>{t('card.collapsedTitle', { cargoName: normalizedCargoName })}</p>
@@ -262,77 +257,103 @@ export function CargoStatusAssistantCard({ cargoId, cargoName, cargoStatus = 'op
                   </section>
                 ) : null}
 
-                <section className={styles.section} aria-labelledby="cargo-ai-summary">
+                <section className={`${styles.section} ${styles.sectionSummary}`} aria-labelledby="cargo-ai-summary">
                   <h4 id="cargo-ai-summary" className={styles.sectionTitle}>
-                    <HydroIcon name="document" size={15} />
+                    <span className={styles.sectionIcon}><HydroIcon name="document" size={16} /></span>
                     {t('sections.summary')}
                   </h4>
                   <p className={styles.body}>{assist.summary}</p>
                 </section>
 
                 {assist.explanation ? (
-                  <section className={styles.section} aria-labelledby="cargo-ai-explanation">
+                  <section className={`${styles.section} ${styles.sectionExplanation}`} aria-labelledby="cargo-ai-explanation">
                     <h4 id="cargo-ai-explanation" className={styles.sectionTitle}>
-                      <HydroIcon name="message" size={15} />
+                      <span className={styles.sectionIcon}><HydroIcon name="message" size={16} /></span>
                       {t('sections.explanation')}
                     </h4>
                     <p className={styles.body}>{assist.explanation}</p>
                   </section>
                 ) : null}
 
-                <section className={styles.section} aria-labelledby="cargo-ai-next">
+                <section className={`${styles.section} ${styles.sectionNext}`} aria-labelledby="cargo-ai-next">
                   <h4 id="cargo-ai-next" className={styles.sectionTitle}>
-                    <HydroIcon name="check" size={15} />
+                    <span className={styles.sectionIcon}><HydroIcon name="check" size={16} /></span>
                     {t('sections.nextSteps')}
                   </h4>
                   {assist.nextSteps.length ? (
-                    <ul className={styles.listCards}>{assist.nextSteps.map((item, index) => <li key={`n-${index}`}>{item}</li>)}</ul>
+                    <ul className={styles.listCards}>
+                      {assist.nextSteps.map((item, index) => (
+                        <li key={`n-${index}`}>
+                          <span className={styles.itemBadge}>{index + 1}</span>
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
                   ) : (
                     <p className={styles.empty}>{t('emptyStates.noNextSteps')}</p>
                   )}
                 </section>
 
-                <section className={styles.section} aria-labelledby="cargo-ai-attention">
+                <section className={`${styles.section} ${styles.sectionAttention}`} aria-labelledby="cargo-ai-attention">
                   <h4 id="cargo-ai-attention" className={styles.sectionTitle}>
-                    <HydroIcon name="shield" size={15} />
+                    <span className={styles.sectionIcon}><HydroIcon name="shield" size={16} /></span>
                     {t('sections.attentionPoints')}
                   </h4>
                   {assist.attentionPoints?.length ? (
-                    <ul className={styles.listCards}>{assist.attentionPoints.map((item, index) => <li key={`a-${index}`}>{item}</li>)}</ul>
+                    <ul className={styles.listCards}>
+                      {assist.attentionPoints.map((item, index) => (
+                        <li key={`a-${index}`}>
+                          <span className={styles.itemBadge}><HydroIcon name="info" size={12} /></span>
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
                   ) : (
                     <p className={styles.empty}>{t('emptyStates.noAlerts')}</p>
                   )}
                 </section>
 
-                <section className={styles.section} aria-labelledby="cargo-ai-risks">
+                <section className={`${styles.section} ${styles.sectionRisks}`} aria-labelledby="cargo-ai-risks">
                   <h4 id="cargo-ai-risks" className={styles.sectionTitle}>
-                    <HydroIcon name="leaf" size={15} />
+                    <span className={styles.sectionIcon}><HydroIcon name="leaf" size={16} /></span>
                     {t('sections.risks')}
                   </h4>
                   {assist.risks.length ? (
-                    <ul className={styles.listCards}>{assist.risks.map((item, index) => <li key={`r-${index}`}>{item}</li>)}</ul>
+                    <ul className={styles.listCards}>
+                      {assist.risks.map((item, index) => (
+                        <li key={`r-${index}`}>
+                          <span className={styles.itemBadge}><HydroIcon name="leaf" size={12} /></span>
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
                   ) : (
                     <p className={styles.empty}>{t('emptyStates.noAlerts')}</p>
                   )}
                 </section>
 
-                <section className={styles.section} aria-labelledby="cargo-ai-blockers">
+                <section className={`${styles.section} ${styles.sectionBlockers}`} aria-labelledby="cargo-ai-blockers">
                   <h4 id="cargo-ai-blockers" className={styles.sectionTitle}>
-                    <HydroIcon name="anchor" size={15} />
+                    <span className={styles.sectionIcon}><HydroIcon name="anchor" size={16} /></span>
                     {t('sections.blockers')}
                   </h4>
                   {assist.blockers.length ? (
-                    <ul className={styles.listCards}>{assist.blockers.map((item, index) => <li key={`b-${index}`}>{item}</li>)}</ul>
+                    <ul className={styles.listCards}>
+                      {assist.blockers.map((item, index) => (
+                        <li key={`b-${index}`}>
+                          <span className={styles.itemBadge}><HydroIcon name="anchor" size={12} /></span>
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
                   ) : (
                     <p className={styles.empty}>{t('emptyStates.noBlockers')}</p>
                   )}
                 </section>
 
                 <div className={styles.meta}>
-                  <span>{t('meta.basedOnCurrentData')}</span>
-                  <span>{t('meta.confidence')}: {confidenceLabel}</span>
+                  <span>{t('meta.basedOnCurrentData')} • {t('meta.confidence')}: {confidenceLabel}</span>
                   <span>{t('meta.mockSource')}</span>
-                  <span>{t('meta.disclaimer')}</span>
                 </div>
               </>
             ) : null}

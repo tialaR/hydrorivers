@@ -148,7 +148,7 @@
     "fallback": {
       "heading": "Unmapped status",
       "summary": "Cargo state is not mapped in this assistant version. Manually review the record, documents, and negotiations.",
-      "explanation": "The received status does not have a dedicated assistance package in this phase. Guidance uses a deterministic fallback rule.",
+      "explanation": "I could not identify this stage precisely yet. I will support you with a safe fallback guidance so you can keep moving with context.",
       "nextSteps": [
         "Validate status with the operations team.",
         "Check documentation and upcoming milestones on the cargo view."
@@ -163,7 +163,7 @@
       "open": {
         "heading": "Open status",
         "summary": "Cargo posted on the marketplace; awaiting proposals aligned with route, type, and stated constraints.",
-        "explanation": "There is no confirmed transport commitment yet. The priority is to qualify proposals that match the cargo operational context.",
+        "explanation": "There is no confirmed transport commitment yet. The best move now is to attract compatible proposals and keep key information ready for a faster decision.",
         "nextSteps": [
           "Review the suggested document package and gaps before the first booking.",
           "Monitor the operating window and interest signals along the corridor.",
@@ -179,7 +179,7 @@
       "bidding": {
         "heading": "Bidding status",
         "summary": "Quotes or counteroffers are under review; the decision rests with the shipper and involved parties.",
-        "explanation": "The cargo has entered commercial discussions, but still depends on convergence across price, terms, and documentation.",
+        "explanation": "Your cargo is already in negotiation. This is the right moment to compare options carefully and balance price, timing, and documentary safety.",
         "nextSteps": [
           "Compare terms, amounts, and document commitments in each proposal.",
           "Request formal adjustments when evidence or an operational clause is missing.",
@@ -195,7 +195,7 @@
       "contracting": {
         "heading": "Contracting status",
         "summary": "Negotiation moved to contracting; focus on formalization, documents, and capacity booking.",
-        "explanation": "There is a clear intention to close, with priority on contractual and operational validation before execution.",
+        "explanation": "You are close to closing. Focus now on final contractual and operational checks to proceed with confidence.",
         "nextSteps": [
           "Validate drafts, guarantees, and responsibilities before final acceptance.",
           "Align loading with real berth and draft availability.",
@@ -211,7 +211,7 @@
       "reserved": {
         "heading": "Reserved status",
         "summary": "Capacity or booking condition agreed; prepare loading and final compliance.",
-        "explanation": "An operational reservation is active, and pending items should be closed to reduce replanning risk.",
+        "explanation": "Your cargo is already reserved. Now it is worth aligning final details to reduce risk and ensure a smooth boarding phase.",
         "nextSteps": [
           "Confirm seals, temperature, and batches with the carrier.",
           "Close document items still listed as mandatory.",
@@ -227,7 +227,7 @@
       "boarded": {
         "heading": "Loaded / in-transit status",
         "summary": "Cargo loaded or on inland waterway transit; monitor events, synchronization, and operational proof.",
-        "explanation": "The operation is now in logistics execution. The priority shifts to route predictability and incident handling.",
+        "explanation": "The operation is in motion. The priority now is route visibility, quick incident response, and clear communication with stakeholders.",
         "nextSteps": [
           "Follow tracking and incident logs along the corridor.",
           "Keep a contingency channel for delays or route deviations.",
@@ -243,7 +243,7 @@
       "delivered": {
         "heading": "Delivered status",
         "summary": "Main flow completed in the simulated operational view; focus on proof and closure.",
-        "explanation": "Delivery is complete in the main flow. Post-operation checks remain for documentary and financial closure.",
+        "explanation": "Main delivery is complete. The next step is to finalize documents, capture lessons learned, and close the operation safely.",
         "nextSteps": [
           "Archive proof of delivery, receipts, and relevant communications.",
           "Capture lessons learned and metrics for future cycles.",

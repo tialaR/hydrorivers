@@ -19,9 +19,9 @@
   border: 0;
   background: transparent;
   color: inherit;
-  padding: 1rem;
+  padding: 0.82rem 0.9rem;
   display: grid;
-  gap: 0.85rem;
+  gap: 0.62rem;
   text-align: left;
   cursor: pointer;
 }
@@ -33,24 +33,26 @@
 
 .triggerMain {
   display: flex;
-  gap: 0.8rem;
+  gap: 0.72rem;
   align-items: flex-start;
 }
 
 .avatar {
-  width: 2.15rem;
-  height: 2.15rem;
+  width: 2.3rem;
+  height: 2.3rem;
   border-radius: 999px;
   display: grid;
   place-items: center;
   flex: 0 0 auto;
-  background: color-mix(in srgb, var(--brand) 18%, transparent);
+  background: color-mix(in srgb, var(--brand) 24%, transparent);
   color: var(--brand);
-  border: 1px solid color-mix(in srgb, var(--brand) 40%, transparent);
+  border: 1px solid color-mix(in srgb, var(--brand) 48%, transparent);
+  box-shadow: 0 6px 16px color-mix(in srgb, var(--brand) 16%, transparent);
 }
 
 .triggerText {
   min-width: 0;
+  max-width: 58ch;
 }
 
 .triggerText h3 {
@@ -73,17 +75,17 @@
 }
 
 .heroLine {
-  margin: 0.55rem 0 0;
-  font-size: 0.95rem;
-  font-weight: 640;
-  line-height: 1.45;
+  margin: 0.48rem 0 0;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.52;
   color: var(--text);
 }
 
 .hint {
-  margin: 0.35rem 0 0;
-  font-size: 0.8125rem;
-  line-height: 1.45;
+  margin: 0.4rem 0 0;
+  font-size: 0.84rem;
+  line-height: 1.55;
   color: var(--muted, #6b7280);
 }
 
@@ -91,8 +93,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.6rem;
+  gap: 0.46rem;
 }
 
 .stageChip {
@@ -120,6 +121,7 @@
 }
 
 .cta {
+  margin-left: auto;
   display: inline-flex;
   align-items: center;
   gap: 0.38rem;
@@ -139,7 +141,7 @@
 
 .panel {
   border-top: 1px solid var(--line);
-  padding: 0.95rem 1rem 1rem;
+  padding: 1rem 1rem 1.08rem;
 }
 
 .statusArea {
@@ -161,20 +163,59 @@
 }
 
 .section {
-  margin-top: 0.9rem;
-  padding: 0.8rem;
+  margin-top: 1rem;
+  padding: 0.92rem;
   border-radius: 13px;
   border: 1px solid var(--line);
   background: color-mix(in srgb, var(--surface-strong) 72%, transparent);
 }
 
+.sectionHeader {
+  border-left: 3px solid color-mix(in srgb, var(--brand) 60%, transparent);
+}
+
+.sectionSummary {
+  border-left: 3px solid color-mix(in srgb, #22c55e 55%, transparent);
+}
+
+.sectionExplanation {
+  border-left: 3px solid color-mix(in srgb, #06b6d4 58%, transparent);
+}
+
+.sectionNext {
+  border-left: 3px solid color-mix(in srgb, #3b82f6 58%, transparent);
+}
+
+.sectionAttention {
+  border-left: 3px solid color-mix(in srgb, #f59e0b 62%, transparent);
+}
+
+.sectionRisks {
+  border-left: 3px solid color-mix(in srgb, #14b8a6 58%, transparent);
+}
+
+.sectionBlockers {
+  border-left: 3px solid color-mix(in srgb, #ef4444 58%, transparent);
+}
+
 .sectionTitle {
   display: inline-flex;
   align-items: center;
-  gap: 0.38rem;
-  font-size: 0.84rem;
+  gap: 0.46rem;
+  font-size: 0.88rem;
   font-weight: 700;
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.58rem;
+}
+
+.sectionIcon {
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 999px;
+  display: inline-grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  border: 1px solid var(--line);
+  color: var(--brand);
 }
 
 .timelineHint {
@@ -195,15 +236,15 @@
 .timeline li {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.42rem;
   border: 1px solid var(--line);
   border-radius: 10px;
-  padding: 0.45rem 0.5rem;
+  padding: 0.52rem 0.56rem;
 }
 
 .stepIcon {
-  width: 1.35rem;
-  height: 1.35rem;
+  width: 1.55rem;
+  height: 1.55rem;
   border-radius: 999px;
   display: grid;
   place-items: center;
@@ -211,9 +252,9 @@
 }
 
 .stepLabel {
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   line-height: 1.25;
-  font-weight: 650;
+  font-weight: 700;
 }
 
 .step-done {
@@ -249,24 +290,41 @@
   padding: 0;
   list-style: none;
   display: grid;
-  gap: 0.45rem;
-  font-size: 0.84rem;
-  line-height: 1.45;
+  gap: 0.52rem;
+  font-size: 0.86rem;
+  line-height: 1.5;
 }
 
 .listCards li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
   border: 1px solid var(--line);
   border-radius: 10px;
-  padding: 0.5rem 0.58rem;
+  padding: 0.58rem 0.62rem;
   background: color-mix(in srgb, var(--surface) 92%, transparent);
+}
+
+.itemBadge {
+  width: 1.34rem;
+  height: 1.34rem;
+  border-radius: 999px;
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--brand) 15%, transparent);
+  color: var(--brand);
 }
 
 .meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.65rem 1rem;
+  gap: 0.4rem 0.9rem;
   margin-top: 0.95rem;
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   color: var(--muted, #6b7280);
 }
 
@@ -281,8 +339,8 @@
 }
 
 .body {
-  font-size: 0.86rem;
-  line-height: 1.45;
+  font-size: 0.9rem;
+  line-height: 1.62;
   margin: 0;
 }
 

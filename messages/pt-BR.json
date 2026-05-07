@@ -148,7 +148,7 @@
     "fallback": {
       "heading": "Status não mapeado",
       "summary": "Estado da carga não mapeado nesta versão do assistente. Revise manualmente a ficha, documentos e negociações.",
-      "explanation": "O status recebido não possui pacote específico de assistência nesta fase. A orientação usa regra determinística de fallback.",
+      "explanation": "Ainda não consegui identificar essa etapa com precisão. Vou te apoiar com uma orientação segura de fallback para você seguir sem perder contexto.",
       "nextSteps": [
         "Valide o status com o time operacional.",
         "Confira documentação e próximos marcos no painel da carga."
@@ -163,7 +163,7 @@
       "open": {
         "heading": "Status aberto",
         "summary": "Carga publicada no marketplace; aguardando propostas alinhadas a rota, tipo e restrições declaradas.",
-        "explanation": "Ainda não há compromisso de transporte confirmado. O foco é qualificar propostas aderentes ao contexto operacional da carga.",
+        "explanation": "Ainda não há transporte confirmado. Agora o ideal é atrair propostas compatíveis e organizar as informações-chave para acelerar a próxima decisão.",
         "nextSteps": [
           "Conferir pacote documental sugerido e lacunas antes da primeira reserva.",
           "Monitorar janela operacional e sinalização de interesse no corredor.",
@@ -179,7 +179,7 @@
       "bidding": {
         "heading": "Status em cotação",
         "summary": "Há cotações ou contrapropostas em análise; a decisão segue com o embarcador e as partes envolvidas.",
-        "explanation": "A carga já entrou em tratativas comerciais, mas ainda depende de convergência entre preço, termos e documentação.",
+        "explanation": "Sua carga já está em negociação. Este é o momento de comparar opções com calma para fechar a melhor combinação entre preço, prazo e segurança documental.",
         "nextSteps": [
           "Comparar termos, valores e compromissos documentais de cada proposta.",
           "Pedir ajustes formais quando faltar evidência ou cláusula operacional.",
@@ -195,7 +195,7 @@
       "contracting": {
         "heading": "Status em contratação",
         "summary": "Negociação avançou para contratação; foco em formalização, documentos e reserva de capacidade.",
-        "explanation": "Existe intenção clara de fechamento, com prioridade para validações contratuais e operacionais antes da execução.",
+        "explanation": "Você está perto do fechamento. O foco agora é validar os últimos detalhes contratuais e operacionais para seguir com confiança.",
         "nextSteps": [
           "Validar minutas, garantias e responsabilidades antes do aceite final.",
           "Sincronizar embarque com disponibilidade real de cais e calado.",
@@ -211,7 +211,7 @@
       "reserved": {
         "heading": "Status reservado",
         "summary": "Capacidade ou condição de reserva acordada; preparar embarque e conformidade final.",
-        "explanation": "Há reserva operacional ativa, com necessidade de concluir pendências para reduzir risco de replanejamento.",
+        "explanation": "Sua carga já está reservada. Agora vale alinhar os detalhes finais para reduzir riscos e preparar um embarque tranquilo.",
         "nextSteps": [
           "Confirmar lacres, temperatura e lotes com o transportador.",
           "Fechar pendências documentais ainda listadas como obrigatórias.",
@@ -227,7 +227,7 @@
       "boarded": {
         "heading": "Status embarcada/em trânsito",
         "summary": "Carga embarcada ou em trânsito fluvial; monitorar eventos, sincronização e provas operacionais.",
-        "explanation": "A operação está em execução logística. O objetivo passa a ser previsibilidade de percurso e gestão de ocorrências.",
+        "explanation": "A operação está em movimento. O foco passa a ser visibilidade do trajeto, resposta rápida a ocorrências e comunicação clara com todos os envolvidos.",
         "nextSteps": [
           "Acompanhar rastreio e registros de ocorrência ao longo do corredor.",
           "Garantir canal de contingência para atrasos ou desvios de rota.",
@@ -243,7 +243,7 @@
       "delivered": {
         "heading": "Status entregue",
         "summary": "Fluxo principal concluído do ponto de vista operacional simulado; foco em comprovações e encerramento.",
-        "explanation": "A entrega ocorreu no fluxo principal. Restam validações pós-operação para fechamento documental e financeiro.",
+        "explanation": "A entrega principal foi concluída. Agora vale finalizar documentos, registrar aprendizados e encerrar a operação com segurança.",
         "nextSteps": [
           "Arquivar comprovantes, POD e comunicações relevantes.",
           "Registrar lições aprendidas e indicadores para próximos ciclos.",
