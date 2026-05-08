@@ -1,5 +1,12 @@
 
-import type { HydroUser, LoginPayload, LoginResult, PublicHydroUser, RegisterPayload } from '../domain/auth.types';
+import type {
+  HydroUser,
+  LoginPayload,
+  LoginResult,
+  PublicHydroUser,
+  RegisterOtpChallengeResponse,
+  RegisterPayload
+} from '../domain/auth.types';
 import { apiRoutes } from '@/shared/routing/api-routes';
 import { httpStatus } from '@/shared/http/http-status';
 
@@ -70,16 +77,21 @@ export async function login(payload: LoginPayload): Promise<LoginResult> {
   return data;
 }
 
-export async function register(payload: RegisterPayload): Promise<HydroUser> {
+export async function register(payload: RegisterPayload): Promise<HydroUser | RegisterOtpChallengeResponse> {
   const response = await fetch(apiRoutes.auth.register, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(payload),
     credentials: 'include'
   });
-  const data = await parseResponse<{ user: HydroUser }>(response);
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error((data as { error?: string }).error ?? 'request-failed');
+  if ((data as RegisterOtpChallengeResponse).otpRequired) {
+    return data as RegisterOtpChallengeResponse;
+  }
+  const created = data as { user: HydroUser };
   window.dispatchEvent(new CustomEvent('hydrorivers:auth-changed'));
-  return data.user;
+  return created.user;
 }
 
 export async function updateProfile(nextUser: HydroUser & { avatarUrl?: string }): Promise<HydroUser & { avatarUrl?: string }> {

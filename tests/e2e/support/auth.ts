@@ -15,7 +15,7 @@ export type OtpCredentials = {
 export async function loginWithOtp(page: Page, credentials: OtpCredentials = defaultShipper) {
   await page.goto('/pt-BR/login');
 
-  const emailInput = page.getByLabel(/e-?mail|email/i);
+  const emailInput = page.getByLabel(/e-?mail|email|correo|telefone|teléfono|phone/i);
   const passwordInput = page.getByLabel(/senha|password/i);
   const submitButton = page.getByRole('button', { name: submitButtonName }).first();
 

@@ -1,7 +1,9 @@
-import { createHash } from 'node:crypto';
 import { cookies } from 'next/headers';
 import type { HydroUser } from '@/features/auth/domain/auth.types';
-import { otpLength, sessionCookieOptions } from '@/features/auth/domain/auth-constants';
+import { otpExpiresInSeconds, sessionCookieOptions } from '@/features/auth/domain/auth-constants';
+import { otpCodeSchema, resolveLegacyLoginPayload } from '@/features/auth/domain/auth-schemas';
+import { findUserByIdentifier } from '@/features/auth/server/find-user-by-identifier';
+import { createLoginChallenge, verifyLoginChallenge } from '@/features/auth/server/mock-otp-challenges';
 import { isOtpCodeExposed } from '@/shared/config/env';
 import { cookieNames } from '@/shared/http/cookie-names';
 import { httpStatus } from '@/shared/http/http-status';
@@ -12,50 +14,73 @@ import { toPublicUser, verifyPassword } from '@/shared/server/auth';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-const otpModulo = 10 ** otpLength;
-
-function makeOtp(email: string) {
-  const digest = createHash('sha256').update(`hydrorivers-otp:${email}`).digest('hex');
-  const value = Number.parseInt(digest.slice(0, 8), 16) % otpModulo;
-  return value.toString().padStart(otpLength, '0');
-}
-
-function makeChallenge(userId: string, email: string) {
-  return Buffer.from(`${userId}:${email}:hydrorivers-otp`).toString('base64url');
-}
-
 export async function POST(request: Request) {
   const payload = await request.json().catch(() => null);
   if (!payload) return invalidPayload('invalid-json');
 
-  const email = String(payload.email ?? '').trim().toLowerCase();
-  const password = String(payload.password ?? '');
-  const otp = String(payload.otp ?? '').trim();
-  const challenge = String(payload.challenge ?? '').trim();
-
-  if (!email || !password) {
-    return invalidPayload('missing-credentials');
+  let parsed;
+  try {
+    parsed = resolveLegacyLoginPayload({
+      identifier: payload.identifier,
+      email: payload.email,
+      password: payload.password,
+      otp: payload.otp,
+      challenge: payload.challenge
+    });
+  } catch {
+    return invalidPayload('invalid-login-fields');
   }
 
   const users = readMock('users') as HydroUser[];
-  const user = users.find((item) => item.email.toLowerCase() === email);
-  if (!user || !verifyPassword(password, user.passwordHash)) {
-    return Response.json({ error: 'invalid-login' }, { status: httpStatus.unauthorized });
-  }
+  const user = findUserByIdentifier(users, parsed.identifier);
 
-  const expectedOtp = makeOtp(email);
-  const expectedChallenge = makeChallenge(user.id, email);
+  if (!parsed.otp) {
+    if (!user) {
+      return Response.json({ error: 'user-not-found' }, { status: httpStatus.notFound });
+    }
+    if (!user.passwordHash || !verifyPassword(parsed.password, user.passwordHash)) {
+      return Response.json({ error: 'invalid-login' }, { status: httpStatus.unauthorized });
+    }
 
-  if (!otp) {
+    const issued = createLoginChallenge(user.id);
     const exposeOtpCode = isOtpCodeExposed();
+
     return Response.json({
       otpRequired: true,
-      challenge: expectedChallenge,
-      ...(exposeOtpCode ? { otpCode: expectedOtp } : {})
+      challenge: issued.challenge,
+      expiresAt: new Date(issued.expiresAt).toISOString(),
+      expiresInSeconds: otpExpiresInSeconds,
+      ...(exposeOtpCode ? { otpCode: issued.code } : {})
     });
   }
 
-  if (challenge !== expectedChallenge || otp !== expectedOtp) {
+  const otpCheck = otpCodeSchema.safeParse(parsed.otp);
+  const challengeId = parsed.challenge?.trim();
+  if (!otpCheck.success || !challengeId) {
+    return invalidPayload('invalid-otp-payload');
+  }
+
+  if (!user) {
+    return Response.json({ error: 'user-not-found' }, { status: httpStatus.notFound });
+  }
+
+  if (!user.passwordHash || !verifyPassword(parsed.password, user.passwordHash)) {
+    return Response.json({ error: 'invalid-login' }, { status: httpStatus.unauthorized });
+  }
+
+  const verified = verifyLoginChallenge(challengeId, otpCheck.data);
+
+  if (verified.status !== 'ok') {
+    if (verified.status === 'missing') {
+      return Response.json({ error: 'invalid-otp' }, { status: httpStatus.unauthorized });
+    }
+    if (verified.status === 'expired') {
+      return Response.json({ error: 'otp-expired' }, { status: httpStatus.unauthorized });
+    }
+    return Response.json({ error: 'invalid-otp' }, { status: httpStatus.unauthorized });
+  }
+
+  if (verified.userId !== user.id) {
     return Response.json({ error: 'invalid-otp' }, { status: httpStatus.unauthorized });
   }
 

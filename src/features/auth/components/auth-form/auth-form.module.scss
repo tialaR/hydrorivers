@@ -32,7 +32,7 @@
 .panel > span { display: block; color: var(--muted); margin-top: .85rem; line-height: 1.65; max-width: 45rem; }
 .form { margin-top: 1.5rem; display: grid; gap: 1rem; }
 .field { display: grid; gap: .45rem; font-weight: 620; color: var(--text); }
-.field div {
+.field > div:not(.fieldRowSplit):not(.menuWrap) {
   min-height: 3.4rem;
   border: 2px solid var(--line);
   border-radius: var(--radius-md);
@@ -53,6 +53,193 @@
 }
 .field input::placeholder { color: color-mix(in srgb, var(--muted) 76%, transparent); }
 .field input:disabled { opacity: .72; cursor: not-allowed; }
+.fieldIssue {
+  margin: 0;
+  font-size: .82rem;
+  font-weight: 650;
+  color: var(--danger);
+}
+.fieldHint {
+  margin: 0;
+  font-size: .82rem;
+  font-weight: 560;
+  color: var(--muted);
+}
+.success {
+  margin: 0;
+  font-weight: 720;
+  color: var(--brand);
+}
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.fieldGrow {
+  display: grid;
+  gap: .45rem;
+  min-width: 0;
+}
+.menuWrap {
+  position: relative;
+  width: 100%;
+}
+.menuTrigger {
+  min-height: 3.4rem;
+  width: 100%;
+  border: 2px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-strong);
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  padding: 0 .9rem;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 580;
+  color: var(--text);
+}
+.menuTriggerDial {
+  min-height: 3.4rem;
+  min-width: 5.75rem;
+  padding: 0 .75rem;
+  border: 2px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-strong);
+  font: inherit;
+  font-weight: 680;
+  color: var(--text);
+  cursor: pointer;
+}
+.menuTrigger:focus-visible,
+.menuTriggerDial:focus-visible {
+  outline: 3px solid var(--brand);
+  outline-offset: 2px;
+}
+.menuTriggerText {
+  flex: 1;
+  text-align: left;
+}
+.menuPanel {
+  position: absolute;
+  z-index: 8;
+  left: 0;
+  right: 0;
+  top: calc(100% + .35rem);
+  padding: .45rem;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--line-strong);
+  background: color-mix(in srgb, var(--surface) 98%, transparent);
+  backdrop-filter: blur(22px);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.22);
+  display: grid;
+  gap: .2rem;
+}
+.menuPanelDial {
+  position: absolute;
+  z-index: 8;
+  left: 0;
+  top: calc(100% + .35rem);
+  min-width: 8rem;
+  padding: .45rem;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--line-strong);
+  background: color-mix(in srgb, var(--surface) 98%, transparent);
+  backdrop-filter: blur(22px);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.22);
+  display: grid;
+  gap: .15rem;
+}
+.menuOption {
+  display: grid;
+  gap: .12rem;
+  width: 100%;
+  text-align: left;
+  padding: .72rem .85rem;
+  border: 0;
+  border-radius: var(--radius-md);
+  font: inherit;
+  cursor: pointer;
+  color: var(--muted);
+  background: transparent;
+}
+.menuOption:hover {
+  background: color-mix(in srgb, var(--brand) 10%, transparent);
+  color: var(--text);
+}
+.menuOptionActive {
+  background: color-mix(in srgb, var(--brand) 16%, var(--surface-strong));
+  color: var(--text);
+  box-shadow: inset 0 0 0 1px var(--brand-soft-line);
+}
+.menuHint {
+  font-size: .82rem;
+  font-weight: 560;
+  color: var(--muted);
+}
+.togglePassword {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  padding: .25rem;
+  margin-left: auto;
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+}
+.togglePassword:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+.fieldRowSplit {
+  display: grid;
+  grid-template-columns: minmax(5.75rem, 7rem) 1fr;
+  gap: .65rem;
+  align-items: end;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  min-height: 0;
+}
+@media (max-width: 520px) {
+  .fieldRowSplit { grid-template-columns: 1fr; }
+}
+.otpRow {
+  display: flex;
+  gap: .45rem;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  padding-top: .15rem;
+}
+.otpCell {
+  width: 2.55rem;
+  height: 3rem;
+  text-align: center;
+  font-size: 1.28rem;
+  font-weight: 780;
+  border: 2px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-strong);
+  color: var(--text);
+}
+.otpCell:focus-visible {
+  outline: 3px solid var(--brand);
+  outline-offset: 2px;
+}
+.otpTimer {
+  margin: 0;
+  text-align: left;
+  color: var(--muted);
+  font-weight: 650;
+  font-size: .92rem;
+}
 .submit { width: 100%; margin-top: .3rem; }
 .error { color: var(--danger); font-weight: 700; margin: 0; }
 .secondaryAction {

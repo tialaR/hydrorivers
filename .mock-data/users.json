@@ -1,5 +1,14 @@
 [
   {
+    "id": "u-1778197909521",
+    "name": "TIALA FERNANDA DE SANTANA ROCHA",
+    "email": "tialarocha@hotmail.com",
+    "company": "Cooperativa Açaí Norte",
+    "role": "shipper",
+    "approved": true,
+    "passwordHash": "pbkdf2_sha256$100000$1f71f34e82c51861a66dc3c2b911d31c$baf4687dfee1eabb2d8c23f3e47a22c6365641fedda0ccf430d3861b374eff3a"
+  },
+  {
     "id": "u-shipper-1",
     "name": "Tiala Rocha",
     "email": "tiala@hydrorivers.com",
