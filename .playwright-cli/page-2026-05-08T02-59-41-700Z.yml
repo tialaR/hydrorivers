@@ -1,0 +1,131 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - link "HydroRivers" [ref=e5] [cursor=pointer]:
+          - /url: /en-US
+          - img [ref=e7]
+        - generic [ref=e168]:
+          - button "Language" [ref=e171] [cursor=pointer]:
+            - generic [ref=e172]: 🇺🇸
+          - button "Toggle theme" [ref=e174] [cursor=pointer]:
+            - img [ref=e175]
+          - button "Open menu" [ref=e181]:
+            - img [ref=e182]
+    - generic [ref=e38]:
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - img [ref=e41]
+          - img [ref=e44]
+        - paragraph [ref=e51]: Secure access
+        - heading "Sign in to HydroRivers operations" [level=1] [ref=e52]
+        - generic [ref=e53]: Sign in with phone and password to receive a mock OTP tied to the number you provide.
+        - generic [ref=e54]:
+          - paragraph [ref=e55]: Enter the account email, your password, and the main phone number. The mock OTP is always generated for this phone.
+          - generic [ref=e56]:
+            - generic [ref=e57]: Email
+            - generic [ref=e58]:
+              - img [ref=e59]
+              - textbox "Email Required. Use a valid email." [ref=e62]:
+                - /placeholder: tiala@hydrorivers.com
+            - paragraph [ref=e63]: Required. Use a valid email.
+          - generic [ref=e64]:
+            - generic [ref=e65]: Password
+            - generic [ref=e66]:
+              - img [ref=e67]
+              - textbox "Password Show password Required. At least 8 characters." [ref=e71]:
+                - /placeholder: ••••••••
+              - button "Show password" [ref=e72] [cursor=pointer]:
+                - img [ref=e73]
+                - generic [ref=e76]: Show password
+            - paragraph [ref=e77]: Required. At least 8 characters.
+          - generic [ref=e78]:
+            - generic [ref=e79]: Account phone
+            - generic [ref=e81]:
+              - button "Select phone country" [ref=e82] [cursor=pointer]:
+                - generic [ref=e83]:
+                  - generic [ref=e84]: 🇺🇸
+                  - img [ref=e85]
+                - generic [ref=e87]: United States
+              - generic "Country prefix applied automatically to the phone number" [ref=e88]:
+                - generic [ref=e89]: "+1"
+              - generic [ref=e90]:
+                - generic [ref=e91]: National number
+                - img [ref=e92]
+                - textbox "National number" [active] [ref=e94]:
+                  - /placeholder: "4156723894"
+            - paragraph [ref=e95]: Required. Enter your mobile number.
+          - button "Continue" [disabled] [ref=e96]
+      - complementary [ref=e97]:
+        - paragraph [ref=e98]: Operational MVP
+        - heading "From order to delivery—less paper, more river." [level=2] [ref=e99]
+        - list [ref=e100]:
+          - listitem [ref=e101]: Public registration for shipper and carrier, with admin outside the public UI.
+          - listitem [ref=e102]: Quoting, acceptance, and space booking simulated via API/MSW.
+          - listitem [ref=e103]: Foundation ready for manual approval, auditing, and offline-first use.
+    - contentinfo [ref=e104]:
+      - generic [ref=e105]:
+        - generic [ref=e106]:
+          - generic [ref=e107]:
+            - img [ref=e109]
+            - text: HydroRivers
+          - paragraph [ref=e114]: River and cabotage freight marketplace to cut cost, improve predictability, and make regional logistics more sustainable.
+        - navigation "Product" [ref=e115]:
+          - heading "Product" [level=2] [ref=e116]
+          - link "Cargoes" [ref=e117] [cursor=pointer]:
+            - /url: /en-US/cargas
+          - link "Vessels" [ref=e118] [cursor=pointer]:
+            - /url: /en-US/embarcacoes
+          - link "Negotiations" [ref=e119] [cursor=pointer]:
+            - /url: /en-US/negociacoes
+          - link "Tracking" [ref=e120] [cursor=pointer]:
+            - /url: /en-US/rastreio
+        - navigation "Platform" [ref=e121]:
+          - heading "Platform" [level=2] [ref=e122]
+          - link "Dashboard" [ref=e123] [cursor=pointer]:
+            - /url: /en-US/dashboard
+          - link "Impact" [ref=e124] [cursor=pointer]:
+            - /url: /en-US/impacto
+          - link "Admin" [ref=e125] [cursor=pointer]:
+            - /url: /en-US/admin
+          - link "Publish cargo" [ref=e126] [cursor=pointer]:
+            - /url: /en-US/cargas/nova
+        - navigation "Support" [ref=e127]:
+          - heading "Support" [level=2] [ref=e128]
+          - link "Sign in" [ref=e129] [cursor=pointer]:
+            - /url: /en-US/login
+          - link "Create account" [ref=e130] [cursor=pointer]:
+            - /url: /en-US/cadastro
+          - link "Profile" [ref=e131] [cursor=pointer]:
+            - /url: /en-US/perfil
+          - link "Tracking" [ref=e132] [cursor=pointer]:
+            - /url: /en-US/rastreio
+        - navigation "Context" [ref=e133]:
+          - heading "Context" [level=2] [ref=e134]
+          - link "BR do Mar alignment" [ref=e135] [cursor=pointer]:
+            - /url: /en-US/impacto/brdomar
+          - link "Less CO₂ per ton" [ref=e136] [cursor=pointer]:
+            - /url: /en-US/impacto/sustainability
+          - link "Optimized routes" [ref=e137] [cursor=pointer]:
+            - /url: /en-US/impacto/regional
+          - link "Less bureaucracy" [ref=e138] [cursor=pointer]:
+            - /url: /en-US/impacto/automation
+      - generic [ref=e139]:
+        - generic [ref=e140]: © 2026 HydroRivers. All rights reserved.
+        - generic "HydroRivers networks and channels" [ref=e141]:
+          - button "WhatsApp demo" [ref=e142] [cursor=pointer]:
+            - img [ref=e143]
+          - button "Instagram demo" [ref=e145] [cursor=pointer]:
+            - img [ref=e146]
+          - button "X/Twitter demo" [ref=e149] [cursor=pointer]:
+            - img [ref=e150]
+          - button "Support demo" [ref=e152] [cursor=pointer]:
+            - img [ref=e153]
+    - complementary "Mock mode · QA" [ref=e155]:
+      - button "Mock mode" [ref=e156]:
+        - generic [ref=e157]: M
+        - generic [ref=e158]: Mock mode
+    - status
+  - button "Open Next.js Dev Tools" [ref=e164] [cursor=pointer]:
+    - img [ref=e165]
+  - alert [ref=e183]

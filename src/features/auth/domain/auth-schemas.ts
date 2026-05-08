@@ -1,12 +1,12 @@
 import { z } from 'zod';
 import { minimumPasswordLength, otpExpiresInSeconds, otpLength, publicUserRoles } from './auth-constants';
+import { hasValidMobileDigitsForCountry } from './auth-phone-countries';
 import {
   buildPhoneE164,
   hasAtLeastTwoWords,
   normalizeCountryCode,
   normalizeEmail,
   normalizeFullName,
-  normalizeIdentifier,
   normalizePhone,
   normalizePhoneDigits
 } from './auth-normalization';
@@ -51,7 +51,7 @@ export const registerSchema = z
     phone: phoneSchema,
     phoneE164: z.string().optional(),
     role: publicUserRoleSchema,
-    company: z.string().trim().min(1, 'company-required')
+    company: z.string().trim().default('')
   })
   .transform((value) => {
     const phoneE164 = value.phoneE164 && value.phoneE164.trim()
@@ -63,32 +63,81 @@ export const registerSchema = z
       phoneE164
     };
   })
-  .refine((value) => phoneE164Schema.safeParse(value.phoneE164).success, {
-    message: 'invalid-phone-e164',
-    path: ['phoneE164']
+  .superRefine((value, ctx) => {
+    if (!hasValidMobileDigitsForCountry(value.countryCode, value.phone)) {
+      ctx.addIssue({ code: 'custom', message: 'invalid-phone', path: ['phone'] });
+    }
+
+    if (!phoneE164Schema.safeParse(value.phoneE164).success) {
+      ctx.addIssue({ code: 'custom', message: 'invalid-phone-e164', path: ['phoneE164'] });
+    }
   });
 
-export const loginIdentifierSchema = z
-  .string()
-  .transform(normalizeIdentifier)
-  .pipe(z.string().min(1, 'identifier-required'))
-  .refine(
-    (value) => normalizedEmailSchema.safeParse(value).success || normalizedPhoneIdentifierSchema.safeParse(value).success,
-    'invalid-identifier'
-  );
+export const loginPhoneSchema = z
+  .object({
+    countryCode: countryCodeSchema,
+    phone: phoneSchema,
+    phoneE164: z.string().optional()
+  })
+  .transform((value) => ({
+    ...value,
+    phoneE164: value.phoneE164 && value.phoneE164.trim()
+      ? value.phoneE164.trim()
+      : buildPhoneE164(value.countryCode, value.phone)
+  }))
+  .superRefine((value, ctx) => {
+    if (!hasValidMobileDigitsForCountry(value.countryCode, value.phone)) {
+      ctx.addIssue({ code: 'custom', message: 'invalid-phone', path: ['phone'] });
+    }
 
-export const loginCredentialsSchema = z.object({
-  identifier: loginIdentifierSchema,
-  password: passwordSchema
-});
+    if (!phoneE164Schema.safeParse(value.phoneE164).success) {
+      ctx.addIssue({ code: 'custom', message: 'invalid-phone-e164', path: ['phoneE164'] });
+    }
+  });
+
+export const loginCredentialsSchema = z
+  .object({
+    email: normalizedEmailSchema,
+    countryCode: countryCodeSchema,
+    phone: phoneSchema,
+    phoneE164: z.string().optional(),
+    password: passwordSchema
+  })
+  .transform((value) => ({
+    ...value,
+    phoneE164: value.phoneE164 && value.phoneE164.trim()
+      ? value.phoneE164.trim()
+      : buildPhoneE164(value.countryCode, value.phone)
+  }))
+  .superRefine((value, ctx) => {
+    if (!hasValidMobileDigitsForCountry(value.countryCode, value.phone)) {
+      ctx.addIssue({ code: 'custom', message: 'invalid-phone', path: ['phone'] });
+    }
+
+    if (!phoneE164Schema.safeParse(value.phoneE164).success) {
+      ctx.addIssue({ code: 'custom', message: 'invalid-phone-e164', path: ['phoneE164'] });
+    }
+  });
 
 export const loginSchema = z
   .object({
-    identifier: loginIdentifierSchema,
+    email: z.string(),
+    countryCode: z.string(),
+    phone: z.string(),
+    phoneE164: z.string().optional(),
     password: passwordSchema,
     otp: z.string().optional(),
     challenge: z.string().optional()
   })
+  .transform((value) => ({
+    ...value,
+    email: normalizedEmailSchema.parse(value.email),
+    ...loginPhoneSchema.parse({
+      countryCode: value.countryCode,
+      phone: value.phone,
+      phoneE164: value.phoneE164
+    })
+  }))
   .superRefine((value, ctx) => {
     if (value.otp !== undefined && value.otp.trim() !== '') {
       const trimmed = value.otp.trim();
@@ -105,7 +154,7 @@ export const otpCodeSchema = z.string().regex(otpCodePattern, 'invalid-otp');
 
 export const otpChallengeSchema = z.object({
   challenge: z.string().trim().min(1, 'challenge-required'),
-  identifier: loginIdentifierSchema,
+  phoneE164: phoneE164Schema,
   otpCode: otpCodeSchema.optional(),
   expiresAt: z.iso.datetime().optional(),
   expiresInSeconds: z.int().positive().default(otpExpiresInSeconds)
@@ -123,11 +172,22 @@ export type LoginData = z.output<typeof loginSchema>;
 export type OtpChallengeData = z.output<typeof otpChallengeSchema>;
 export type OtpVerifyData = z.output<typeof otpVerifySchema>;
 
-export function resolveLegacyLoginPayload(payload: { email?: string; identifier?: string; password: string; otp?: string; challenge?: string }) {
+export function resolveLegacyLoginPayload(payload: {
+  email?: string;
+  countryCode?: string;
+  phone?: string;
+  phoneE164?: string;
+  password: string;
+  otp?: string;
+  challenge?: string;
+}) {
   const otp = payload.otp?.trim() ? payload.otp.trim() : undefined;
   const challenge = payload.challenge?.trim() ? payload.challenge.trim() : undefined;
   return loginSchema.parse({
-    identifier: payload.identifier ?? payload.email ?? '',
+    email: payload.email ?? '',
+    countryCode: payload.countryCode ?? '',
+    phone: payload.phone ?? '',
+    phoneE164: payload.phoneE164,
     password: payload.password,
     otp,
     challenge
@@ -157,7 +217,10 @@ export function normalizeRegisterDraft(payload: {
 }
 
 export function normalizeLoginDraft(payload: {
-  identifier: string;
+  email: string;
+  countryCode: string;
+  phone: string;
+  phoneE164?: string;
   password: string;
   otp?: string;
   challenge?: string;
@@ -167,7 +230,7 @@ export function normalizeLoginDraft(payload: {
 
 export function buildOtpChallengeContract(payload: {
   challenge: string;
-  identifier: string;
+  phoneE164: string;
   otpCode?: string;
   expiresAt?: string;
   expiresInSeconds?: number;

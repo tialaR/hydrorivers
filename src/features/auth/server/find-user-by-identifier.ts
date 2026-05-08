@@ -23,6 +23,16 @@ export function findUserByIdentifier(users: HydroUser[], rawIdentifier: string):
   });
 }
 
+export function findUserByPhone(users: HydroUser[], rawPhoneE164: string): HydroUser | undefined {
+  const digits = normalizePhoneDigits(rawPhoneE164);
+  if (!digits) return undefined;
+
+  return users.find((u) => {
+    if (!u.phoneE164) return false;
+    return normalizePhoneDigits(u.phoneE164) === digits;
+  });
+}
+
 export function isPhoneE164Taken(users: HydroUser[], phoneE164: string): boolean {
   const target = normalizeE164(phoneE164);
   if (!target) return false;

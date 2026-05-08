@@ -1,5 +1,19 @@
 [
   {
+    "id": "u-1778212518990",
+    "name": "TIALA FERNANDA DE SANTANA ROCHA",
+    "email": "tialarocha@gmail.com.br",
+    "company": "Cooperativa Cacau de Belém",
+    "role": "carrier",
+    "approved": false,
+    "passwordHash": "pbkdf2_sha256$100000$b2ee96fbb4aa7b73733d5028a6571a54$668d21fdb537ea848bd71193a0889545754a38e4169500862cc86413e16b5401",
+    "countryCode": "+55",
+    "phone": "71993118786",
+    "phoneE164": "+5571993118786",
+    "createdAt": "2026-05-08T03:55:18.990Z",
+    "updatedAt": "2026-05-08T03:55:18.990Z"
+  },
+  {
     "id": "u-1778197909521",
     "name": "TIALA FERNANDA DE SANTANA ROCHA",
     "email": "tialarocha@hotmail.com",

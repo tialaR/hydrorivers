@@ -15,6 +15,7 @@ export type PendingRegisterDraft = {
 
 type PendingLoginChallenge = {
   userId: string;
+  phoneE164: string;
   code: string;
   expiresAt: number;
 };
@@ -40,21 +41,27 @@ function invalidateRegisterChallengesForEmail(emailNormalized: string) {
   }
 }
 
+function invalidateRegisterChallengesForPhone(phoneE164: string) {
+  for (const [id, row] of registerChallenges) {
+    if (row.draft.phoneE164 === phoneE164) registerChallenges.delete(id);
+  }
+}
+
 function randomOtpCode(): string {
   return randomInt(0, 1_000_000).toString().padStart(6, '0');
 }
 
-export function createLoginChallenge(userId: string) {
+export function createLoginChallenge(userId: string, phoneE164: string) {
   invalidateLoginChallengesForUser(userId);
   const challenge = randomUUID();
   const code = randomOtpCode();
   const expiresAt = Date.now() + otpExpiresInSeconds * 1000;
-  loginChallenges.set(challenge, { userId, code, expiresAt });
+  loginChallenges.set(challenge, { userId, phoneE164, code, expiresAt });
   return { challenge, code, expiresAt };
 }
 
 export type LoginVerifyResult =
-  | { status: 'ok'; userId: string }
+  | { status: 'ok'; userId: string; phoneE164: string }
   | { status: 'missing' | 'expired' | 'wrong' };
 
 export function verifyLoginChallenge(challengeId: string, otp: string): LoginVerifyResult {
@@ -66,11 +73,12 @@ export function verifyLoginChallenge(challengeId: string, otp: string): LoginVer
   }
   if (row.code !== otp) return { status: 'wrong' };
   loginChallenges.delete(challengeId);
-  return { status: 'ok', userId: row.userId };
+  return { status: 'ok', userId: row.userId, phoneE164: row.phoneE164 };
 }
 
 export function createRegisterChallenge(draft: PendingRegisterDraft) {
   invalidateRegisterChallengesForEmail(draft.email);
+  invalidateRegisterChallengesForPhone(draft.phoneE164);
   const challenge = randomUUID();
   const code = randomOtpCode();
   const expiresAt = Date.now() + otpExpiresInSeconds * 1000;

@@ -82,6 +82,49 @@ describe('auth normalization and schemas', () => {
     });
   });
 
+  it.each([
+    ['+55', '11999990000'],
+    ['+1', '4156723894'],
+    ['+34', '612345678'],
+    ['+57', '3001234567'],
+    ['+51', '912345678'],
+    ['+56', '912345678']
+  ])('accepts register payload with valid phone length for %s', (countryCode, phone) => {
+    const result = registerSchema.safeParse({
+      fullName: 'Tiala Rocha',
+      email: `tiala+${countryCode.replace('+', '')}@hydrorivers.com`,
+      password: '12345678',
+      countryCode,
+      phone,
+      role: 'shipper',
+      company: ''
+    });
+
+    expect(result.success).toBe(true);
+  });
+
+  it.each([
+    ['+55', '1199999000'],
+    ['+1', '415672389'],
+    ['+34', '61234567'],
+    ['+57', '300123456'],
+    ['+51', '91234567'],
+    ['+56', '91234567']
+  ])('rejects register payload with invalid phone length for %s', (countryCode, phone) => {
+    const result = registerSchema.safeParse({
+      fullName: 'Tiala Rocha',
+      email: `tiala-invalid-${countryCode.replace('+', '')}@hydrorivers.com`,
+      password: '12345678',
+      countryCode,
+      phone,
+      role: 'shipper',
+      company: ''
+    });
+
+    expect(result.success).toBe(false);
+    expect(result.error?.issues.some((issue) => issue.path[0] === 'phone' && issue.message === 'invalid-phone')).toBe(true);
+  });
+
   it('rejects invalid register payload', () => {
     const result = registerSchema.safeParse({
       fullName: 'Tiala',
@@ -96,28 +139,58 @@ describe('auth normalization and schemas', () => {
     expect(result.success).toBe(false);
   });
 
-  it('accepts login schema with email identifier', () => {
+  it('accepts login schema with normalized phone payload', () => {
     const result = loginSchema.parse({
-      identifier: '  Tiala@HydroRivers.COM ',
+      email: ' Tiala@HydroRivers.COM ',
+      countryCode: '+55',
+      phone: '(91) 99999-0000',
       password: '12345678'
     });
 
-    expect(result.identifier).toBe('tiala@hydrorivers.com');
+    expect(result.email).toBe('tiala@hydrorivers.com');
+    expect(result.phone).toBe('91999990000');
+    expect(result.phoneE164).toBe('+5591999990000');
   });
 
-  it('accepts login schema with normalized phone identifier', () => {
-    const result = loginSchema.parse({
-      identifier: '+5591999990000',
+  it('accepts US login credentials with 10 digits', () => {
+    const result = loginCredentialsSchema.safeParse({
+      email: 'tiala@hydrorivers.com',
+      countryCode: '+1',
+      phone: '4156723894',
       password: '12345678'
     });
 
-    expect(result.identifier).toBe('+5591999990000');
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects US login credentials with invalid length', () => {
+    const result = loginCredentialsSchema.safeParse({
+      email: 'tiala@hydrorivers.com',
+      countryCode: '+1',
+      phone: '415672389',
+      password: '12345678'
+    });
+
+    expect(result.success).toBe(false);
+    expect(result.error?.issues.some((issue) => issue.path[0] === 'phone' && issue.message === 'invalid-phone')).toBe(true);
+  });
+
+  it('rejects BR login credentials with invalid length', () => {
+    const result = loginCredentialsSchema.safeParse({
+      email: 'tiala@hydrorivers.com',
+      countryCode: '+55',
+      phone: '1199999000',
+      password: '12345678'
+    });
+
+    expect(result.success).toBe(false);
+    expect(result.error?.issues.some((issue) => issue.path[0] === 'phone' && issue.message === 'invalid-phone')).toBe(true);
   });
 
   it('accepts OTP contracts with 6-digit code', () => {
     const challenge = buildOtpChallengeContract({
       challenge: 'challenge-123',
-      identifier: 'tiala@hydrorivers.com',
+      phoneE164: '+5591999990000',
       otpCode: '123456'
     });
     const verify = otpVerifySchema.parse({
@@ -129,17 +202,45 @@ describe('auth normalization and schemas', () => {
     expect(verify.otp).toBe('123456');
   });
 
-  it('rejects login credentials when identifier empty', () => {
-    const result = loginCredentialsSchema.safeParse({ identifier: '', password: '12345678' });
+  it('rejects login credentials when phone empty', () => {
+    const result = loginCredentialsSchema.safeParse({ email: 'tiala@hydrorivers.com', countryCode: '+55', phone: '', password: '12345678' });
     expect(result.success).toBe(false);
   });
 
   it('accepts loginCredentialsSchema', () => {
     const result = loginCredentialsSchema.parse({
-      identifier: '  a@b.co ',
+      email: 'Tiala@HydroRivers.COM',
+      countryCode: '+55',
+      phone: '(91) 99999-0000',
       password: '12345678'
     });
-    expect(result.identifier).toBe('a@b.co');
+    expect(result.email).toBe('tiala@hydrorivers.com');
+    expect(result.phoneE164).toBe('+5591999990000');
+  });
+
+  it('keeps public roles restricted to shipper and carrier', () => {
+    const shipperResult = registerSchema.safeParse({
+      fullName: 'Tiala Rocha',
+      email: 'role-shipper@hydrorivers.com',
+      password: '12345678',
+      countryCode: '+55',
+      phone: '11999990000',
+      role: 'shipper',
+      company: ''
+    });
+
+    const carrierResult = registerSchema.safeParse({
+      fullName: 'Tiala Rocha',
+      email: 'role-carrier@hydrorivers.com',
+      password: '12345678',
+      countryCode: '+55',
+      phone: '11999990000',
+      role: 'carrier',
+      company: ''
+    });
+
+    expect(shipperResult.success).toBe(true);
+    expect(carrierResult.success).toBe(true);
   });
 
   it('accepts registerOtpCompleteSchema', () => {
@@ -149,7 +250,9 @@ describe('auth normalization and schemas', () => {
 
   it('login schema exige challenge quando otp informado', () => {
     const result = loginSchema.safeParse({
-      identifier: 'a@b.co',
+      email: 'tiala@hydrorivers.com',
+      countryCode: '+55',
+      phone: '91999990000',
       password: '12345678',
       otp: '123456'
     });
@@ -163,5 +266,17 @@ describe('auth normalization and schemas', () => {
     });
 
     expect(result.success).toBe(false);
+  });
+
+  it('rejects login credentials with invalid email', () => {
+    const result = loginCredentialsSchema.safeParse({
+      email: 'invalid',
+      countryCode: '+55',
+      phone: '11999990000',
+      password: '12345678'
+    });
+
+    expect(result.success).toBe(false);
+    expect(result.error?.issues.some((issue) => issue.path[0] === 'email' && issue.message === 'invalid-email')).toBe(true);
   });
 });

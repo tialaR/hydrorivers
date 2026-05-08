@@ -1,4 +1,2 @@
-/** Prefixos exibidos no cadastro/login mock (E.164 sem espaços). */
-export const AUTH_DIAL_OPTIONS = ['+55', '+1', '+34', '+351', '+54', '+598'] as const;
-
-export type AuthDialCode = (typeof AUTH_DIAL_OPTIONS)[number];
+export { AUTH_PHONE_COUNTRIES as AUTH_DIAL_OPTIONS } from '@/features/auth/domain/auth-phone-countries';
+export type { AuthDialCode, AuthPhoneCountry as AuthDialOption } from '@/features/auth/domain/auth-phone-countries';

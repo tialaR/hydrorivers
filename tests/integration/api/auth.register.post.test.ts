@@ -69,7 +69,6 @@ describe('POST /api/auth/register', () => {
         body: JSON.stringify({
           fullName: 'SóNome',
           email: 'invalid',
-          company: '',
           password: 'short',
           role: 'shipper',
           countryCode: '',
@@ -98,7 +97,7 @@ describe('POST /api/auth/register', () => {
     });
   });
 
-  it('retorna 409 para email já existente na etapa OTP', async () => {
+  it('retorna 409 para email já existente', async () => {
     mockReadMock.mockReturnValue([{ id: 'u-1', email: 'marina@hydrorivers.com' }]);
 
     const response = await POST(
@@ -111,7 +110,7 @@ describe('POST /api/auth/register', () => {
     await expect(response.json()).resolves.toMatchObject({ error: 'email-already-registered' });
   });
 
-  it('retorna 409 para telefone já existente na etapa OTP', async () => {
+  it('retorna 409 para telefone já existente', async () => {
     mockReadMock.mockReturnValue([{ id: 'u-1', email: 'outro@hydrorivers.com', phoneE164: '+5511999990000' }]);
 
     const response = await POST(
@@ -135,7 +134,7 @@ describe('POST /api/auth/register', () => {
     );
     expect(step1.status).toBe(200);
     const body1 = await step1.json();
-    expect(body1).toMatchObject({ otpRequired: true });
+    expect(body1).toMatchObject({ otpRequired: true, phoneE164: '+5511999990000' });
     expect(typeof body1.challenge).toBe('string');
     expect(typeof body1.otpCode).toBe('string');
 

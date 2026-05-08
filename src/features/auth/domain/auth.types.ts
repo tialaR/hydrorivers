@@ -22,30 +22,30 @@ export type HydroUser = {
 export type PublicHydroUser = Omit<HydroUser, 'passwordHash'>;
 
 export type LoginPayload = {
-  email?: string;
-  identifier?: string;
+  email: string;
+  countryCode: string;
+  phone: string;
+  phoneE164?: string;
   password: string;
   otp?: string;
   challenge?: string;
 };
 
-export type LoginResult = {
-  user?: HydroUser;
-  otpRequired?: boolean;
+export type OtpChallengeResponse = {
+  otpRequired: true;
   otpCode?: string;
   challenge?: string;
   expiresAt?: string;
   expiresInSeconds?: number;
+  phoneE164?: string;
 };
 
+export type LoginResult = {
+  user?: HydroUser;
+} & Partial<OtpChallengeResponse>;
+
 /** Resposta da etapa 1 do cadastro (OTP pendente). */
-export type RegisterOtpChallengeResponse = {
-  otpRequired: true;
-  challenge: string;
-  otpCode?: string;
-  expiresAt: string;
-  expiresInSeconds: number;
-};
+export type RegisterOtpChallengeResponse = OtpChallengeResponse;
 
 export type RegisterPayload = {
   /** Preferir `fullName`; `name` mantido por compatibilidade com payloads antigos. */
@@ -53,7 +53,7 @@ export type RegisterPayload = {
   name?: string;
   email: string;
   password: string;
-  company: string;
+  company?: string;
   role: PublicUserRole;
   countryCode: string;
   phone: string;

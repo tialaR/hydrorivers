@@ -4,7 +4,6 @@ import { otpExpiresInSeconds, sessionCookieOptions } from '@/features/auth/domai
 import { registerOtpCompleteSchema, registerSchema } from '@/features/auth/domain/auth-schemas';
 import { isPhoneE164Taken } from '@/features/auth/server/find-user-by-identifier';
 import { createRegisterChallenge, verifyRegisterChallenge } from '@/features/auth/server/mock-otp-challenges';
-import { isOtpCodeExposed } from '@/shared/config/env';
 import { cookieNames } from '@/shared/http/cookie-names';
 import { httpStatus } from '@/shared/http/http-status';
 import { hashPassword, toPublicUser } from '@/shared/server/auth';
@@ -36,7 +35,6 @@ export async function POST(request: Request) {
     }
 
     const verified = verifyRegisterChallenge(completion.challenge, completion.otp);
-
     if (verified.status !== 'ok') {
       if (verified.status === 'expired') {
         return Response.json({ error: 'otp-expired' }, { status: httpStatus.unauthorized });
@@ -45,6 +43,7 @@ export async function POST(request: Request) {
     }
 
     const d = verified.draft;
+    const now = new Date().toISOString();
     const user: HydroUser = {
       id: `u-${Date.now()}`,
       name: d.fullName,
@@ -56,8 +55,8 @@ export async function POST(request: Request) {
       countryCode: d.countryCode,
       phone: d.phone,
       phoneE164: d.phoneE164,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      createdAt: now,
+      updatedAt: now
     };
 
     upsertUser(user);
@@ -101,7 +100,6 @@ export async function POST(request: Request) {
     return Response.json({ error: 'phone-already-registered' }, { status: httpStatus.conflict });
   }
 
-  const passwordHash = hashPassword(data.password);
   const issued = createRegisterChallenge({
     fullName: data.fullName,
     email: data.email,
@@ -110,16 +108,16 @@ export async function POST(request: Request) {
     countryCode: data.countryCode,
     phone: data.phone,
     phoneE164: data.phoneE164,
-    passwordHash
+    passwordHash: hashPassword(data.password)
   });
-
-  const exposeOtpCode = isOtpCodeExposed();
+  const exposeOtpCode = process.env.NODE_ENV !== 'production' || process.env.HYDRORIVERS_EXPOSE_OTP_CODE === 'true';
 
   return Response.json({
     otpRequired: true,
     challenge: issued.challenge,
     expiresAt: new Date(issued.expiresAt).toISOString(),
     expiresInSeconds: otpExpiresInSeconds,
+    phoneE164: data.phoneE164,
     ...(exposeOtpCode ? { otpCode: issued.code } : {})
   });
 }
