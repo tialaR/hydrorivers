@@ -17,10 +17,15 @@ async function parseResponse<T>(response: Response): Promise<T> {
 }
 
 export async function getCurrentUser(): Promise<HydroUser | null> {
-  const response = await fetch(apiRoutes.auth.me, { cache: 'no-store', credentials: 'include' });
-  if (response.status === httpStatus.unauthorized) return null;
-  const payload = await parseResponse<{ user: HydroUser | null }>(response);
-  return payload.user;
+  try {
+    const response = await fetch(apiRoutes.auth.me, { cache: 'no-store', credentials: 'include' });
+    if (response.status === httpStatus.unauthorized) return null;
+    if (!response.ok) return null;
+    const payload = (await response.json()) as { user?: HydroUser | null };
+    return payload.user ?? null;
+  } catch {
+    return null;
+  }
 }
 
 /**

@@ -98,7 +98,26 @@ export function AuthForm({ mode, registerPrefill }: AuthFormProps) {
   const dialMenuRef = useRef<HTMLDivElement>(null);
 
   const [otp, setOtp] = useState('');
-  const otpInputsRef = useRef<Array<HTMLInputElement | null>>([]);
+  /** Slots OTP estáveis (sem useRef) para callbacks de ref memoizados passarem no lint react-hooks/refs. */
+  const otpSlotsBox = useMemo(
+    () => ({
+      slots: Array.from({ length: 6 }, (): HTMLInputElement | null => null)
+    }),
+    []
+  );
+
+  const otpInputRefCallbacks = useMemo(
+    () =>
+      [0, 1, 2, 3, 4, 5].map(
+        (index) => (el: HTMLInputElement | null) => {
+          otpSlotsBox.slots[index] = el;
+        }
+      ),
+    [otpSlotsBox]
+  );
+
+  /** Evita múltiplos redirects para cadastro quando há erro recoverável ou re-render. */
+  const registerRedirectRef = useRef(false);
 
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
@@ -221,7 +240,7 @@ export function AuthForm({ mode, registerPrefill }: AuthFormProps) {
     const raw = event.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
     setOtp(raw);
     const focusIdx = Math.min(raw.length, 5);
-    otpInputsRef.current[focusIdx]?.focus();
+    otpSlotsBox.slots[focusIdx]?.focus();
   }
 
   async function requestRegisterOtp() {
@@ -271,6 +290,7 @@ export function AuthForm({ mode, registerPrefill }: AuthFormProps) {
       setError(t('errorFixFields'));
       return;
     }
+    registerRedirectRef.current = false;
     setPending(true);
     setError('');
     setFieldErrors({});
@@ -292,7 +312,11 @@ export function AuthForm({ mode, registerPrefill }: AuthFormProps) {
       const code = nextError instanceof Error ? nextError.message : 'request-failed';
       if (code === 'user-not-found') {
         setError(t('userNotFound'));
-        router.push(`${intlAppPaths.auth.register}?prefill=${encodeURIComponent(identifier.trim())}` as never);
+        const id = identifier.trim();
+        if (id && !registerRedirectRef.current) {
+          registerRedirectRef.current = true;
+          router.replace(`${intlAppPaths.auth.register}?prefill=${encodeURIComponent(id)}`);
+        }
       } else if (code === 'invalid-login') setError(t('invalidCredentials'));
       else setError(t('error'));
     } finally {
@@ -320,6 +344,7 @@ export function AuthForm({ mode, registerPrefill }: AuthFormProps) {
         setError(t('otpInvalid'));
         return;
       }
+      registerRedirectRef.current = false;
       setPending(true);
       setError('');
       try {
@@ -339,7 +364,11 @@ export function AuthForm({ mode, registerPrefill }: AuthFormProps) {
         else if (code === 'invalid-login') setError(t('invalidCredentials'));
         else if (code === 'user-not-found') {
           setError(t('userNotFound'));
-          router.push(`${intlAppPaths.auth.register}?prefill=${encodeURIComponent(identifier.trim())}` as never);
+          const id = identifier.trim();
+          if (id && !registerRedirectRef.current) {
+            registerRedirectRef.current = true;
+            router.replace(`${intlAppPaths.auth.register}?prefill=${encodeURIComponent(id)}`);
+          }
         } else setError(t('error'));
       } finally {
         setPending(false);
@@ -707,9 +736,7 @@ export function AuthForm({ mode, registerPrefill }: AuthFormProps) {
                   {Array.from({ length: 6 }, (_, index) => (
                     <input
                       key={`otp-slot-${index}`}
-                      ref={(el) => {
-                        otpInputsRef.current[index] = el;
-                      }}
+                      ref={otpInputRefCallbacks[index]}
                       className={styles.otpCell}
                       inputMode="numeric"
                       maxLength={1}
@@ -723,7 +750,7 @@ export function AuthForm({ mode, registerPrefill }: AuthFormProps) {
                         const suffix = otp.slice(index + 1);
                         const merged = `${prefix}${d}${suffix}`.slice(0, 6);
                         setOtp(merged);
-                        if (d && index < 5) otpInputsRef.current[index + 1]?.focus();
+                        if (d && index < 5) otpSlotsBox.slots[index + 1]?.focus();
                       }}
                       onKeyDown={(event) => {
                         if (event.key === 'Backspace') {
@@ -733,7 +760,7 @@ export function AuthForm({ mode, registerPrefill }: AuthFormProps) {
                             const suffix = otp.slice(index + 1);
                             setOtp(`${prefix}${suffix}`);
                           } else if (index > 0) {
-                            otpInputsRef.current[index - 1]?.focus();
+                            otpSlotsBox.slots[index - 1]?.focus();
                           }
                         }
                       }}

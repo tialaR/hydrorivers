@@ -18,7 +18,7 @@ export default async function RegisterPage({
   const t = await getTranslations('pages.cadastro');
   return (
     <Suspense fallback={<section aria-busy="true" aria-label={t('loading')} />}>
-      <AuthForm key={prefill ?? 'register'} mode="register" registerPrefill={prefill} />
+      <AuthForm mode="register" registerPrefill={prefill} />
     </Suspense>
   );
 }
