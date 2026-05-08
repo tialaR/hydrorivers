@@ -8,7 +8,9 @@ export function isMockModeResetAllowed(): boolean {
 }
 
 export function isOtpCodeExposed(): boolean {
-  return process.env.HYDRORIVERS_EXPOSE_OTP_CODE === 'true';
+  if (process.env.HYDRORIVERS_EXPOSE_OTP_CODE === 'false') return false;
+  if (process.env.HYDRORIVERS_EXPOSE_OTP_CODE === 'true') return true;
+  return process.env.NODE_ENV !== 'production';
 }
 
 export function isMockQaHubEnabled(): boolean {

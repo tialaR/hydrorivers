@@ -1,0 +1,168 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - link "HydroRivers" [ref=e5] [cursor=pointer]:
+          - /url: /pt-BR
+          - img [ref=e7]
+          - generic [ref=e12]: HydroRivers
+        - navigation "Navegação principal" [ref=e13]:
+          - link "Início" [ref=e14] [cursor=pointer]:
+            - /url: /pt-BR
+          - link "Dashboard" [ref=e15] [cursor=pointer]:
+            - /url: /pt-BR/dashboard
+          - link "Cargas" [ref=e16] [cursor=pointer]:
+            - /url: /pt-BR/cargas
+          - link "Embarcações" [ref=e17] [cursor=pointer]:
+            - /url: /pt-BR/embarcacoes
+          - button "Mais" [ref=e19] [cursor=pointer]:
+            - text: Mais
+            - img [ref=e20]
+        - generic [ref=e22]:
+          - button "Idioma" [ref=e25] [cursor=pointer]:
+            - generic [ref=e26]: 🇧🇷
+          - button "Alternar tema" [ref=e28] [cursor=pointer]:
+            - img [ref=e29]
+          - generic [ref=e102]:
+            - link "Entrar" [ref=e103] [cursor=pointer]:
+              - /url: /pt-BR/login
+            - link "Criar conta" [ref=e104] [cursor=pointer]:
+              - /url: /pt-BR/cadastro
+          - link "Publicar carga" [ref=e37] [cursor=pointer]:
+            - /url: /pt-BR/cargas/nova
+    - generic [ref=e105]:
+      - generic [ref=e106]:
+        - generic [ref=e107]:
+          - img [ref=e108]
+          - img [ref=e111]
+        - paragraph [ref=e118]: Nova conta
+        - heading "Cadastre sua operação fluvial" [level=1] [ref=e119]
+        - generic [ref=e120]: Crie sua conta com telefone obrigatório e valide o OTP mock antes de concluir o cadastro.
+        - generic [ref=e121]:
+          - generic [ref=e122]:
+            - generic [ref=e123]: Nome completo
+            - generic [ref=e124]:
+              - img [ref=e125]
+              - textbox "Nome completo Obrigatório. Informe nome e sobrenome." [ref=e128]:
+                - /placeholder: Tiala Rocha
+            - paragraph [ref=e129]: Obrigatório. Informe nome e sobrenome.
+          - generic [ref=e130]:
+            - generic [ref=e131]: E-mail
+            - generic [ref=e132]:
+              - img [ref=e133]
+              - textbox "E-mail Obrigatório. Use um e-mail válido." [ref=e136]:
+                - /placeholder: tiala@hydrorivers.com
+            - paragraph [ref=e137]: Obrigatório. Use um e-mail válido.
+          - generic [ref=e138]:
+            - generic [ref=e139]: Senha
+            - generic [ref=e140]:
+              - img [ref=e141]
+              - textbox "Senha Mostrar senha Obrigatório. Mínimo de 8 caracteres." [ref=e145]:
+                - /placeholder: ••••••••
+              - button "Mostrar senha" [ref=e146] [cursor=pointer]:
+                - img [ref=e147]
+                - generic [ref=e150]: Mostrar senha
+            - paragraph [ref=e151]: Obrigatório. Mínimo de 8 caracteres.
+          - generic [ref=e152]:
+            - generic [ref=e153]: Empresa ou cooperativa
+            - generic [ref=e154]:
+              - img [ref=e155]
+              - textbox "Empresa ou cooperativa Opcional neste fluxo mock." [ref=e158]:
+                - /placeholder: Cooperativa Açaí Norte
+            - paragraph [ref=e159]: Opcional neste fluxo mock.
+          - generic [ref=e160]:
+            - generic [ref=e161]: Perfil
+            - button "Perfil" [ref=e163] [cursor=pointer]:
+              - img [ref=e164]
+              - generic [ref=e171]: Selecione o perfil
+            - paragraph [ref=e172]: Obrigatório. Escolha como você vai usar a plataforma.
+          - generic [ref=e173]:
+            - generic [ref=e174]: Telefone
+            - generic [ref=e176]:
+              - button "Selecionar país do telefone" [active] [ref=e177] [cursor=pointer]:
+                - generic [ref=e178]:
+                  - generic [ref=e179]: 🇧🇷
+                  - img [ref=e180]
+                - generic [ref=e182]: Brasil
+              - generic "Prefixo do país aplicado automaticamente ao telefone" [ref=e183]:
+                - generic [ref=e184]: "+55"
+              - generic [ref=e185]:
+                - generic [ref=e186]: Número com DDD
+                - img [ref=e187]
+                - textbox "Número com DDD" [ref=e189]:
+                  - /placeholder: "11999990000"
+            - paragraph [ref=e190]: Obrigatório. Informe seu celular com DDD.
+          - button "Criar conta" [disabled] [ref=e191]
+      - complementary [ref=e192]:
+        - paragraph [ref=e193]: MVP operacional
+        - heading "Do pedido à entrega, menos papel e mais rio." [level=2] [ref=e194]
+        - list [ref=e195]:
+          - listitem [ref=e196]: Cadastro público para embarcador e transportador, com admin fora da UI pública.
+          - listitem [ref=e197]: Cotação, aceite e reserva de espaço simulados via API/MSW.
+          - listitem [ref=e198]: Base pronta para aprovação manual, auditoria e offline-first.
+    - contentinfo [ref=e38]:
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - generic [ref=e41]:
+            - img [ref=e43]
+            - text: HydroRivers
+          - paragraph [ref=e48]: Marketplace de frete fluvial e cabotagem para reduzir custo, ampliar previsibilidade e tornar a logística regional mais sustentável.
+        - navigation "Produto" [ref=e49]:
+          - heading "Produto" [level=2] [ref=e50]
+          - link "Cargas" [ref=e51] [cursor=pointer]:
+            - /url: /pt-BR/cargas
+          - link "Embarcações" [ref=e52] [cursor=pointer]:
+            - /url: /pt-BR/embarcacoes
+          - link "Negociações" [ref=e53] [cursor=pointer]:
+            - /url: /pt-BR/negociacoes
+          - link "Rastreio" [ref=e54] [cursor=pointer]:
+            - /url: /pt-BR/rastreio
+        - navigation "Plataforma" [ref=e55]:
+          - heading "Plataforma" [level=2] [ref=e56]
+          - link "Dashboard" [ref=e57] [cursor=pointer]:
+            - /url: /pt-BR/dashboard
+          - link "Impacto" [ref=e58] [cursor=pointer]:
+            - /url: /pt-BR/impacto
+          - link "Admin" [ref=e59] [cursor=pointer]:
+            - /url: /pt-BR/admin
+          - link "Publicar carga" [ref=e60] [cursor=pointer]:
+            - /url: /pt-BR/cargas/nova
+        - navigation "Suporte" [ref=e61]:
+          - heading "Suporte" [level=2] [ref=e62]
+          - link "Entrar" [ref=e63] [cursor=pointer]:
+            - /url: /pt-BR/login
+          - link "Criar conta" [ref=e64] [cursor=pointer]:
+            - /url: /pt-BR/cadastro
+          - link "Perfil" [ref=e65] [cursor=pointer]:
+            - /url: /pt-BR/perfil
+          - link "Rastreio" [ref=e66] [cursor=pointer]:
+            - /url: /pt-BR/rastreio
+        - navigation "Contexto" [ref=e67]:
+          - heading "Contexto" [level=2] [ref=e68]
+          - link "Aderência ao BR do Mar" [ref=e69] [cursor=pointer]:
+            - /url: /pt-BR/impacto/brdomar
+          - link "Menos CO₂ por tonelada" [ref=e70] [cursor=pointer]:
+            - /url: /pt-BR/impacto/sustainability
+          - link "Amazônia conectada" [ref=e71] [cursor=pointer]:
+            - /url: /pt-BR/impacto/regional
+          - link "Menos burocracia" [ref=e72] [cursor=pointer]:
+            - /url: /pt-BR/impacto/automation
+      - generic [ref=e73]:
+        - generic [ref=e74]: © 2026 HydroRivers. Todos os direitos reservados.
+        - generic "Redes e canais do HydroRivers" [ref=e75]:
+          - button "WhatsApp demo" [ref=e76] [cursor=pointer]:
+            - img [ref=e77]
+          - button "Instagram demo" [ref=e79] [cursor=pointer]:
+            - img [ref=e80]
+          - button "X/Twitter demo" [ref=e83] [cursor=pointer]:
+            - img [ref=e84]
+          - button "Suporte demo" [ref=e86] [cursor=pointer]:
+            - img [ref=e87]
+    - complementary "Modo mock · QA" [ref=e89]:
+      - button "Modo mock" [ref=e90]:
+        - generic [ref=e91]: M
+        - generic [ref=e92]: Modo mock
+    - status
+  - button "Open Next.js Dev Tools" [ref=e98] [cursor=pointer]:
+    - img [ref=e99]
+  - alert [ref=e199]

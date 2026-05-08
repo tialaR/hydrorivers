@@ -14,6 +14,8 @@ export function useAuthSession() {
       try {
         const current = await getCurrentUser();
         if (mounted) setUser(current);
+      } catch {
+        if (mounted) setUser(null);
       } finally {
         if (mounted) setReady(true);
       }

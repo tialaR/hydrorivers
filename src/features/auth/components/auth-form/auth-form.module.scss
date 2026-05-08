@@ -32,7 +32,12 @@
 .panel > span { display: block; color: var(--muted); margin-top: .85rem; line-height: 1.65; max-width: 45rem; }
 .form { margin-top: 1.5rem; display: grid; gap: 1rem; }
 .field { display: grid; gap: .45rem; font-weight: 620; color: var(--text); }
-.field div {
+.phoneFieldContainer {
+  position: relative;
+  overflow: visible;
+  z-index: auto;
+}
+.field > div:not(.fieldRowSplit):not(.menuWrap):not(.phoneField):not(.phoneFieldRoot):not(.phoneInputWrap) {
   min-height: 3.4rem;
   border: 2px solid var(--line);
   border-radius: var(--radius-md);
@@ -53,7 +58,334 @@
 }
 .field input::placeholder { color: color-mix(in srgb, var(--muted) 76%, transparent); }
 .field input:disabled { opacity: .72; cursor: not-allowed; }
+.fieldIssue {
+  margin: 0;
+  font-size: .82rem;
+  font-weight: 650;
+  color: var(--danger);
+}
+.fieldHint {
+  margin: 0;
+  font-size: .82rem;
+  font-weight: 560;
+  color: var(--muted);
+}
+.success {
+  margin: 0;
+  font-weight: 720;
+  color: var(--brand);
+}
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.fieldGrow {
+  display: grid;
+  gap: .45rem;
+  min-width: 0;
+}
+.menuWrap {
+  position: relative;
+  width: 100%;
+}
+.menuTrigger {
+  min-height: 3.4rem;
+  width: 100%;
+  border: 2px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-strong);
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  padding: 0 .9rem;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 580;
+  color: var(--text);
+}
+.menuTrigger:focus-visible,
+.phoneCountryButton:focus-visible {
+  outline: 3px solid var(--brand);
+  outline-offset: 2px;
+}
+.menuTriggerText {
+  flex: 1;
+  text-align: left;
+}
+.menuPanel {
+  position: absolute;
+  z-index: 8;
+  left: 0;
+  right: 0;
+  top: calc(100% + .35rem);
+  padding: .45rem;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--line-strong);
+  background: color-mix(in srgb, var(--surface) 98%, transparent);
+  backdrop-filter: blur(22px);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.22);
+  display: grid;
+  gap: .2rem;
+}
+.menuOption {
+  display: grid;
+  gap: .12rem;
+  width: 100%;
+  text-align: left;
+  padding: .72rem .85rem;
+  border: 0;
+  border-radius: var(--radius-md);
+  font: inherit;
+  cursor: pointer;
+  color: var(--muted);
+  background: transparent;
+}
+.menuOption:hover {
+  background: color-mix(in srgb, var(--brand) 10%, transparent);
+  color: var(--text);
+}
+.menuOptionActive {
+  background: color-mix(in srgb, var(--brand) 16%, var(--surface-strong));
+  color: var(--text);
+  box-shadow: inset 0 0 0 1px var(--brand-soft-line);
+}
+.menuHint {
+  font-size: .82rem;
+  font-weight: 560;
+  color: var(--muted);
+}
+.togglePassword {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  padding: .25rem;
+  margin-left: auto;
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+}
+.togglePassword:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+.fieldRowSplit {
+  display: grid;
+  grid-template-columns: minmax(5.75rem, 7rem) 1fr;
+  gap: .65rem;
+  align-items: end;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  min-height: 0;
+}
+@media (max-width: 520px) {
+  .fieldRowSplit { grid-template-columns: 1fr; }
+}
+.phoneFieldRoot {
+  position: relative;
+  overflow: visible;
+}
+.phoneFieldRootOpen {
+  z-index: auto;
+}
+.phoneField {
+  min-height: 3.45rem;
+  border: 2px solid var(--line);
+  border-radius: var(--radius-md);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-strong) 92%, white), color-mix(in srgb, var(--surface) 96%, transparent));
+  display: grid;
+  grid-template-columns: 4.35rem 4rem minmax(0, 1fr);
+  align-items: stretch;
+  gap: 0;
+  overflow: hidden;
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--surface) 82%, transparent),
+    0 8px 18px rgba(0, 0, 0, 0.08);
+  transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+.phoneField:focus-within {
+  border-color: color-mix(in srgb, var(--brand) 50%, var(--line));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--brand) 24%, transparent),
+    0 0 0 3px color-mix(in srgb, var(--brand) 14%, transparent),
+    0 10px 22px rgba(0, 0, 0, 0.12);
+}
+.phoneFieldInvalid {
+  border-color: color-mix(in srgb, var(--danger) 72%, var(--line));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--danger) 16%, transparent),
+    0 0 0 3px color-mix(in srgb, var(--danger) 10%, transparent);
+}
+.phoneCountryButton {
+  min-height: 100%;
+  border: 0;
+  border-right: 1px solid color-mix(in srgb, var(--line) 82%, transparent);
+  background: color-mix(in srgb, var(--surface) 76%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+  text-align: center;
+  transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+}
+.phoneCountryButton:hover {
+  background: color-mix(in srgb, var(--brand) 10%, var(--surface-strong));
+}
+.phoneCountryButton:active {
+  transform: translateY(1px);
+}
+.phoneCountryButton:focus-visible {
+  outline: none;
+}
+.phoneCountryGlyph {
+  display: inline-flex;
+  align-items: center;
+  align-items: center;
+  justify-content: center;
+  gap: .2rem;
+}
+.phoneCountryFlag {
+  font-size: 1.35rem;
+  line-height: 1;
+}
+.phoneCountryChevron {
+  color: color-mix(in srgb, var(--muted) 90%, white);
+}
+.phoneValue {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 .4rem;
+  color: var(--text);
+  font-weight: 760;
+  white-space: nowrap;
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  border-right: 1px solid color-mix(in srgb, var(--line) 82%, transparent);
+}
+.phonePrefix {
+  color: var(--text);
+  text-align: center;
+  min-width: 2.45rem;
+}
+.phoneInputWrap {
+  min-width: 0;
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  padding: 0 .95rem 0 .7rem;
+}
+.phoneInputWrap input {
+  min-width: 0;
+}
+.phoneDropdown {
+  position: relative;
+  z-index: auto;
+  margin-top: .5rem;
+  padding: .45rem;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--line-strong);
+  background: color-mix(in srgb, var(--surface) 97%, transparent);
+  backdrop-filter: blur(22px);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.22);
+  display: grid;
+  gap: .2rem;
+}
+.phoneOption,
+.phoneOptionActive {
+  width: 100%;
+  border: 0;
+  border-radius: var(--radius-md);
+  font: inherit;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .72rem .82rem;
+  text-align: left;
+  background: transparent;
+  color: var(--text);
+}
+.phoneOption:hover {
+  background: color-mix(in srgb, var(--brand) 10%, transparent);
+}
+.phoneOptionActive {
+  background: color-mix(in srgb, var(--brand) 16%, var(--surface-strong));
+  box-shadow: inset 0 0 0 1px var(--brand-soft-line);
+}
+.phoneOptionFlag {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+.phoneOptionCopy {
+  display: grid;
+  gap: .06rem;
+}
+.phoneOptionCopy strong {
+  font-size: .95rem;
+}
+.phoneOptionCopy span {
+  font-size: .82rem;
+  color: var(--muted);
+}
+@media (max-width: 640px) {
+  .phoneField {
+    grid-template-columns: 4rem 3.7rem minmax(0, 1fr);
+  }
+}
+.otpRow {
+  display: flex;
+  gap: .45rem;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  padding-top: .15rem;
+}
+.otpCell {
+  width: 2.55rem;
+  height: 3rem;
+  text-align: center;
+  font-size: 1.28rem;
+  font-weight: 780;
+  border: 2px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--surface-strong);
+  color: var(--text);
+}
+.otpCell:focus-visible {
+  outline: 3px solid var(--brand);
+  outline-offset: 2px;
+}
+.otpTimer {
+  margin: 0;
+  text-align: left;
+  color: var(--muted);
+  font-weight: 650;
+  font-size: .92rem;
+}
 .submit { width: 100%; margin-top: .3rem; }
+.submit:disabled {
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  color: color-mix(in srgb, var(--muted) 88%, var(--text));
+  border-color: var(--line-strong);
+  box-shadow: none;
+  opacity: .68;
+  cursor: not-allowed;
+}
+.submit:disabled:hover {
+  transform: none;
+}
 .error { color: var(--danger); font-weight: 700; margin: 0; }
 .secondaryAction {
   min-height: 3rem;
@@ -115,6 +447,110 @@
   letter-spacing: .22em;
 }
 .otpBox p { margin: 0; color: var(--muted); font-size: .92rem; line-height: 1.55; }
+.phoneLead {
+  margin: 0;
+  padding: .95rem 1rem;
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--brand) 10%, var(--surface-strong));
+  border: 1px solid var(--brand-soft-line);
+  color: var(--text);
+  line-height: 1.55;
+}
+.successStage {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: .9rem;
+  padding: 1rem 1.1rem;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--brand-soft-line);
+  background: linear-gradient(145deg, color-mix(in srgb, var(--brand) 14%, var(--surface)), color-mix(in srgb, var(--river) 10%, var(--surface)));
+}
+.successIcon {
+  width: 3.2rem;
+  height: 3.2rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--brand) 22%, var(--surface));
+  color: var(--brand);
+}
+.successCopy strong,
+.otpHeroCopy strong,
+.otpStageHeader strong,
+.otpMeta strong {
+  display: block;
+  color: var(--text);
+}
+.successCopy p,
+.otpHeroCopy p,
+.otpStageHeader p,
+.otpFooter p {
+  margin: .28rem 0 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+.otpStage {
+  display: grid;
+  gap: .95rem;
+}
+.otpStageHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  flex-wrap: wrap;
+  padding: 1rem 1.1rem;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--line);
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+}
+.otpHero {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: .85rem;
+  padding: 1rem 1.1rem;
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(circle at top left, color-mix(in srgb, var(--river) 24%, transparent), transparent 11rem),
+    color-mix(in srgb, var(--surface) 92%, transparent);
+  border: 1.5px solid var(--line);
+}
+.otpHeroIcon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--brand) 74%, white 8%), color-mix(in srgb, var(--river) 80%, white 6%));
+  color: #07110e;
+}
+.otpStageCard {
+  display: grid;
+  gap: .9rem;
+  padding: 1rem 1.1rem;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--line);
+  background: color-mix(in srgb, var(--surface) 90%, transparent);
+}
+.otpMeta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .75rem;
+  flex-wrap: wrap;
+}
+.otpMeta span {
+  color: var(--muted);
+  font-size: .9rem;
+  font-weight: 650;
+}
+.otpFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  flex-wrap: wrap;
+}
 .story {
   background:
     radial-gradient(circle at 30% 18%, var(--river-soft), transparent 20rem),
@@ -127,3 +563,9 @@
 .story ul { list-style: none; padding: 0; margin: 1.3rem 0 0; display: grid; gap: .8rem; }
 .story li { color: var(--muted); line-height: 1.6; padding: .9rem 1rem; border: 2px solid var(--line); border-radius: var(--radius-md); background: color-mix(in srgb, var(--surface) 55%, transparent); }
 @media (max-width: 900px) { .shell { grid-template-columns: 1fr; } }
+@media (max-width: 640px) {
+  .otpCell {
+    width: calc((100% - 2.25rem) / 6);
+    min-width: 2.55rem;
+  }
+}

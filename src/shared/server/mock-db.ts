@@ -97,7 +97,17 @@ export function writeMock<K extends keyof MockData>(key: K, value: MockData[K]) 
 
 export function upsertUser(user: HydroUser) {
   const users = readMock('users');
-  const next = [user, ...users.filter((item) => item.id !== user.id && item.email.toLowerCase() !== user.email.toLowerCase())];
+  const emailNorm = user.email.toLowerCase();
+  const phone = user.phoneE164?.replace(/\D/g, '') ?? '';
+  const next = [
+    user,
+    ...users.filter((item) => {
+      if (item.id === user.id) return false;
+      if (item.email.toLowerCase() === emailNorm) return false;
+      if (phone && item.phoneE164?.replace(/\D/g, '') === phone) return false;
+      return true;
+    })
+  ];
   writeMock('users', next);
   return user;
 }
